@@ -298,7 +298,6 @@ tbody td {
 }
 /* Visibility helpers */
 .desktop-only { display: table-cell; }
-.mobile-only  { display: none; }
 
 @media (max-width: 640px) {
   .desktop-only { display: none; }
@@ -1405,11 +1404,6 @@ thead th {
   display: none;
 }
 
-@media (max-width: 768px) {
-  table {
-    display: none;
-  }
-
   .mobile-list {
     display: block;
   }
@@ -1460,7 +1454,7 @@ thead th {
   .m-status.estimated {
     color: #f5c26b;
   }
-}
+
 /* =========================
    MOBILE PLAYER CARDS (FIXED)
 ========================= */
@@ -1909,4 +1903,17 @@ thead th {
   font-size: 12px;
   opacity: 0.75;
   margin-top: 2px;
+}
+/* DEFAULT */
+.desktop-only { display: table-cell; }
+.mobile-only  { display: none; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: table-cell !important; }
+
+  table {
+    display: table !important;
+  }
 }
