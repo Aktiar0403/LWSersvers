@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Server Intelligence • KOBRA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="Server intelligence, alliance dominance, elite power rankings and strategic comparisons.">
+  <link rel="stylesheet" href="/css/server-intelligence.css" />
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#00ffc8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KOBRA">
+
+<link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+
+</head>
+
+<body class="bg">
+
+<!-- 🌍 GLOBAL INTELLIGENCE LOADER -->
+<div id="appLoader" class="intel-loader">
+  <div class="map-layer">
+    <img src="/assets/world-map.svg" class="world-map" />
+    <svg class="flow-lines" viewBox="0 0 280 160">
+  <line x1="30" y1="40" x2="140" y2="80" />
+  <line x1="70" y1="90" x2="140" y2="80" />
+  <line x1="220" y1="50" x2="140" y2="80" />
+  <line x1="240" y1="120" x2="140" y2="80" />
+</svg>
+
+    <div class="intel-core"></div>
+
+    <!-- Pulses from different regions -->
+    <span class="pulse p1"></span>
+    <span class="pulse p2"></span>
+    <span class="pulse p3"></span>
+    <span class="pulse p4"></span>
+    <span class="pulse p5"></span>
+  </div>
+
+ <div class="intel-text">
+  <span id="intelFeed">Initializing global intelligence…</span>
+</div>
+
+  <div class="progress-ring">
+  <svg width="60" height="60">
+    <circle cx="30" cy="30" r="26" />
+    <circle cx="30" cy="30" r="26" class="progress" />
+  </svg>
+  <div id="progressText" class="progress-text">0%</div>
+</div>
+
+</div>
+
+<!-- MAIN APP CONTENT -->
+<div class="page">
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <h1>LAST WAR SERVER INTELLIGENCE</h1>
+    <div class="sub">Alliance & Warzone Power Analytics</div>
+  </header>
+<!-- TOP META INFO -->
+<div class="top-meta">
+  <div class="last-updated">
+    🕒 Last Updated: <span id="lastUpdated">—</span>
+  </div>
+
+ <a
+  href="https://discord.gg/HW9jn2KX"
+  target="_blank"
+  class="discord-cta"
+  title="Request to add your server on Discord"
+>
+  <span class="discord-icon">
+    <svg viewBox="0 0 245 240" aria-hidden="true">
+      <path d="M104.4 104.1c-5.7 0-10.2 5-10.2 11.1 0 6.1 4.6 11.1 10.2 11.1 5.7 0 10.2-5 10.2-11.1 0-6.1-4.6-11.1-10.2-11.1zm36.1 0c-5.7 0-10.2 5-10.2 11.1 0 6.1 4.6 11.1 10.2 11.1 5.7 0 10.2-5 10.2-11.1 0-6.1-4.6-11.1-10.2-11.1z"/>
+      <path d="M189.5 20h-134C24.5 20 20 24.6 20 30.3v179.4c0 5.7 4.5 10.3 10.3 10.3h113.1l-5.3-18.5 12.8 11.9 12.1 11.2 21.5 19V30.3c0-5.7-4.5-10.3-10.3-10.3z"/>
+    </svg>
+  </span>
+  <span class="discord-text">
+    Request Server
+  </span>
+</a>
+
+
+
+</div>
+
+
+  <!-- STATS OVERVIEW -->
+  <section class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-label">TOTAL PLAYERS</div>
+      <div class="stat-value" id="totalPlayers">0</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">WARZONES</div>
+      <div class="stat-value" id="totalWarzones">0</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">ALLIANCES</div>
+      <div class="stat-value" id="totalAlliances">0</div>
+    </div>
+  </section>
+
+  <!-- 🏆 TOP 5 ELITE PLAYERS -->
+  <section class="top5-glory">
+    <h2 class="section-title">Top 5 Power Holders</h2>
+    <div id="top5Grid" class="top5-grid"></div>
+  </section>
+
+ <!-- QUICK ACTION CARDS -->
+<div class="kobra-card-row">
+  <a href="/server-compare.html" class="kobra-card-btn">
+    <div class="kobra-card-icon">⚔️</div>
+    <div class="kobra-card-text">
+      <div class="kobra-card-title">COMPARISONS</div>
+      <div class="kobra-card-sub">Strategic Power Analysis</div>
+    </div>
+  </a>
+
+  <a href="/alliance-showdown.html" class="kobra-card-btn">
+    <div class="kobra-card-icon">⚔️</div>
+    <div class="kobra-card-text">
+      <div class="kobra-card-title">ALLIANCE SHOWDOWN</div>
+      <div class="kobra-card-sub">Strategic Simulation</div>
+    </div>
+  </a>
+
+ 
+</div>
+
+  <!-- SEARCH -->
+  <section class="search-bar">
+    <input id="searchInput" placeholder="🔎 Search player name" />
+  </section>
+
+  <!-- FILTERS -->
+  <section class="filters">
+    <div class="filter-group">
+      <div class="filter-title">🟦 Warzones</div>
+      <input id="warzoneSearch" class="filter-search" placeholder="Search warzone…" />
+      <div id="warzoneCards" class="filter-cards"></div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-title">🟩 Alliances</div>
+      <input id="allianceSearch" class="filter-search" placeholder="Search alliance…" />
+      <div id="allianceCards" class="filter-cards"></div>
+    </div>
+  </section>
+
+  <!-- POWER SEGMENTS -->
+  <section class="segments">
+    <div class="segment mega">
+      🐋 Mega Whales
+      <span id="megaWhaleCount">0</span>
+      <small>230M+ Power</small>
+    </div>
+
+    <div class="segment whale">
+      🐋 Whales
+      <span id="whaleCount">0</span>
+      <small>180M–229M</small>
+    </div>
+
+    <div class="segment shark">
+      🦈 Sharks
+      <span id="sharkCount">0</span>
+      <small>160M–179M</small>
+    </div>
+
+    <div class="segment piranha">
+      🐟 Piranhas
+      <span id="piranhaCount">0</span>
+      <small>140M–159M</small>
+    </div>
+
+    <div class="segment shrimp">
+      🦐 Shrimps
+      <span id="shrimpCount">0</span>
+      <small>Below 140M</small>
+    </div>
+  </section>
+
+  <!-- ALLIANCE DOMINANCE -->
+ <section class="dominance" id="dominanceSection">
+  <h2>Alliance Dominance (%)</h2>
+  <div id="dominanceGrid" class="dominance-grid"></div>
+</section>
+
+
+  <!-- ALLIANCE COMPARISON 
+  <section class="comparison">
+    <h2>Alliance vs Alliance</h2>
+    <div class="compare-controls">
+      <select id="compareAllianceA"></select>
+      <select id="compareAllianceB"></select>
+      <button id="compareBtn">Compare</button>
+    </div>
+    <div id="comparisonResult" class="comparison-result"></div>
+  </section>-->
+
+  <!-- DATA TABLE -->
+  <section class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th class="col-name">Name</th>
+          <th class="col-power">Power</th>
+          <th class="col-meta">Alliance</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </section>
+<div class="power-legend">
+  <span>✅ Confirmed — Admin verified</span>
+  <span>⚙️ Estimated — Auto growth</span>
+</div>
+
+  <!-- ADMIN PANEL (HIDDEN FOR PUBLIC) -->
+  <details class="admin-panel admin-only">
+    <summary>⚙ Admin Data Import</summary>
+
+    <div class="admin-hint">
+      Format per line:<br>
+      <code>Rank | Alliance | Name | Warzone | TotalPower</code>
+    </div>
+
+    <textarea id="pasteData" placeholder="Paste data here…"></textarea>
+    <input type="file" id="excelInput" />
+    <button id="saveBtn">Upload to Firestore</button>
+
+    <button onclick="deleteByUploadId('upload-1702872239123')">
+  🗑️ Delete Upload
+</button>
+
+  </details>
+
+</div>
+<div id="kofi-container"></div>
+
+<script src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+<script>
+  kofiwidget2.init(
+    'Support LWS',
+    '#72a4f2',
+    'E1E41QFTXA'
+  );
+  kofiwidget2.draw();
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2025 LWServers</span>
+    <small style="opacity:.75;">
+      Independent fan-made analytics. Not affiliated with or endorsed by the game developers.
+    </small>
+    <nav>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script type="module" src="/js/server-intelligence.js"></script>
+
+<!-- ADMIN VISIBILITY CONTROL -->
+<script type="module">
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { auth } from "/js/firebase-config.js";
+
+  onAuthStateChanged(auth, user => {
+    document.querySelectorAll(".admin-only").forEach(el => {
+      el.style.display = user ? "block" : "none";
+    });
+  });
+</script>
+<!-- EDIT POWER MODAL -->
+<div id="editPowerModal" class="modal hidden">
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <h3>Edit Player Power</h3>
+      <button class="modal-close" onclick="closeEditPowerModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-row">
+        <span class="label">Player</span>
+        <span id="epPlayerName">—</span>
+      </div>
+
+      <div class="modal-row">
+        <span class="label">Warzone</span>
+        <span id="epWarzone">—</span>
+      </div>
+
+      <div class="modal-row">
+        <span class="label">Current Power</span>
+        <span id="epCurrentPower">—</span>
+      </div>
+
+      <div class="modal-row">
+        <label class="label">New Power</label>
+        <input
+          id="epNewPower"
+          type="number"
+          placeholder="Enter new power"
+        />
+      </div>
+
+      <div class="modal-hint" id="epHint">
+        Enter new power to continue
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeEditPowerModal()">Cancel</button>
+      <button class="btn-primary" id="epSaveBtn" disabled>
+        Save (disabled)
+      </button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

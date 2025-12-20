@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Comparisons • Server Intelligence</title>
+  <link rel="manifest" href="/manifest.json">
+
+<meta name="theme-color" content="#00ffc8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KOBRA">
+
+<link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+
+  <meta name="robots" content="index, follow">
+<meta name="description" content="Alliance and warzone power comparison, top players, dominance charts and strategic analysis.">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/server-compare.css" />
+</head>
+
+<body class="bg">
+<div class="page">
+
+  <header class="site-header">
+  <div class="logo">
+    <a href="/">LWServers</a>
+  </div>
+
+  <nav class="nav">
+    <a href="/server-intelligence.html">Server Intelligence</a>
+    <a href="/server-compare.html">Compare</a>
+    <a href="/alliance-showdown.html" class="badge-link">
+      Alliance Showdown
+      <span class="badge">Experimental</span>
+    </a>
+  </nav>
+</header>
+
+  <!-- MODE TOGGLE -->
+  <section class="compare-modes">
+    <button class="mode-btn active" data-mode="alliance">Alliance vs Alliance</button>
+    <button class="mode-btn" data-mode="warzone">Warzone vs Warzone</button>
+  </section>
+
+  <!-- FILTER MODE -->
+  <section class="filter-toggle">
+    <label>
+      <input type="checkbox" id="respectFilters" checked />
+      Respect current filters
+    </label>
+  </section>
+
+  <!-- SELECTORS -->
+  <section class="compare-selectors">
+    <input id="searchA" placeholder="Search Alliance A…" />
+<select id="selectA"></select>
+    <div class="vs">⚔️</div>
+   <input id="searchB" placeholder="Search Alliance B…" />
+<select id="selectB"></select>
+    <button id="compareBtn">Compare</button>
+  </section>
+<section id="analysisPanel" class="analysis-panel hidden">
+  <div class="analysis-title">INTELLIGENCE ANALYSIS</div>
+
+  <div class="analysis-row">
+    <span>Most Powerful</span>
+    <strong id="analysisWinner">—</strong>
+  </div>
+
+  <div class="analysis-row">
+    <span>Total Power</span>
+    <strong id="analysisTotalPower">—</strong>
+  </div>
+
+  <div class="analysis-row">
+    <span>Top Player</span>
+    <strong id="analysisTopPlayer">—</strong>
+  </div>
+</section>
+
+  <!-- RESULTS -->
+  <section class="compare-chart">
+  <canvas id="compareChart"></canvas>
+</section>
+<!-- TOP 10 ELITE COMPARISON -->
+<section id="top10Compare" class="top10 hidden">
+  <div class="top10-col">
+    <div class="top10-title" id="top10TitleA"></div>
+    <div id="top10ListA"></div>
+  </div>
+
+  <div class="top10-vs">⚔️</div>
+
+  <div class="top10-col">
+    <div class="top10-title" id="top10TitleB"></div>
+    <div id="top10ListB"></div>
+  </div>
+</section>
+
+
+  <!-- VERDICT -->
+  <section id="verdictCard" class="verdict hidden"></section>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="/js/server-compare.js"></script>
+<div id="kofi-container"></div>
+
+<script src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+<script>
+  kofiwidget2.init(
+    'Support LWS',
+    '#72a4f2',
+    'E1E41QFTXA'
+  );
+  kofiwidget2.draw();
+</script>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2025 LWServers</span>
+    <small style="opacity:.75;">
+      Independent fan-made analytics. Not affiliated with or endorsed by the game developers.
+    </small>
+    <nav>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+

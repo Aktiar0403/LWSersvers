@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Desert Brawl — Structures Deployment</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    :root{
+      --bg:#05060a; --panel:#071018; --accent:#00ffc8; --muted:#93a3a6; --cardBorder:rgba(255,255,255,0.03);
+      --gold:#ffd23f;
+    }
+    html,body{height:100%; margin:0; background:var(--bg); color:#e6eef0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
+    .page{max-width:1200px;margin:18px auto;padding:12px;}
+    .topbar{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+    .title{font-weight:800;color:var(--accent);text-align:left;flex:1;font-size:18px;}
+    .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--cardBorder);background:transparent;color:inherit;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#00bfff);border:0;color:#001217;font-weight:700}
+    .panel{background:linear-gradient(180deg,var(--panel),#061019);border-radius:12px;padding:12px;border:1px solid var(--cardBorder)}
+    .layout { display:grid; grid-template-columns: 1fr 420px; gap:14px; align-items:start; }
+    @media (max-width:1000px){ .layout{grid-template-columns:1fr; } }
+
+    /* Structures grid */
+    .structures-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:12px; }
+    @media (max-width:1200px){ .structures-grid { grid-template-columns: repeat(3, 1fr);} }
+    @media (max-width:880px){ .structures-grid { grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width:600px){ .structures-grid { grid-template-columns: 1fr; } }
+
+    .structure-card {
+      border-radius:10px;
+      padding:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      min-height:160px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .sc-top { display:flex; justify-content:space-between; align-items:center; gap:8px }
+    .sc-name { font-weight:800; color:var(--gold); }
+    .sc-stats { text-align:right; font-size:13px; color:var(--muted) }
+    .sc-squadcounts { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px }
+    .pill { padding:4px 8px; border-radius:999px; font-weight:700; font-size:12px; background:rgba(255,255,255,0.02); color:#e6eef0; border:1px solid rgba(255,255,255,0.02) }
+
+    .sc-list { flex:1; overflow:auto; padding:6px; border-radius:8px; background:rgba(0,0,0,0.06); border:1px solid rgba(255,255,255,0.02) }
+    .assigned-row { display:flex; justify-content:space-between; align-items:center; padding:6px; border-radius:8px; background:linear-gradient(90deg, rgba(0,0,0,0.02), rgba(255,255,255,0.006)); margin-bottom:6px; }
+    .assigned-left { display:flex; align-items:center; gap:8px }
+    .initial { width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#071718;color:var(--accent); font-weight:800; border:1px solid rgba(255,255,255,0.02) }
+
+    .right-col { display:flex; flex-direction:column; gap:14px; }
+    .players-panel { padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); background:rgba(255,255,255,0.01) }
+    .players-list { max-height:480px; overflow:auto; padding:8px; display:flex; flex-direction:column; gap:8px }
+    .player-item{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px; border-radius:8px; background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); border:1px solid rgba(255,255,255,0.02); cursor:grab; }
+    .player-item.dragging { opacity:0.5; transform:scale(0.98); }
+
+    /* Drop highlight */
+    .sc-list.over { outline:2px dashed rgba(0,255,180,0.12); background:rgba(0,255,180,0.02) }
+
+    /* modal picker */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:99999 }
+    .picker { width:760px; max-width:96%; max-height:84%; overflow:auto; background:linear-gradient(180deg,#051018,#071019); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03) }
+    .picker .search { width:100%; padding:8px; border-radius:8px; margin-bottom:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:inherit }
+    .picker-list { display:flex; flex-direction:column; gap:6px; max-height:340px; overflow:auto; padding:6px; }
+    .picker-entry { display:flex; justify-content:space-between; align-items:center; padding:8px; border-radius:8px; background:rgba(255,255,255,0.01); cursor:pointer }
+    .picker-entry.disabled { opacity:0.45; cursor:not-allowed }
+    .picker-entry.selected { outline:2px solid rgba(0,200,255,0.08); background:rgba(0,200,255,0.02) }
+
+    .picker-note { width:100%; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); background:transparent; color:inherit; margin-top:6px }
+
+    .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div style="display:flex;gap:12px;align-items:center;flex:1;">
+        <button onclick="location.href='/admin-fights.html'" class="btn">← Back</button>
+        <div class="title">Desert Brawl — Structures Deployment</div>
+
+        <div style="display:flex;gap:8px;align-items:center" class="controls">
+          <select id="selectWeek" class="btn"><option value="">-- Select week --</option></select>
+          <select id="selectTeam" class="btn"><option value="A">Team A</option><option value="B">Team B</option></select>
+          <button id="btnLoadTeam" class="btn primary">Load Team</button>
+          
+       
+
+        </div>
+      </div>
+
+
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="btnSave" class="btn">💾 Save</button>
+        <button id="btnClear" class="btn">Clear</button>
+           <button id="downloadJpgBtn" class="btn">📸 Download JPG</button>
+      </div>
+    </div>
+
+    <div class="panel layout">
+      <!-- LEFT: Structures -->
+      <div>
+        <div class="structures-grid" id="structuresGrid">
+          <!-- Cards injected by JS -->
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:12px;">
+          <div class="panel" style="flex:1;">
+            <div style="font-size:13px;color:var(--muted)">Total Team Power</div>
+            <div style="font-size:20px;font-weight:800;color:var(--accent)" id="teamTotalPower">0</div>
+          </div>
+          <div class="panel" style="width:160px;">
+            <div style="font-size:13px;color:var(--muted)">Total Assigned</div>
+            <div style="font-size:20px;font-weight:800;color:var(--accent)" id="totalAssigned">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Players -->
+      <div class="right-col">
+        <div class="players-panel panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-weight:800">Players (Mains + Subs)</div>
+            <div style="color:var(--muted);font-size:13px">Drag → drop to assign • Tap + to open picker</div>
+          </div>
+
+          <div id="playersList" class="players-list" style="margin-top:10px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script type="module" src="/js/structures.js"></script>
+  <div id="printArea" style="display:none;"></div>
+<script type="module" src="./js/auth-guard.js"></script>
+
+</body>
+</html>
