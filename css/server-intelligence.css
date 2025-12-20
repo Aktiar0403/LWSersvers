@@ -1397,3 +1397,67 @@ thead th {
   color: #93a3a6;
   margin-bottom: 6px;
 }
+/* =========================
+   MOBILE PLAYER CARDS
+========================= */
+
+.mobile-list {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: none;
+  }
+
+  .mobile-list {
+    display: block;
+  }
+
+  .mobile-card {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .m-row-1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+  }
+
+  .m-rank {
+    color: #00ffc8;
+    min-width: 22px;
+  }
+
+  .m-name {
+    flex: 1;
+  }
+
+  .m-power {
+    opacity: 0.9;
+  }
+
+  .m-row-2 {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #93a3a6;
+  }
+
+  .m-row-3 {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .m-status.confirmed {
+    color: #32d27c;
+  }
+
+  .m-status.estimated {
+    color: #f5c26b;
+  }
+}
