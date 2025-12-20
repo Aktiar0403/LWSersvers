@@ -1801,3 +1801,27 @@ thead th {
     color: #f1c40f;
   }
 }
+.m-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* 🔑 THIS is critical */
+}
+
+.m-sub {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* 🔑 keeps squad away from center */
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 12px;
+  opacity: 0.9;
+}
+.m-rank {
+  min-width: 26px;
+  margin-right: 6px;
+  font-weight: 700;
+  color: #35ffd2;
+}
+.m-status {
+  cursor: help;
+}
