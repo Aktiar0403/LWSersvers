@@ -951,3 +951,80 @@ body.kobra-dark {
 .search-result-item.selected {
   opacity: 0.6;
 }
+#acis-appendix {
+  background: linear-gradient(180deg, #070e12, #04090c);
+  border-top: 1px solid #1c2a31;
+  padding: 36px 20px 48px;
+  margin-top: 60px;
+  color: #b7d7d2;
+}
+
+#acis-appendix .acis-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.acis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.acis-header h3 {
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  color: #eafff8;
+}
+
+.acis-version {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.acis-lead {
+  font-size: 12px;
+  line-height: 1.7;
+  opacity: 0.85;
+  margin-bottom: 26px;
+}
+
+.acis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 26px;
+}
+
+.acis-block {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.acis-block h4 {
+  font-size: 11px;
+  color: #f5c542;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+
+.acis-block.full {
+  grid-column: span 2;
+}
+
+.acis-block.muted {
+  opacity: 0.6;
+}
+
+.acis-disclaimer {
+  margin-top: 28px;
+  font-size: 10px;
+  opacity: 0.55;
+  line-height: 1.5;
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+  .acis-grid {
+    grid-template-columns: 1fr;
+  }
+}

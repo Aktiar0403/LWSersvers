@@ -64,9 +64,7 @@
   <div id="allianceCards"></div>
 
 
-  <h2>Matchup Results</h2>
-  <div id="matchups"></div>
-</section>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script type="module" src="./js/alliance-showdown.js"></script>
@@ -82,6 +80,83 @@
   );
   kofiwidget2.draw();
 </script>
+<section id="acis-appendix">
+  <div class="acis-container">
+    <div class="acis-header">
+      <h3>ACIS Methodology — Combat Inference Framework</h3>
+      <span class="acis-version">v1.3.7</span>
+    </div>
+
+    <p class="acis-lead">
+      The Alliance Combat Intelligence System (ACIS) is a multi-layered
+      analytical framework derived from aggregated Top-200 Warzone datasets,
+      engineered to estimate alliance-level combat readiness under
+      sustained, loss-inclusive engagement models.
+    </p>
+
+    <div class="acis-grid">
+      <div class="acis-block">
+        <h4>Ⅰ. Effective Combat Power (ECP)</h4>
+        <p>
+          Individual player power vectors are normalized via temporal decay
+          correction, confirmation weighting, and tier-dependent growth caps
+          to suppress stale telemetry and asymmetrical inflation effects.
+        </p>
+      </div>
+
+      <div class="acis-block">
+        <h4>Ⅱ. Frontline Engagement Vector (FEV)</h4>
+        <p>
+          Primary strike capability is modeled through averaged First-Squad
+          Power distributions, approximating early-phase battlefield dominance
+          and momentum acquisition probability.
+        </p>
+      </div>
+
+      <div class="acis-block">
+        <h4>Ⅲ. Depth Elasticity Index (DEI)</h4>
+        <p>
+          Bench-to-active ratios are evaluated to quantify reinforcement elasticity,
+          modeling how efficiently an alliance absorbs attritional losses without
+          structural destabilization.
+        </p>
+      </div>
+
+      <div class="acis-block">
+        <h4>Ⅳ. Stability Coefficient (σ)</h4>
+        <p>
+          Organizational resilience is expressed as a stability coefficient,
+          incorporating power dispersion entropy, frontline concentration risk,
+          and cascade-failure susceptibility metrics.
+        </p>
+      </div>
+
+      <div class="acis-block full">
+        <h4>Ⅴ. Composite Combat Index (CCI)</h4>
+        <p>
+          Final alliance strength is synthesized through a weighted composite
+          of ECP, FEV, DEI, and σ, producing a normalized Combat Index
+          suitable for cross-alliance comparative inference.
+        </p>
+      </div>
+
+      <div class="acis-block full muted">
+        <p>
+          Probabilistic win likelihoods are derived from pairwise CCI ratios,
+          transformed through a logistic response function to preserve
+          uncertainty and avoid deterministic overfitting in near-equivalent scenarios.
+        </p>
+      </div>
+    </div>
+
+    <p class="acis-disclaimer">
+      ACIS outputs represent probabilistic readiness estimations rather than
+      deterministic outcomes. Tactical leadership, diplomacy, coordination,
+      and real-time execution dynamics remain intentionally non-modeled variables.
+    </p>
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2025 LWServers</span>
