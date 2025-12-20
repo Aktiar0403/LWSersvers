@@ -1,6 +1,6 @@
 {
-  "name": "KOBRA Server Intelligence",
-  "short_name": "KOBRA",
+  "name": "LWS Server Intelligence",
+  "short_name": "LWS",
   "description": "Server intelligence, alliance dominance, power analytics and comparisons.",
   "start_url": "/server-intelligence.html",
   "display": "standalone",
