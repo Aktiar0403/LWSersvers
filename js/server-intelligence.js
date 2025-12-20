@@ -452,21 +452,19 @@ function renderTable(players) {
       </td>
 
       <!-- MOBILE CARD -->
-    <td class="mobile-only mobile-cell">
+   <td class="mobile-only mobile-cell">
   <div class="m-row">
 
-    <!-- COL 1: RANK -->
-    <div class="m-rank">
-      ${index + 1}
-    </div>
+    <!-- LEFT -->
+    <div class="m-rank">${index + 1}</div>
 
-    <!-- COL 2: CENTER -->
+    <!-- CENTER -->
     <div class="m-center">
       <div class="m-name">${p.name}</div>
       <div class="m-meta">${p.warzone} • ${p.alliance}</div>
     </div>
 
-    <!-- COL 3: RIGHT -->
+    <!-- RIGHT -->
     <div class="m-right">
       <div class="m-power">${powerM}m</div>
       <div class="m-sub">
@@ -482,6 +480,7 @@ function renderTable(players) {
 
   </div>
 </td>
+
 
 
 
