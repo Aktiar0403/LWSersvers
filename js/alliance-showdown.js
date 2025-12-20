@@ -213,7 +213,6 @@ function renderMatchupCards(alliances) {
 function ratioToProbability(ratio) {
   return 1 / (1 + Math.exp(-4 * (ratio - 1)));
 }
-
 function computeWinProbabilities(alliances) {
   const results = {};
   alliances.forEach(a => results[a.alliance] = []);
@@ -228,15 +227,14 @@ function computeWinProbabilities(alliances) {
     results[m.b].push(pB);
   });
 
-  const final = {};
-  Object.keys(results).forEach(name => {
-    const arr = results[name];
-    final[name] =
-      arr.reduce((s, v) => s + v, 0) / arr.length;
+  alliances.forEach(a => {
+    const arr = results[a.alliance];
+    a.winProbability = arr.length
+      ? arr.reduce((s, v) => s + v, 0) / arr.length
+      : 0;
   });
-
-  return final;
 }
+
 
 /* =============================
    ANALYZE
@@ -256,7 +254,7 @@ analyzeBtn.addEventListener("click", () => {
   resultsEl.classList.remove("hidden");
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
-a.winProbability
+
 });
 
 /* =============================
@@ -325,7 +323,7 @@ alliances.forEach((a, index) => {
     </div>
 
     <!-- BARS -->
-    ${(() => {
+   ${(() => {
   const level = getRankLevel(index + 1, alliances.length);
   const winPct = Math.round((a.winProbability || 0) * 100);
 
@@ -344,6 +342,7 @@ alliances.forEach((a, index) => {
     </div>
   `;
 })()}
+
 <div class="intel-bars">
       <canvas id="bars-${a.alliance}-${a.warzone}"></canvas>
     </div>
@@ -522,16 +521,7 @@ function formatBig(v) {
   return Math.round(v).toString();
 }
 
-function getRankLevel(rank, total) {
-  if (rank === 1) return { label: "Elite", class: "elite" };
 
-  const pct = rank / total;
-
-  if (pct <= 0.25) return { label: "Strong", class: "strong" };
-  if (pct <= 0.6)  return { label: "Average", class: "average" };
-
-  return { label: "Weak", class: "weak" };
-}
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const normalizeTotalPower = v => clamp(v / 2e10 * 100, 5, 100);

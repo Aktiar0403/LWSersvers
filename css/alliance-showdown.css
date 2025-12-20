@@ -907,10 +907,7 @@ body.kobra-dark {
   letter-spacing: 0.5px;
 }
 
-.rank-level.elite   { color: #ffd700; }
-.rank-level.strong  { color: #6cffc1; }
-.rank-level.average { color: #ffe08a; }
-.rank-level.weak    { color: #ff8a8a; }
+
 
 .win-percent {
   color: #eafff8;
