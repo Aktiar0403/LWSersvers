@@ -451,10 +451,17 @@ function renderTable(players) {
         ⚔️ ${firstSquad}
       </td>
 
-      <!-- EDIT (DESKTOP ONLY – ADMIN LOGIC LATER) -->
-      <th class="col-edit desktop-only admin-only">Edit</th>
-        <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
-      </td>
+      <!-- EDIT (DESKTOP ONLY – ADMIN VIA CSS) -->
+<td class="col-edit desktop-only admin-only">
+  <button
+    class="edit-btn"
+    onclick="openEditPower('${p.id}')"
+    title="Edit Power"
+  >
+    ✏️
+  </button>
+</td>
+
 
       <!-- MOBILE CARD -->
    <!-- MOBILE ROW -->
