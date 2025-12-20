@@ -916,3 +916,11 @@ body.kobra-dark {
   color: #eafff8;
   font-weight: 600;
 }
+.pie-rank {
+  margin-top: 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #f5c542;
+}

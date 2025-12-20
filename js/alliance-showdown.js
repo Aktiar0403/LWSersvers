@@ -298,10 +298,16 @@ alliances.forEach((a, index) => {
     </div>
 
     <!-- PIE -->
-    <div class="intel-pie">
-      <canvas id="pie-${a.alliance}-${a.warzone}"></canvas>
-      <div class="pie-label">Composition</div>
-    </div>
+   <div class="intel-pie">
+  <canvas id="pie-${a.alliance}-${a.warzone}"></canvas>
+
+  <div class="pie-rank">
+    Rank <strong>#${index + 1}</strong>
+  </div>
+
+  <div class="pie-label">Composition</div>
+</div>
+
 
     <!-- COMBAT -->
     <div class="combat-number">
@@ -366,31 +372,36 @@ function renderAllianceBars(a) {
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["Total", "Frontline", "Depth", "Stability"],
+      labels: ["Win %", "Total", "Frontline", "Depth", "Stability"],
       datasets: [{
   data: [
-    normalizeTotalPower(a.totalAlliancePower),
-     normalizeFSP(a.averageFirstSquadPower),
-    normalizeDepth(a.benchPower / (a.activePower || 1)),
-    normalizeStability(a.stabilityFactor)
-    
-  ],
+  
+  clamp((a.winProbability || 0) * 100, 5, 100), // 🔥 Probability bar
+  normalizeTotalPower(a.totalAlliancePower),
+  normalizeFSP(a.averageFirstSquadPower),
+  normalizeDepth(a.benchPower / (a.activePower || 1)),
+  normalizeStability(a.stabilityFactor)
+],
 
+  
   // 👇 THESE ARE THE LABELS SHOWN ABOVE BARS
   rawValues: [
-    formatBig(a.totalAlliancePower),
-      formatPower(a.averageFirstSquadPower),
-    Math.round((a.benchPower / a.activePower) * 100) + "%",
-    Math.round(a.stabilityFactor * 100) + "%"
-  ],
+  Math.round((a.winProbability || 0) * 100) + "%",
+  formatBig(a.totalAlliancePower),
+  formatPower(a.averageFirstSquadPower),
+  Math.round((a.benchPower / a.activePower) * 100) + "%",
+  Math.round(a.stabilityFactor * 100) + "%"
+],
+
 
   backgroundColor: [
-    "#1e90ff",   // Total
-   
-    "#bb7467ff",   // Frontline
-    "#2eca74ff",   // Depth
-    "#13a787ff"    // Stability
-  ]
+  "#f5c542",    // 🟡 Win %
+  "#1e90ff",    // Total
+  "#bb7467ff",  // Frontline
+  "#2eca74ff",  // Depth
+  "#13a787ff"   // Stability
+]
+
 }]
     },
 options: {
