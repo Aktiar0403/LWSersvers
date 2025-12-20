@@ -1234,3 +1234,90 @@ body.kobra-dark {
     font-size: 14px;
   }
 }
+#acis-appendix {
+  background: linear-gradient(180deg, #0a1217, #060b0e);
+  border-top: 1px solid #22343c;
+  padding: 28px 18px 32px;
+  margin-top: 48px;
+  color: #cfe6e1;
+}
+
+.acis-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.acis-title {
+  font-size: 17px;
+  letter-spacing: 1.1px;
+  color: #eafff8;
+  margin-bottom: 8px;
+}
+
+.acis-summary {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.acis-equation-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 12px;
+  flex-wrap: wrap;
+}
+
+.acis-equation-inline code {
+  font-size: 14px;
+  color: #f5c542;
+  background: #050a0d;
+  padding: 5px 9px;
+  border-radius: 6px;
+  border: 1px solid #2a3c43;
+}
+
+.acis-equation-inline span {
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.acis-points {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 12px;
+  padding-left: 16px;
+}
+
+.acis-points li {
+  margin-bottom: 3px;
+}
+
+.acis-ai-compact {
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.acis-footnote {
+  font-size: 11.5px;
+  opacity: 0.6;
+  line-height: 1.45;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .acis-title {
+    font-size: 15.5px;
+  }
+
+  .acis-summary,
+  .acis-ai-compact {
+    font-size: 13px;
+  }
+
+  .acis-equation-inline code {
+    font-size: 13px;
+  }
+}
