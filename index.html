@@ -67,10 +67,22 @@
     <h2>Choose where you want to begin</h2>
 
     <div class="action-grid">
-      <a href="/server-intelligence.html" class="action-card primary">
-        <h3>Server Intelligence</h3>
-        <p>Explore players, alliances, power segments, and dominance.</p>
-      </a>
+     <div class="action-card primary disabled" id="maintenanceCard">
+  <h3>
+    Server Intelligence
+    <span class="badge maintenance">Maintenance</span>
+  </h3>
+
+  <p>
+    This module is temporarily disabled due to system maintenance
+    and internal upgradation.
+  </p>
+
+  <div class="countdown">
+    <span>Resuming in</span>
+    <strong id="countdownTimer">48:00:00</strong>
+  </div>
+</div>
 
       <a href="/server-compare.html" class="action-card">
         <h3>Compare Servers</h3>
@@ -123,6 +135,43 @@
   </section>
 
 </main>
+<script>
+  // === MAINTENANCE COUNTDOWN (48 HOURS) ===
+  const COUNTDOWN_HOURS = 48;
+
+  // Persist start time so refresh doesn't reset
+  let startTime = localStorage.getItem("si_maintenance_start");
+
+  if (!startTime) {
+    startTime = Date.now();
+    localStorage.setItem("si_maintenance_start", startTime);
+  }
+
+  const endTime = Number(startTime) + COUNTDOWN_HOURS * 60 * 60 * 1000;
+  const timerEl = document.getElementById("countdownTimer");
+
+  function updateCountdown() {
+    const now = Date.now();
+    let diff = endTime - now;
+
+    if (diff <= 0) {
+      timerEl.textContent = "00:00:00";
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    timerEl.textContent =
+      String(hours).padStart(2, "0") + ":" +
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
 
 <!-- FOOTER -->
 <footer class="site-footer">
