@@ -82,80 +82,111 @@
 </script>
 <section id="acis-appendix">
   <div class="acis-container">
+
     <div class="acis-header">
-      <h3>ACIS Methodology — Combat Inference Framework</h3>
-      <span class="acis-version">v1.3.7</span>
+      <h2>ACIS — Alliance Combat Intelligence System</h2>
+      <span class="acis-version">Framework v1.3.7</span>
     </div>
 
     <p class="acis-lead">
-      The Alliance Combat Intelligence System (ACIS) is a multi-layered
-      analytical framework derived from aggregated Top-200 Warzone datasets,
-      engineered to estimate alliance-level combat readiness under
-      sustained, loss-inclusive engagement models.
+      The Alliance Combat Intelligence System (ACIS) is a multi-model,
+      multi-variable combat inference framework derived from aggregated
+      Top-200 Warzone telemetry. It is engineered to estimate alliance-level
+      combat readiness under sustained, loss-inclusive engagement conditions,
+      rather than superficial power comparisons.
     </p>
 
+    <div class="acis-equation">
+      <code>
+        CCI = α·ECP + β·FEV + γ·DEI + δ·σ
+      </code>
+      <span class="eq-caption">
+        Composite Combat Index (CCI) synthesis model
+      </span>
+    </div>
+
     <div class="acis-grid">
+
       <div class="acis-block">
-        <h4>Ⅰ. Effective Combat Power (ECP)</h4>
+        <h3>Ⅰ. Effective Combat Power (ECP)</h3>
         <p>
-          Individual player power vectors are normalized via temporal decay
-          correction, confirmation weighting, and tier-dependent growth caps
-          to suppress stale telemetry and asymmetrical inflation effects.
+          Individual power vectors are transformed into Effective Combat Power
+          using temporal decay correction, confirmation-weighted trust coefficients,
+          and tier-dependent growth caps. This suppresses stale telemetry,
+          artificial inflation, and asymmetric whale bias.
         </p>
       </div>
 
       <div class="acis-block">
-        <h4>Ⅱ. Frontline Engagement Vector (FEV)</h4>
+        <h3>Ⅱ. Frontline Engagement Vector (FEV)</h3>
         <p>
-          Primary strike capability is modeled through averaged First-Squad
-          Power distributions, approximating early-phase battlefield dominance
-          and momentum acquisition probability.
+          Frontline strength is modeled through averaged First-Squad Power
+          distributions, representing early-phase engagement dominance and
+          momentum acquisition probability during initial conflict windows.
         </p>
       </div>
 
       <div class="acis-block">
-        <h4>Ⅲ. Depth Elasticity Index (DEI)</h4>
+        <h3>Ⅲ. Depth Elasticity Index (DEI)</h3>
         <p>
-          Bench-to-active ratios are evaluated to quantify reinforcement elasticity,
-          modeling how efficiently an alliance absorbs attritional losses without
-          structural destabilization.
+          Bench-to-active force ratios are evaluated to quantify reinforcement
+          elasticity — the alliance’s ability to absorb attritional losses
+          without immediate structural degradation.
         </p>
       </div>
 
       <div class="acis-block">
-        <h4>Ⅳ. Stability Coefficient (σ)</h4>
+        <h3>Ⅳ. Stability Coefficient (σ)</h3>
         <p>
-          Organizational resilience is expressed as a stability coefficient,
+          Organizational resilience is expressed via a stability coefficient,
           incorporating power dispersion entropy, frontline concentration risk,
-          and cascade-failure susceptibility metrics.
+          and cascading failure susceptibility under prolonged pressure.
         </p>
       </div>
 
       <div class="acis-block full">
-        <h4>Ⅴ. Composite Combat Index (CCI)</h4>
+        <h3>Ⅴ. Probabilistic Outcome Modeling</h3>
         <p>
-          Final alliance strength is synthesized through a weighted composite
-          of ECP, FEV, DEI, and σ, producing a normalized Combat Index
-          suitable for cross-alliance comparative inference.
+          Win likelihoods are derived from pairwise Composite Combat Index ratios,
+          transformed through a logistic response function to preserve uncertainty
+          and avoid deterministic overfitting in near-equivalent engagements.
         </p>
       </div>
 
-      <div class="acis-block full muted">
-        <p>
-          Probabilistic win likelihoods are derived from pairwise CCI ratios,
-          transformed through a logistic response function to preserve
-          uncertainty and avoid deterministic overfitting in near-equivalent scenarios.
-        </p>
-      </div>
     </div>
+
+    <div class="acis-ai">
+  <h3>System Architecture & Intelligence Layer</h3>
+  <p>
+    ACIS is architected and designed by <strong>Akki</strong>, with analytical
+    reasoning executed via a version-pinned, multi-model intelligence stack.
+    Core structured inference is distributed across
+    <strong>GPT-4.1.x reasoning models</strong>,
+    <strong>GPT-4o (o-series) multimodal inference units</strong>, and
+    <strong>GPT-4-class analytical variants</strong>, each operating under
+    constrained prompt scopes to enforce deterministic step decomposition
+    and minimize stochastic drift.
+    Probabilistic outcome weighting is delegated to
+    <strong>decision-transformer ensembles</strong>, while uncertainty bounds
+    and variance propagation are evaluated through
+    <strong>Monte Carlo–driven statistical simulation engines</strong>.
+    Cross-model outputs are reconciled through a dedicated
+    <strong>inference arbitration layer</strong>, responsible for confidence
+    normalization, hypothesis conflict resolution, and final signal fusion
+    prior to Composite Combat Index (CCI) synthesis.
+  </p>
+</div>
+
 
     <p class="acis-disclaimer">
       ACIS outputs represent probabilistic readiness estimations rather than
-      deterministic outcomes. Tactical leadership, diplomacy, coordination,
-      and real-time execution dynamics remain intentionally non-modeled variables.
+      deterministic predictions. Tactical leadership, diplomacy, coordination,
+      morale, and real-time decision-making remain intentionally non-modeled variables.
     </p>
+
   </div>
 </section>
+
 
 <footer class="site-footer">
   <div class="footer-inner">
