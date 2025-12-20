@@ -921,3 +921,33 @@ body.kobra-dark {
   letter-spacing: 0.4px;
   color: #f5c542;
 }
+.alliance-search {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 8px 0;
+  background: #0f1a1f;
+  border: 1px solid #2a3b42;
+  color: #eafff8;
+  border-radius: 6px;
+}
+
+.search-results {
+  background: #0b1418;
+  border: 1px solid #2a3b42;
+  border-radius: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.search-result-item:hover {
+  background: #16252c;
+}
+
+.search-result-item.selected {
+  opacity: 0.6;
+}

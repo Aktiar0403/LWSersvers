@@ -22,6 +22,8 @@ let SELECTED = new Map();
 /* =============================
    DOM
 ============================= */
+const allianceSearchInput = document.getElementById("allianceSearch");
+const allianceSearchResults = document.getElementById("allianceSearchResults");
 const warzoneSelect   = document.getElementById("warzoneSelect");
 const allianceListEl = document.getElementById("allianceList");
 const analyzeBtn     = document.getElementById("analyzeBtn");
@@ -123,6 +125,9 @@ function populateWarzones() {
 /* =============================
    WARZONE → ALLIANCES
 ============================= */
+allianceSearchInput.value = "";
+allianceSearchResults.innerHTML = "";
+
 warzoneSelect.addEventListener("change", () => {
   allianceListEl.innerHTML = "";
   const wz = Number(warzoneSelect.value);
@@ -162,8 +167,47 @@ function toggleAlliance(a, el) {
 
   analyzeBtn.disabled = SELECTED.size < 2;
 }
+function searchAlliances(query) {
+  const wz = Number(warzoneSelect.value);
+  if (!wz || !query) return [];
+
+  const q = query.toLowerCase();
+
+  return ALL_ALLIANCES
+    .filter(a =>
+      Number(a.warzone) === wz &&
+      a.alliance.toLowerCase().includes(q)
+    )
+    .sort((a, b) => b.acsAbsolute - a.acsAbsolute)
+    .slice(0, 10); // limit results
+}
 
 
+allianceSearchInput.addEventListener("input", () => {
+  const query = allianceSearchInput.value.trim();
+  allianceSearchResults.innerHTML = "";
+
+  if (!query) return;
+
+  const results = searchAlliances(query);
+
+  results.forEach(a => {
+    const row = document.createElement("div");
+    row.className = "search-result-item";
+    row.textContent = a.alliance;
+
+    const key = `${a.alliance}|${a.warzone}`;
+    if (SELECTED.has(key)) row.classList.add("selected");
+
+    row.onclick = () => {
+      toggleAlliance(a, row);
+      allianceSearchInput.value = "";
+      allianceSearchResults.innerHTML = "";
+    };
+
+    allianceSearchResults.appendChild(row);
+  });
+});
 
 
 function renderMatchupCards(alliances) {
@@ -265,16 +309,17 @@ function resetShowdown() {
   // 2️⃣ Reset UI controls
   warzoneSelect.value = "";
   allianceListEl.innerHTML = "";
+allianceSearchInput.value = "";
+allianceSearchResults.innerHTML = "";
 
   // 3️⃣ Disable buttons
   analyzeBtn.disabled = true;
   resetBtn.disabled = true;
 
-  // 4️⃣ Clear results
+  // 4️⃣ Hide results (DO NOT delete DOM)
   resultsEl.classList.add("hidden");
-  resultsEl.innerHTML = "";
 
-  // 5️⃣ Clear cards & matchups
+  // 5️⃣ Clear cards & matchups safely
   const cards = document.getElementById("allianceCards");
   if (cards) cards.innerHTML = "";
 
