@@ -473,9 +473,7 @@ function renderTable(players) {
     <span
       class="m-status ${powerData.tag}"
       title="${powerData.tag === "confirmed" ? "Confirmed snapshot power" : "Estimated from growth model"}"
-    >
-      ✔
-    </span>
+    >✔</span>
   </div>
 </div>
 
