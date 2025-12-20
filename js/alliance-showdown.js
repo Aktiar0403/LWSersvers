@@ -461,28 +461,6 @@ function getEffectivePowerValue(p) {
 }
 
 
-function computeWinProbabilities(alliances) {
-  const results = {};
-  alliances.forEach(a => results[a.alliance] = []);
-
-  const matchups = buildMatchupMatrix(alliances);
-
-  matchups.forEach(m => {
-    const pA = ratioToProbability(m.ratio);
-    const pB = 1 - pA;
-
-    results[m.a].push(pA);
-    results[m.b].push(pB);
-  });
-
-  alliances.forEach(a => {
-    const arr = results[a.alliance];
-    a.winProbability = arr.length
-      ? arr.reduce((s, v) => s + v, 0) / arr.length
-      : 0;
-  });
-}
-
 
 /* =============================
    HELPERS
