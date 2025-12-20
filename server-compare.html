@@ -118,6 +118,60 @@
   );
   kofiwidget2.draw();
 </script>
+<section id="analysis-logic">
+  <div class="analysis-wrap">
+
+    <h3>Analysis Logic — How This Comparison Works</h3>
+
+    <p class="analysis-text">
+      This comparison engine evaluates alliances or warzones using
+      <em>time-adjusted player power</em> and <em>population structure</em>,
+      rather than static or self-reported totals. Each player’s strength is
+      normalized into an <strong>Effective Power</strong> value to compensate
+      for stale confirmations while preserving end-game saturation effects.
+    </p>
+
+    <p class="analysis-text">
+      Effective Power is computed using tier-dependent weekly growth rates,
+      applied only when power data is unconfirmed. Lower-power players grow
+      faster, while high-end players follow diminishing growth curves to
+      prevent artificial whale inflation.
+    </p>
+
+    <p class="analysis-text">
+      Players are stratified into discrete power tiers (Mega Whales, Whales,
+      Sharks, Piranhas, Shrimps) to expose structural composition rather than
+      raw totals. Comparative charts visualize tier distribution to highlight
+      elite concentration and depth balance between the two selections.
+    </p>
+
+    <p class="analysis-text">
+      The Top-10 list represents the effective frontline core, extracted by
+      sorting players on Effective Power. First-squad capability is estimated
+      using range-based heuristics derived from observed end-game builds,
+      avoiding false precision while preserving tactical relevance.
+    </p>
+
+    <p class="analysis-text">
+      Final comparison outputs include total effective power, elite density,
+      frontline dominance, and relative structural advantage. Results are
+      analytical in nature and describe comparative strength, not deterministic
+      combat outcomes.
+    </p>
+
+    <p class="analysis-credits">
+      Designed by <strong>Akki</strong> (also known as <strong>AkkiGPT</strong>).
+      Built with validation input and field insights from
+      <strong>SleepyRahul</strong>,
+      <strong>Mighty07</strong>,
+      <strong>SuperSnail</strong>,
+      <strong>Alex Blake (Server 704)</strong>,
+      and contributors across multiple servers.
+    </p>
+
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2025 LWServers</span>

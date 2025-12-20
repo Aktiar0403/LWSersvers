@@ -578,3 +578,43 @@ body.kobra-dark {
   visibility: hidden;
   pointer-events: none;
 }
+#analysis-logic {
+  margin-top: 48px;
+  padding: 26px 20px 30px;
+  border-top: 1px solid #24343b;
+  background: linear-gradient(180deg, #0a1217, #060b0e);
+  color: #cfe6e1;
+}
+
+.analysis-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+#analysis-logic h3 {
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  color: #eafff8;
+}
+
+.analysis-text {
+  font-size: 13.8px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.analysis-credits {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin-top: 12px;
+  opacity: 0.75;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .analysis-text {
+    font-size: 13px;
+  }
+}
