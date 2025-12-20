@@ -12,12 +12,6 @@ import {
   updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-// 🔐 ADMIN MODE DETECTION
-const IS_ADMIN = !!document.getElementById("pasteData"); 
-if (IS_ADMIN) {
-  document.body.classList.add("admin-view");
-}
-
 
 let editingPlayer = null;
 
@@ -424,7 +418,6 @@ function renderTable(players) {
     const firstSquad = estimateFirstSquad(effectivePower);
 
     tr.innerHTML = `
-    <th class="col-edit desktop-only admin-only">Edit</th>
       <!-- RANK -->
       <td class="col-rank desktop-only">${index + 1}</td>
 
@@ -452,17 +445,10 @@ function renderTable(players) {
         ⚔️ ${firstSquad}
       </td>
 
-      <!-- EDIT (DESKTOP ONLY – ADMIN VIA CSS) -->
-<td class="col-edit desktop-only admin-only">
-  <button
-    class="edit-btn"
-    onclick="openEditPower('${p.id}')"
-    title="Edit Power"
-  >
-    ✏️
-  </button>
-</td>
-
+      <!-- EDIT (DESKTOP ONLY – ADMIN LOGIC LATER) -->
+      <td class="col-edit desktop-only">
+        <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
+      </td>
 
       <!-- MOBILE CARD -->
    <!-- MOBILE ROW -->
