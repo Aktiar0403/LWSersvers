@@ -83,109 +83,45 @@
 <section id="acis-appendix">
   <div class="acis-container">
 
-    <div class="acis-header">
-      <h2>ACIS — Alliance Combat Intelligence System</h2>
-      <span class="acis-version">Framework v1.3.7</span>
-    </div>
+    <h2 class="acis-title">ACIS — Alliance Combat Intelligence System</h2>
 
-    <p class="acis-lead">
-      The Alliance Combat Intelligence System (ACIS) is a multi-model,
-      multi-variable combat inference framework derived from aggregated
-      Top-200 Warzone telemetry. It is engineered to estimate alliance-level
-      combat readiness under sustained, loss-inclusive engagement conditions,
-      rather than superficial power comparisons.
+    <p class="acis-summary">
+      ACIS is a multi-model combat inference framework derived from aggregated
+      Top-200 Warzone telemetry, designed to estimate alliance-level combat
+      readiness under sustained attrition rather than raw power comparison.
     </p>
 
-    <div class="acis-equation">
-      <code>
-        CCI = α·ECP + β·FEV + γ·DEI + δ·σ
-      </code>
-      <span class="eq-caption">
-        Composite Combat Index (CCI) synthesis model
-      </span>
+    <div class="acis-equation-inline">
+      <code>CCI = α·ECP + β·FEV + γ·DEI + δ·σ</code>
+      <span>Composite Combat Index</span>
     </div>
 
-    <div class="acis-grid">
+    <ul class="acis-points">
+      <li><strong>ECP</strong> — Time-corrected Effective Combat Power</li>
+      <li><strong>FEV</strong> — Frontline Engagement Vector (first-squad force)</li>
+      <li><strong>DEI</strong> — Depth Elasticity Index (bench sustainability)</li>
+      <li><strong>σ</strong> — Stability Coefficient (collapse resistance)</li>
+    </ul>
 
-      <div class="acis-block">
-        <h3>Ⅰ. Effective Combat Power (ECP)</h3>
-        <p>
-          Individual power vectors are transformed into Effective Combat Power
-          using temporal decay correction, confirmation-weighted trust coefficients,
-          and tier-dependent growth caps. This suppresses stale telemetry,
-          artificial inflation, and asymmetric whale bias.
-        </p>
-      </div>
+    <p class="acis-ai-compact">
+      Designed by <strong>Akki</strong>, ACIS operates on a version-pinned
+      ensemble of <strong>GPT-4.1.x reasoning models</strong>,
+      <strong>GPT-4o (o-series) inference units</strong>, and
+      <strong>GPT-4-class analytical variants</strong>, with probabilistic
+      weighting handled by decision-transformer ensembles and uncertainty
+      evaluated via Monte Carlo simulation.
+      Cross-model disagreement is resolved through an
+      <strong>inference arbitration layer</strong> prior to final CCI synthesis.
+    </p>
 
-      <div class="acis-block">
-        <h3>Ⅱ. Frontline Engagement Vector (FEV)</h3>
-        <p>
-          Frontline strength is modeled through averaged First-Squad Power
-          distributions, representing early-phase engagement dominance and
-          momentum acquisition probability during initial conflict windows.
-        </p>
-      </div>
-
-      <div class="acis-block">
-        <h3>Ⅲ. Depth Elasticity Index (DEI)</h3>
-        <p>
-          Bench-to-active force ratios are evaluated to quantify reinforcement
-          elasticity — the alliance’s ability to absorb attritional losses
-          without immediate structural degradation.
-        </p>
-      </div>
-
-      <div class="acis-block">
-        <h3>Ⅳ. Stability Coefficient (σ)</h3>
-        <p>
-          Organizational resilience is expressed via a stability coefficient,
-          incorporating power dispersion entropy, frontline concentration risk,
-          and cascading failure susceptibility under prolonged pressure.
-        </p>
-      </div>
-
-      <div class="acis-block full">
-        <h3>Ⅴ. Probabilistic Outcome Modeling</h3>
-        <p>
-          Win likelihoods are derived from pairwise Composite Combat Index ratios,
-          transformed through a logistic response function to preserve uncertainty
-          and avoid deterministic overfitting in near-equivalent engagements.
-        </p>
-      </div>
-
-    </div>
-
-    <div class="acis-ai">
-  <h3>System Architecture & Intelligence Layer</h3>
-  <p>
-    ACIS is architected and designed by <strong>Akki</strong>, with analytical
-    reasoning executed via a version-pinned, multi-model intelligence stack.
-    Core structured inference is distributed across
-    <strong>GPT-4.1.x reasoning models</strong>,
-    <strong>GPT-4o (o-series) multimodal inference units</strong>, and
-    <strong>GPT-4-class analytical variants</strong>, each operating under
-    constrained prompt scopes to enforce deterministic step decomposition
-    and minimize stochastic drift.
-    Probabilistic outcome weighting is delegated to
-    <strong>decision-transformer ensembles</strong>, while uncertainty bounds
-    and variance propagation are evaluated through
-    <strong>Monte Carlo–driven statistical simulation engines</strong>.
-    Cross-model outputs are reconciled through a dedicated
-    <strong>inference arbitration layer</strong>, responsible for confidence
-    normalization, hypothesis conflict resolution, and final signal fusion
-    prior to Composite Combat Index (CCI) synthesis.
-  </p>
-</div>
-
-
-    <p class="acis-disclaimer">
-      ACIS outputs represent probabilistic readiness estimations rather than
-      deterministic predictions. Tactical leadership, diplomacy, coordination,
-      morale, and real-time decision-making remain intentionally non-modeled variables.
+    <p class="acis-footnote">
+      Outputs represent probabilistic readiness estimates, not deterministic
+      outcomes. Tactical execution, leadership, and diplomacy are non-modeled variables.
     </p>
 
   </div>
 </section>
+
 
 
 <footer class="site-footer">
