@@ -398,7 +398,7 @@ if (activeWarzone !== "ALL") {
 }
 
 /* =============================
-   TABLE
+   TABLE (FINAL – Phase 5.5 UI)
 ============================= */
 function renderTable(players) {
   tableBody.innerHTML = "";
@@ -408,59 +408,73 @@ function renderTable(players) {
 
     const powerData = computeEffectivePower(p);
     const effectivePower = powerData.value;
+    const powerM = Math.round(effectivePower / 1_000_000);
 
-    const powerValue = Math.round(effectivePower / 1_000_000);
-    const powerHTML = `
-      <span class="power-num">${powerValue}</span>
-      <small class="power-m">M</small>
-      ;
-      <span
-      class="power-tag ${powerData.tag}"
-      title="${
-       powerData.tag === "confirmed"
-      ? "Admin verified power"
-      : "Estimated based on weekly growth"
-         }"
->
-        ${powerData.tag === "confirmed" ? "✅ Confirmed" : "⚙️ Estimated"}
-       </span>
-
-    `;
+    const statusIcon =
+      powerData.tag === "confirmed" ? "✅" : "⚙️";
 
     const firstSquad = estimateFirstSquad(effectivePower);
 
     tr.innerHTML = `
-      <td class="col-rank rank-num">${index + 1}</td>
+      <!-- RANK -->
+      <td class="col-rank desktop-only">${index + 1}</td>
 
-      <td class="col-name">
-        ${p.name}
+      <!-- NAME + ALLIANCE META -->
+      <td class="col-name desktop-only">
+        <div class="name-main">${p.name}</div>
+        <div class="name-meta muted">${p.alliance}</div>
       </td>
 
+      <!-- WARZONE -->
+      <td class="col-warzone desktop-only">
+        ${p.warzone}
+      </td>
+
+      <!-- POWER + STATUS -->
       <td class="col-power desktop-only">
-        <span class="power">${powerHTML}</span>
-        <div class="sub-power">⚔️ S1 ${firstSquad}</div>
+        <span class="power-main">${powerM}m</span>
+        <span class="power-status ${powerData.tag}">
+          ${statusIcon}
+        </span>
       </td>
 
-      <td class="col-meta">
-        <span class="alliance">${p.alliance}</span>
-        <span class="sep">•</span>
-        <span class="power mobile-only">
-          ${powerHTML}
-          <span class="s1-inline">⚔️ S1 ${firstSquad}</span>
-        </span>
+      <!-- SQUAD POWER -->
+      <td class="col-squad desktop-only">
+        ⚔️ ${firstSquad}
+      </td>
 
-         <button
-    class="edit-power-btn"
-    onclick="openEditPower('${p.id}')"
-    title="Edit player power (admin)"
-  >✏️</button>
+      <!-- EDIT (DESKTOP ONLY – ADMIN LOGIC LATER) -->
+      <td class="col-edit desktop-only">
+        <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
+      </td>
 
+      <!-- MOBILE CARD -->
+      <td class="mobile-only mobile-cell">
+        <div class="m-line-1">
+          <span class="m-rank">${index + 1}</span>
+          <span class="m-name">${p.name}</span>
+          <span class="m-power">${powerM}m</span>
+        </div>
+
+        <div class="m-line-2">
+          <div class="m-left muted">
+            ${p.warzone} • ${p.alliance}
+          </div>
+
+          <div class="m-right">
+            ⚔️ ${firstSquad}
+            <span class="m-status ${powerData.tag}">
+              ${statusIcon}
+            </span>
+          </div>
+        </div>
       </td>
     `;
 
     tableBody.appendChild(tr);
   });
 }
+
 
 
 
