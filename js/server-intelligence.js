@@ -468,7 +468,7 @@ function renderTable(players) {
     <div class="m-right">
       <div
         class="m-power ${powerData.tag}"
-        title="${powerData.tag === "Verified"
+        title="${powerData.tag === "Confirmed"
           ? "Confirmed snapshot power"
           : "Estimated using weekly growth model"}"
       >
