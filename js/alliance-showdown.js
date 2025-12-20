@@ -323,31 +323,13 @@ alliances.forEach((a, index) => {
     </div>
 
     <!-- BARS -->
-   ${(() => {
-  const level = getRankLevel(index + 1, alliances.length);
-  const winPct = Math.round((a.winProbability || 0) * 100);
 
-  return `
+
     <div class="intel-bars">
       <canvas id="bars-${a.alliance}-${a.warzone}"></canvas>
-
-      <div class="bar-overlay">
-        <span class="rank-level ${level.class}">
-          ${level.label}
-        </span>
-        <span class="win-percent">
-          ${winPct}% WIN
-        </span>
-      </div>
-    </div>
-  `;
-})()}
-
-<div class="intel-bars">
-      <canvas id="bars-${a.alliance}-${a.warzone}"></canvas>
     </div>
 
-  </div>
+     </div>
 `
 ;
 
@@ -477,31 +459,28 @@ function getEffectivePowerValue(p) {
 
   return Math.round(p.basePower * Math.pow(1 + rate, weeks));
 }
-function renderWinProbabilitySummary(alliances) {
-  const container = document.getElementById("results");
-  if (!container) return;
+function computeWinProbabilities(alliances) {
+  const results = {};
+  alliances.forEach(a => results[a.alliance] = []);
 
-  const probs = computeWinProbabilities(alliances);
+  const matchups = buildMatchupMatrix(alliances);
 
-  let html = `
-    <h2>Winning Probability</h2>
-    <div class="probability-list">
-  `;
+  matchups.forEach(m => {
+    const pA = ratioToProbability(m.ratio);
+    const pB = 1 - pA;
 
-  alliances.forEach((a, i) => {
-    const p = Math.round(probs[a.alliance] * 100);
-
-    html += `
-      <div class="prob-row rank-${i + 1}">
-        <span>#${i + 1} ${a.alliance}</span>
-        <strong>${p}%</strong>
-      </div>
-    `;
+    results[m.a].push(pA);
+    results[m.b].push(pB);
   });
 
-  html += `</div>`;
-  container.insertAdjacentHTML("beforeend", html);
+  alliances.forEach(a => {
+    const arr = results[a.alliance];
+    a.winProbability = arr.length
+      ? arr.reduce((s, v) => s + v, 0) / arr.length
+      : 0;
+  });
 }
+
 
 /* =============================
    HELPERS
