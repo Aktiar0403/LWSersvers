@@ -256,7 +256,7 @@ analyzeBtn.addEventListener("click", () => {
   resultsEl.classList.remove("hidden");
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
-  renderWinProbabilitySummary(alliances);
+a.winProbability
 });
 
 /* =============================
