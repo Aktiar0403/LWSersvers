@@ -25,6 +25,7 @@ let SELECTED = new Map();
 const warzoneSelect   = document.getElementById("warzoneSelect");
 const allianceListEl = document.getElementById("allianceList");
 const analyzeBtn     = document.getElementById("analyzeBtn");
+const resetBtn = document.getElementById("resetBtn");
 const resultsEl      = document.getElementById("results");
 
 // Chart.js plugin to draw values above bars
@@ -252,10 +253,36 @@ analyzeBtn.addEventListener("click", () => {
   alliances.sort((a, b) => b.combatScore - a.combatScore);
     computeWinProbabilities(alliances);   // 🔥 REQUIRED HERE
   resultsEl.classList.remove("hidden");
+  resetBtn.disabled = false;
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
 
 });
+function resetShowdown() {
+  // 1️⃣ Clear selection state
+  SELECTED.clear();
+
+  // 2️⃣ Reset UI controls
+  warzoneSelect.value = "";
+  allianceListEl.innerHTML = "";
+
+  // 3️⃣ Disable buttons
+  analyzeBtn.disabled = true;
+  resetBtn.disabled = true;
+
+  // 4️⃣ Clear results
+  resultsEl.classList.add("hidden");
+  resultsEl.innerHTML = "";
+
+  // 5️⃣ Clear cards & matchups
+  const cards = document.getElementById("allianceCards");
+  if (cards) cards.innerHTML = "";
+
+  const matchups = document.getElementById("matchups");
+  if (matchups) matchups.innerHTML = "";
+}
+resetBtn.addEventListener("click", resetShowdown);
+
 
 /* =============================
    ALLIANCE CARDS
