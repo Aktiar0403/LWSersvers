@@ -1846,3 +1846,13 @@ thead th {
   margin-top: 2px;
   text-align: right;
 }
+.power-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  opacity: 0.85;
+  margin-bottom: 6px;
+}
+
+.power-legend .confirmed { color: #2ef0c2; }
+.power-legend .estimated { color: #9fbfb8; }
