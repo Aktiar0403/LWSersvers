@@ -382,8 +382,7 @@ if (activeWarzone === "ALL") {
 
 
   renderTable(filteredPlayers);
-  renderMobile(filteredPlayers);
-
+  
  
 
   updatePowerSegments(filteredPlayers);
