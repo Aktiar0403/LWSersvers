@@ -454,34 +454,35 @@ function renderTable(players) {
       <!-- MOBILE CARD -->
     <td class="mobile-only mobile-cell">
   <div class="m-row">
-    <!-- LEFT -->
-    <div class="m-left">
-      <div class="m-name-line">
-        <span class="m-rank">${index + 1}</span>
-        <span class="m-name">${p.name}</span>
-      </div>
 
-      <div class="m-meta">
-        ${p.warzone} • ${p.alliance}
-      </div>
+    <!-- COL 1: RANK -->
+    <div class="m-rank">
+      ${index + 1}
     </div>
 
-    <!-- RIGHT -->
+    <!-- COL 2: CENTER -->
+    <div class="m-center">
+      <div class="m-name">${p.name}</div>
+      <div class="m-meta">${p.warzone} • ${p.alliance}</div>
+    </div>
+
+    <!-- COL 3: RIGHT -->
     <div class="m-right">
       <div class="m-power">${powerM}m</div>
-
       <div class="m-sub">
-        <span class="m-squad">⚔ ${firstSquad}</span>
+        <span class="m-squad">⚔️ ${firstSquad}</span>
         <span
           class="m-status ${powerData.tag}"
-          data-tip="${powerData.tag === "confirmed"
-            ? "Confirmed by admin"
-            : "Estimated using growth model"}"
-        >${statusIcon}</span>
+          title="${powerData.tag === "confirmed" ? "Confirmed power" : "Estimated power"}"
+        >
+          ${powerData.tag === "confirmed" ? "✔" : "≈"}
+        </span>
       </div>
     </div>
+
   </div>
 </td>
+
 
 
     `;
