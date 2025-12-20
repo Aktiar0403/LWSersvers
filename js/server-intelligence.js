@@ -470,10 +470,7 @@ function renderTable(players) {
 
   <div class="m-sub">
     <span class="m-squad">⚔️ ${firstSquad}</span>
-    <span
-      class="m-status ${powerData.tag}"
-      title="${powerData.tag === "confirmed" ? "Confirmed snapshot power" : "Estimated from growth model"}"
-    >✔</span>
+   
   </div>
 </div>
 
