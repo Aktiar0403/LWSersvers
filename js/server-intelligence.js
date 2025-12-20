@@ -381,8 +381,9 @@ if (activeWarzone === "ALL") {
 
 
 
- renderMobile(filteredPlayers);
   renderTable(filteredPlayers);
+  renderMobile(filteredPlayers);
+
  
 
   updatePowerSegments(filteredPlayers);
@@ -477,6 +478,42 @@ function renderTable(players) {
   });
 }
 
+function renderMobile(players) {
+  const list = document.getElementById("mobileList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  players.forEach((p, index) => {
+    const powerData = computeEffectivePower(p);
+    const powerM = Math.round(powerData.value / 1_000_000);
+    const firstSquad = estimateFirstSquad(powerData.value);
+
+    const card = document.createElement("div");
+    card.className = "mobile-card";
+
+    card.innerHTML = `
+      <div class="m-row-1">
+        <span class="m-rank">${index + 1}</span>
+        <span class="m-name">${p.name}</span>
+        <span class="m-power">${powerM}m</span>
+      </div>
+
+      <div class="m-row-2">
+        ${p.warzone} • ${p.alliance}
+      </div>
+
+      <div class="m-row-3">
+        ⚔️ ${firstSquad}
+        <span class="m-status ${powerData.tag}">
+          ${powerData.tag === "confirmed" ? "✔" : "⚙️"}
+        </span>
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
+}
 
 
 
