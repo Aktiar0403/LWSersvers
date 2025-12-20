@@ -891,3 +891,28 @@ body.kobra-dark {
   margin: 0 auto;
   padding: 0 24px;
 }
+.intel-bars {
+  position: relative;
+}
+
+.bar-overlay {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.rank-level.elite   { color: #ffd700; }
+.rank-level.strong  { color: #6cffc1; }
+.rank-level.average { color: #ffe08a; }
+.rank-level.weak    { color: #ff8a8a; }
+
+.win-percent {
+  color: #eafff8;
+  font-weight: 600;
+}

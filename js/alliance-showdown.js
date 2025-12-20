@@ -252,7 +252,7 @@ analyzeBtn.addEventListener("click", () => {
 
   // 🔥 SORT BY STRONGEST FIRST
   alliances.sort((a, b) => b.combatScore - a.combatScore);
-
+    computeWinProbabilities(alliances);   // 🔥 REQUIRED HERE
   resultsEl.classList.remove("hidden");
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
@@ -319,7 +319,26 @@ alliances.forEach((a, index) => {
     </div>
 
     <!-- BARS -->
+    ${(() => {
+  const level = getRankLevel(index + 1, alliances.length);
+  const winPct = Math.round((a.winProbability || 0) * 100);
+
+  return `
     <div class="intel-bars">
+      <canvas id="bars-${a.alliance}-${a.warzone}"></canvas>
+
+      <div class="bar-overlay">
+        <span class="rank-level ${level.class}">
+          ${level.label}
+        </span>
+        <span class="win-percent">
+          ${winPct}% WIN
+        </span>
+      </div>
+    </div>
+  `;
+})()}
+<div class="intel-bars">
       <canvas id="bars-${a.alliance}-${a.warzone}"></canvas>
     </div>
 
@@ -354,6 +373,7 @@ function renderAllianceBars(a) {
      normalizeFSP(a.averageFirstSquadPower),
     normalizeDepth(a.benchPower / (a.activePower || 1)),
     normalizeStability(a.stabilityFactor)
+    
   ],
 
   // 👇 THESE ARE THE LABELS SHOWN ABOVE BARS
@@ -491,6 +511,16 @@ function formatBig(v) {
   return Math.round(v).toString();
 }
 
+function getRankLevel(rank, total) {
+  if (rank === 1) return { label: "Elite", class: "elite" };
+
+  const pct = rank / total;
+
+  if (pct <= 0.25) return { label: "Strong", class: "strong" };
+  if (pct <= 0.6)  return { label: "Average", class: "average" };
+
+  return { label: "Weak", class: "weak" };
+}
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const normalizeTotalPower = v => clamp(v / 2e10 * 100, 5, 100);
