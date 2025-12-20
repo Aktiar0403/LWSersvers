@@ -381,9 +381,9 @@ if (activeWarzone === "ALL") {
 
 
 
-
+ renderMobile(filteredPlayers);
   renderTable(filteredPlayers);
-  renderMobile(filteredPlayers);
+ 
 
   updatePowerSegments(filteredPlayers);
 updateOverviewStats(allPlayers);
