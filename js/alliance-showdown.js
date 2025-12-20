@@ -210,6 +210,34 @@ function renderMatchupCards(alliances) {
     el.appendChild(card);
   });
 }
+function ratioToProbability(ratio) {
+  return 1 / (1 + Math.exp(-4 * (ratio - 1)));
+}
+
+function computeWinProbabilities(alliances) {
+  const results = {};
+  alliances.forEach(a => results[a.alliance] = []);
+
+  const matchups = buildMatchupMatrix(alliances);
+
+  matchups.forEach(m => {
+    const pA = ratioToProbability(m.ratio);
+    const pB = 1 - pA;
+
+    results[m.a].push(pA);
+    results[m.b].push(pB);
+  });
+
+  const final = {};
+  Object.keys(results).forEach(name => {
+    const arr = results[name];
+    final[name] =
+      arr.reduce((s, v) => s + v, 0) / arr.length;
+  });
+
+  return final;
+}
+
 /* =============================
    ANALYZE
 ============================= */
@@ -217,10 +245,20 @@ analyzeBtn.addEventListener("click", () => {
   const alliances = [...SELECTED.values()];
   if (alliances.length < 2) return;
 
+  // 🔥 COMPUTE COMBAT SCORE
+  alliances.forEach(a => {
+    a.combatScore = computeCombatScore(a);
+  });
+
+  // 🔥 SORT BY STRONGEST FIRST
+  alliances.sort((a, b) => b.combatScore - a.combatScore);
+
   resultsEl.classList.remove("hidden");
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
+  renderWinProbabilitySummary(alliances);
 });
+
 /* =============================
    ALLIANCE CARDS
 ============================= */
@@ -228,7 +266,8 @@ function renderAllianceCards(alliances) {
   const el = document.getElementById("allianceCards");
   el.innerHTML = "";
 
-  alliances.forEach(a => {
+alliances.forEach((a, index) => {
+
     const marquee = [...a.activePlayers]
       .filter(p => !p.assumed)
       .sort((x, y) => y.firstSquadPower - x.firstSquadPower)
@@ -239,6 +278,10 @@ function renderAllianceCards(alliances) {
 
     card.innerHTML = `
   <div class="alliance-intel ${a.isNCA ? "bad" : a.stabilityFactor < 0.8 ? "warn" : "good"}">
+  <div class="alliance-rank rank-${index + 1}">
+  #${index + 1}
+</div>
+
 
     <!-- HEADER STRIP -->
     <div class="intel-strip">
@@ -404,6 +447,31 @@ function getEffectivePowerValue(p) {
 
   return Math.round(p.basePower * Math.pow(1 + rate, weeks));
 }
+function renderWinProbabilitySummary(alliances) {
+  const container = document.getElementById("results");
+  if (!container) return;
+
+  const probs = computeWinProbabilities(alliances);
+
+  let html = `
+    <h2>Winning Probability</h2>
+    <div class="probability-list">
+  `;
+
+  alliances.forEach((a, i) => {
+    const p = Math.round(probs[a.alliance] * 100);
+
+    html += `
+      <div class="prob-row rank-${i + 1}">
+        <span>#${i + 1} ${a.alliance}</span>
+        <strong>${p}%</strong>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  container.insertAdjacentHTML("beforeend", html);
+}
 
 /* =============================
    HELPERS
@@ -430,3 +498,12 @@ const normalizeFSP = v => clamp(v / 1.2e8 * 100, 5, 100);
 const normalizeDepth = v => clamp(v * 100, 5, 100);
 const normalizeStability = v => clamp(v * 100, 5, 100);
 const formatPower = v => (v / 1e6).toFixed(1) + "M";
+function computeCombatScore(a) {
+  const frontlineFactor = normalizeFSP(a.averageFirstSquadPower) / 100;
+
+  return (
+    a.totalAlliancePower *
+    a.stabilityFactor *
+    (0.6 + 0.4 * frontlineFactor)
+  );
+}
