@@ -1519,3 +1519,62 @@ thead th {
 .m-status.estimated {
   color: #f5c26b;
 }
+/* ===== MOBILE CARD FIX ===== */
+
+.m-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 🔑 creates space between rank & name */
+}
+
+.m-rank {
+  min-width: 26px;
+  text-align: right;
+  font-weight: 700;
+  color: #00ffc8;
+}
+
+.m-name {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.m-power {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+/* Meta */
+.m-row-2 {
+  margin-left: 38px; /* aligns under name, not rank */
+  font-size: 13px;
+  color: #93a3a6;
+  margin-top: 2px;
+}
+
+/* Squad + status */
+.m-row-3 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.m-squad {
+  opacity: 0.9;
+}
+
+.m-status {
+  font-size: 14px;
+}
+
+.m-status.confirmed {
+  color: #32d27c;
+}
+
+.m-status.estimated {
+  color: #f5c26b;
+}
