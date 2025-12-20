@@ -168,19 +168,16 @@ function toggleAlliance(a, el) {
   analyzeBtn.disabled = SELECTED.size < 2;
 }
 function searchAlliances(query) {
-  const wz = Number(warzoneSelect.value);
-  if (!wz || !query) return [];
+  if (!query) return [];
 
   const q = query.toLowerCase();
 
   return ALL_ALLIANCES
-    .filter(a =>
-      Number(a.warzone) === wz &&
-      a.alliance.toLowerCase().includes(q)
-    )
+    .filter(a => a.alliance.toLowerCase().includes(q))
     .sort((a, b) => b.acsAbsolute - a.acsAbsolute)
-    .slice(0, 10); // limit results
+    .slice(0, 12); // global top matches
 }
+
 
 
 allianceSearchInput.addEventListener("input", () => {
@@ -194,16 +191,23 @@ allianceSearchInput.addEventListener("input", () => {
   results.forEach(a => {
     const row = document.createElement("div");
     row.className = "search-result-item";
-    row.textContent = a.alliance;
+   row.textContent = `${a.alliance} (WZ-${a.warzone})`;
 
     const key = `${a.alliance}|${a.warzone}`;
     if (SELECTED.has(key)) row.classList.add("selected");
+row.onclick = () => {
+  // 🔁 Switch warzone automatically
+  warzoneSelect.value = a.warzone;
 
-    row.onclick = () => {
-      toggleAlliance(a, row);
-      allianceSearchInput.value = "";
-      allianceSearchResults.innerHTML = "";
-    };
+  // 🔁 Trigger warzone list rebuild
+  warzoneSelect.dispatchEvent(new Event("change"));
+
+  // 🔁 Select alliance
+  toggleAlliance(a, row);
+
+  allianceSearchInput.value = "";
+  allianceSearchResults.innerHTML = "";
+};
 
     allianceSearchResults.appendChild(row);
   });
