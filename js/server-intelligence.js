@@ -12,6 +12,12 @@ import {
   updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// 🔐 ADMIN MODE DETECTION
+const IS_ADMIN = !!document.getElementById("pasteData"); 
+if (IS_ADMIN) {
+  document.body.classList.add("admin-view");
+}
+
 
 let editingPlayer = null;
 
@@ -446,7 +452,7 @@ function renderTable(players) {
       </td>
 
       <!-- EDIT (DESKTOP ONLY – ADMIN LOGIC LATER) -->
-      <td class="col-edit desktop-only">
+      <th class="col-edit desktop-only admin-only">Edit</th>
         <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
       </td>
 

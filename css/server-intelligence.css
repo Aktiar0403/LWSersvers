@@ -1917,3 +1917,23 @@ thead th {
     display: table !important;
   }
 }
+/* =============================
+   ADMIN ONLY ELEMENTS
+============================= */
+
+/* Hidden everywhere by default */
+.admin-only {
+  display: none !important;
+}
+
+/* Visible ONLY when admin */
+body.admin-view .admin-only {
+  display: table-cell !important;
+}
+
+/* Never show edit on mobile */
+@media (max-width: 768px) {
+  body.admin-view .admin-only {
+    display: none !important;
+  }
+}
