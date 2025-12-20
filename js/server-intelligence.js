@@ -424,6 +424,7 @@ function renderTable(players) {
     const firstSquad = estimateFirstSquad(effectivePower);
 
     tr.innerHTML = `
+    <th class="col-edit desktop-only admin-only">Edit</th>
       <!-- RANK -->
       <td class="col-rank desktop-only">${index + 1}</td>
 
