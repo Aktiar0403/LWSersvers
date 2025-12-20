@@ -459,6 +459,8 @@ function getEffectivePowerValue(p) {
 
   return Math.round(p.basePower * Math.pow(1 + rate, weeks));
 }
+
+
 function computeWinProbabilities(alliances) {
   const results = {};
   alliances.forEach(a => results[a.alliance] = []);
