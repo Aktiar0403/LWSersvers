@@ -452,39 +452,36 @@ function renderTable(players) {
       </td>
 
       <!-- MOBILE CARD -->
-   <td class="mobile-only mobile-cell">
-  <div class="m-row">
+   <!-- MOBILE ROW -->
+<td class="mobile-only mobile-cell">
+  <div class="m-grid">
 
-    <!-- LEFT -->
+    <!-- LEFT: RANK -->
     <div class="m-rank">${index + 1}</div>
 
-    <!-- CENTER -->
+    <!-- CENTER: NAME + META -->
     <div class="m-center">
       <div class="m-name">${p.name}</div>
       <div class="m-meta">${p.warzone} • ${p.alliance}</div>
     </div>
 
-    <!-- RIGHT -->
-   <div class="m-right">
-  <div class="m-power">${powerM}m</div>
+    <!-- RIGHT: POWER + SQUAD -->
+    <div class="m-right">
+      <div
+        class="m-power ${powerData.tag}"
+        title="${powerData.tag === "confirmed"
+          ? "Confirmed snapshot power"
+          : "Estimated using weekly growth model"}"
+      >
+        ${powerM}m
+      </div>
 
-  <div class="m-sub">
-    <span class="m-squad">⚔️ ${firstSquad}</span>
-   <div
-  class="m-power ${powerData.tag}"
-  title="${powerData.tag === "confirmed"
-    ? "Confirmed snapshot power"
-    : "Estimated using weekly growth model"}"
->
-  ${powerM}m
-</div>
-
-  </div>
-</div>
-
+      <div class="m-squad">⚔️ ${firstSquad}</div>
+    </div>
 
   </div>
 </td>
+
 
 
 
@@ -495,42 +492,6 @@ function renderTable(players) {
   });
 }
 
-function renderMobile(players) {
-  const list = document.getElementById("mobileList");
-  if (!list) return;
-
-  list.innerHTML = "";
-
-  players.forEach((p, index) => {
-    const powerData = computeEffectivePower(p);
-    const powerM = Math.round(powerData.value / 1_000_000);
-    const firstSquad = estimateFirstSquad(powerData.value);
-
-    const card = document.createElement("div");
-    card.className = "mobile-card";
-
-    card.innerHTML = `
-      <div class="m-row-1">
-        <span class="m-rank">${index + 1}</span>
-        <span class="m-name">${p.name}</span>
-        <span class="m-power">${powerM}m</span>
-      </div>
-
-      <div class="m-row-2">
-        ${p.warzone} • ${p.alliance}
-      </div>
-
-      <div class="m-row-3">
-        ⚔️ ${firstSquad}
-        <span class="m-status ${powerData.tag}">
-          ${powerData.tag === "confirmed" ? "✔" : "⚙️"}
-        </span>
-      </div>
-    `;
-
-    list.appendChild(card);
-  });
-}
 
 
 

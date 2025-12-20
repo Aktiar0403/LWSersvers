@@ -1856,3 +1856,57 @@ thead th {
 
 .power-legend .confirmed { color: #2ef0c2; }
 .power-legend .estimated { color: #9fbfb8; }
+/* MOBILE GRID */
+.mobile-cell {
+  padding: 12px 10px;
+}
+
+.m-grid {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+
+/* RANK */
+.m-rank {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* CENTER */
+.m-name {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.m-meta {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+/* RIGHT */
+.m-right {
+  text-align: right;
+}
+
+.m-power {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* STATUS VIA COLOR */
+.m-power.confirmed {
+  color: #2ef2b1; /* green */
+}
+
+.m-power.estimated {
+  color: #7aa6ff; /* soft blue */
+}
+
+.m-squad {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-top: 2px;
+}
