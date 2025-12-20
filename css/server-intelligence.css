@@ -1825,3 +1825,24 @@ thead th {
 .m-status {
   cursor: help;
 }
+.m-power {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+/* Confirmed = confident but not loud */
+.m-power.confirmed {
+  color: #2ef0c2; /* your teal */
+}
+
+/* Estimated = softer, analytical */
+.m-power.estimated {
+  color: #9fbfb8;
+}
+.m-sub {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+  text-align: right;
+}
