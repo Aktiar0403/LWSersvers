@@ -1,5 +1,5 @@
 console.log("✅ Server Intelligence JS loaded");
-
+import { logout } from "./auth.js";
 import { db } from "./firebase-config.js";
 import {
   collection,
@@ -995,3 +995,19 @@ onAuthStateChanged(auth, async (user) => {
   // 🔁 Load data ONLY after auth is resolved
   loadPlayers();
 });
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+  logoutBtn.onclick = async () => {
+    const ok = confirm("Logout from admin session?");
+    if (!ok) return;
+
+    try {
+      await logout();
+      window.location.href = "/admin-login.html";
+    } catch (err) {
+      alert("Logout failed");
+      console.error(err);
+    }
+  };
+}
