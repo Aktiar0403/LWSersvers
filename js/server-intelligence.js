@@ -407,6 +407,8 @@ function renderCards(players) {
 ============================= */
 
 function renderCards(players) {
+  console.log("🃏 renderCards called", players.length);
+
   const wrap = document.getElementById("playerCards");
   if (!wrap) return;
 
@@ -462,6 +464,7 @@ function renderCards(players) {
     wrap.appendChild(card);
   });
 }
+
 
 renderCards(filteredPlayers);
 
