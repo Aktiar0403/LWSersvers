@@ -401,8 +401,6 @@ if (activeWarzone !== "ALL") {
   dominanceGrid.innerHTML = "";
 }
 
-}
-
 
 /* =============================
    TABLE card
