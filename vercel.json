@@ -1,7 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/server-intelligence", "destination": "/server-intelligence.html" },
-    { "source": "/server-compare", "destination": "/server-compare.html" },
-    { "source": "/alliance-showdown", "destination": "/alliance-showdown.html" }
-  ]
-}
