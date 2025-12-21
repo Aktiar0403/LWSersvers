@@ -1974,3 +1974,38 @@ body.admin-view .admin-only {
 .admin-only {
   display: none !important;
 }
+/* Rank */
+.col-rank {
+  width: 56px;
+  text-align: center;
+}
+
+/* Player (name + alliance) */
+.col-name {
+  width: 38%;
+}
+
+/* Warzone (705, 685, etc.) */
+.col-warzone {
+  width: 90px;
+  text-align: center;
+}
+
+/* Power (515m ✓) */
+.col-power {
+  width: 140px;
+  text-align: right;
+  padding-right: 16px;
+}
+
+/* Squad (⚔️ 105–125M) */
+.col-squad {
+  width: 160px;
+  white-space: nowrap;
+}
+
+/* Admin edit */
+.col-edit {
+  width: 56px;
+  text-align: center;
+}
