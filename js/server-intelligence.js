@@ -401,6 +401,9 @@ if (activeWarzone !== "ALL") {
   dominanceGrid.innerHTML = "";
 }
 
+}
+function renderCards(players) {
+  console.log("🃏 renderCards called", players?.length);
 
 /* =============================
    TABLE card
@@ -468,7 +471,7 @@ function renderCards(players) {
 
 renderCards(filteredPlayers);
 
-
+}
 
 
 /* =============================
