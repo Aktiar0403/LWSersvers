@@ -399,6 +399,8 @@ if (activeWarzone !== "ALL") {
 }
 
 }
+function renderCards(players) {
+  console.log("🃏 renderCards called", players?.length);
 
 /* =============================
    TABLE card
