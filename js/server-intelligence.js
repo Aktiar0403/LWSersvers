@@ -12,6 +12,8 @@ import {
   updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// 🔐 Global admin flag (default false)
+window.IS_ADMIN = false;
 
 let editingPlayer = null;
 
@@ -444,11 +446,14 @@ function renderTable(players) {
       <td class="col-squad desktop-only">
         ⚔️ ${firstSquad}
       </td>
-
+  
       <!-- EDIT (DESKTOP ONLY – ADMIN LOGIC LATER) -->
-      <td class="col-edit desktop-only">
-        <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
-      </td>
+     
+${window.IS_ADMIN ? `
+  <td class="col-edit desktop-only">
+    <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
+  </td>
+` : ``}
 
       <!-- MOBILE CARD -->
    <!-- MOBILE ROW -->
@@ -822,11 +827,22 @@ searchInput.oninput = applyFilters;
 /* =============================
    INIT
 ============================= */
+async function resolveAdminState() {
+  try {
+    window.IS_ADMIN = await checkIsAdmin();
+  } catch (e) {
+    window.IS_ADMIN = false;
+  }
+}
+
+(async () => {
+  await resolveAdminState();
+  loadPlayers();
+})();
 
 
 
 
-loadPlayers();
 function updateOverviewStats(players) {
   const totalPlayers = players.length;
 
@@ -838,6 +854,12 @@ function updateOverviewStats(players) {
   document.getElementById("totalAlliances").textContent = alliances.size;
 }
 function openEditPower(playerId) {
+  // 🔐 ADMIN GUARD
+  if (!window.IS_ADMIN) {
+    console.warn("❌ Unauthorized edit attempt blocked");
+    return;
+  }
+
   const player = allPlayers.find(p => p.id === playerId);
 
   if (!player) {
@@ -910,6 +932,12 @@ epNewPowerInput.addEventListener("input", () => {
 });
 
 epSaveBtn.onclick = async () => {
+  // 🔐 ADMIN GUARD
+  if (!window.IS_ADMIN) {
+    alert("❌ Unauthorized action");
+    return;
+  }
+
   if (!editingPlayer) return;
 
   const newPower = Number(epNewPowerInput.value);
@@ -935,14 +963,14 @@ epSaveBtn.onclick = async () => {
       overrideAt: serverTimestamp()
     });
 
-    // 🔁 Update local cache (IMPORTANT)
+    // 🔁 Sync local cache
     editingPlayer.totalPower = newPower;
     editingPlayer.basePower = newPower;
     editingPlayer.powerSource = "confirmed";
     editingPlayer.lastConfirmedAt = new Date();
 
     closeEditPowerModal();
-    applyFilters(); // re-render table
+    applyFilters();
 
     alert("✅ Power updated successfully");
 

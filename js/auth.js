@@ -43,3 +43,13 @@ export function guardAdminPage() {
     }
   });
 }
+// ============================
+// CHECK IF CURRENT USER IS ADMIN
+// ============================
+export async function checkIsAdmin() {
+  const user = auth.currentUser;
+  if (!user) return false;
+
+  const token = await user.getIdTokenResult();
+  return token.claims.admin === true;
+}
