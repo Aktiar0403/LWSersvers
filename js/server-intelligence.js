@@ -403,6 +403,7 @@ if (activeWarzone !== "ALL") {
 
 }
 
+
 /* =============================
    TABLE card
 ============================= */
@@ -469,7 +470,7 @@ function renderCards(players) {
 
 renderCards(filteredPlayers);
 
-}
+
 
 
 /* =============================
