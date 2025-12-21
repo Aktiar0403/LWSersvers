@@ -70,7 +70,7 @@
   <header class="header">
     <h1>LAST WAR SERVER INTELLIGENCE</h1>
     <div class="sub">Alliance & Warzone Power Analytics</div>
-    <!-- ADMIN BAR (ADMIN ONLY) -->
+<!-- ADMIN BAR (ADMIN ONLY) -->
 <div class="admin-bar admin-only" id="adminBar">
   <span class="admin-badge">🛡️ ADMIN MODE</span>
   <button id="logoutBtn" class="admin-logout-btn">Logout</button>
@@ -307,8 +307,8 @@
       const token = await user.getIdTokenResult(true); // force refresh
       if (token.claims.admin === true) {
         adminEls.forEach(el => {
-          el.style.display = "flex";
-        });
+  el.style.display = "";
+});
       }
     } catch (e) {
       console.warn("Admin check failed", e);
