@@ -2154,3 +2154,80 @@ thead th {
     48px;
   align-items: center;
 }
+/* DESKTOP CARD SYSTEM */
+@media (min-width: 1024px) {
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .player-card {
+    background: #151821;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-rank {
+    width: 36px;
+    font-size: 12px;
+    opacity: 0.6;
+    text-align: center;
+  }
+
+  .card-player {
+    flex: 1;
+  }
+
+  .name-main {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e8edf5;
+  }
+
+  .name-meta {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  .card-action {
+    width: 40px;
+    text-align: right;
+  }
+
+  .card-metrics {
+    display: flex;
+    gap: 28px;
+    margin-top: 10px;
+  }
+
+  .metric .label {
+    font-size: 10px;
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  .metric .value {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .metric.power .value {
+    color: #00ffc8;
+  }
+
+  /* Hide table on desktop */
+  table {
+    display: none;
+  }
+}

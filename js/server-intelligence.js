@@ -382,7 +382,7 @@ if (activeWarzone === "ALL") {
 }
 
 
-  renderGrid(filteredPlayers);
+  renderCards(filteredPlayers);   // desktop cards
   renderTable(filteredPlayers);
   
  
@@ -496,54 +496,64 @@ ${window.IS_ADMIN ? `
   });
 }
 
+function renderCards(players) {
+  const wrap = document.getElementById("desktopCards");
+  if (!wrap) return;
 
-function renderGrid(players) {
-  const grid = document.getElementById("desktopGrid");
-  if (!grid) return;
-
-  grid.innerHTML = "";
+  wrap.innerHTML = "";
 
   players.forEach((p, index) => {
     const powerData = computeEffectivePower(p);
     const effectivePower = powerData.value;
     const powerM = Math.round(effectivePower / 1_000_000);
-    const firstSquad = estimateFirstSquad(effectivePower);
+    const squad = estimateFirstSquad(effectivePower);
 
-    const row = document.createElement("div");
-    row.className = "grid-row";
+    const card = document.createElement("div");
+    card.className = "player-card";
 
-    const isAdmin = window.IS_ADMIN === true;
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-rank">#${index + 1}</div>
 
-row.innerHTML = `
-  <div class="c-rank">${index + 1}</div>
+        <div class="card-player">
+          <div class="name-main">${p.name}</div>
+          <div class="name-meta">${p.alliance || "—"}</div>
+        </div>
 
-  <div class="c-player">
-    <div class="name-main">${p.name}</div>
-    <div class="name-meta">${p.alliance || "—"}</div>
-  </div>
+        <div class="card-action">
+          ${
+            window.IS_ADMIN
+              ? `<button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>`
+              : ""
+          }
+        </div>
+      </div>
 
-  <div class="c-warzone">${p.warzone}</div>
+      <div class="card-metrics">
+        <div class="metric">
+          <span class="label">WZ</span>
+          <span class="value">${p.warzone}</span>
+        </div>
 
-  <div class="c-power ${powerData.tag}">
-    ${powerM}m
-    <span class="power-status">
-      ${powerData.tag === "confirmed" ? "✅" : "⚙️"}
-    </span>
-  </div>
+        <div class="metric power ${powerData.tag}">
+          <span class="label">Power</span>
+          <span class="value">${powerM}M</span>
+          <span class="icon">
+            ${powerData.tag === "confirmed" ? "✅" : "⚙️"}
+          </span>
+        </div>
 
-  <div class="c-squad">⚔️ ${firstSquad}</div>
+        <div class="metric">
+          <span class="label">Squad</span>
+          <span class="value">⚔️ ${squad}</span>
+        </div>
+      </div>
+    `;
 
-  <div class="c-edit">
-    ${isAdmin
-      ? `<button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>`
-      : ``}
-  </div>
-`;
-
-
-    grid.appendChild(row);
+    wrap.appendChild(card);
   });
 }
+
 
 
 
