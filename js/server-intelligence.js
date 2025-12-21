@@ -338,6 +338,77 @@ async function loadPlayers() {
   }
 }
 
+function renderCards(players) {
+  console.log("🃏 renderCards called", players?.length);
+
+/* =============================
+   TABLE card
+============================= */
+
+function renderCards(players) {
+  console.log("🃏 renderCards called", players.length);
+
+  const wrap = document.getElementById("playerCards");
+  if (!wrap) return;
+
+  wrap.innerHTML = "";
+
+  players.forEach((p, index) => {
+    const powerData = computeEffectivePower(p);
+    const powerM = Math.round(powerData.value / 1_000_000);
+    const squad = estimateFirstSquad(powerData.value);
+
+    const card = document.createElement("div");
+    card.className = "player-card";
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-rank">#${index + 1}</div>
+
+        <div class="card-player">
+          <div class="name-main">${p.name}</div>
+          <div class="name-meta">${p.alliance || "—"}</div>
+        </div>
+
+        <div class="card-action">
+          ${
+            window.IS_ADMIN
+              ? `<button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>`
+              : ""
+          }
+        </div>
+      </div>
+
+      <div class="card-metrics">
+        <div class="metric">
+          <span class="label">WZ</span>
+          <span class="value">${p.warzone}</span>
+        </div>
+
+        <div class="metric power ${powerData.tag}">
+          <span class="label">Power</span>
+          <span class="value">${powerM}M</span>
+          <span class="icon">
+            ${powerData.tag === "confirmed" ? "✅" : "⚙️"}
+          </span>
+        </div>
+
+        <div class="metric">
+          <span class="label">Squad</span>
+          <span class="value">⚔️ ${squad}</span>
+        </div>
+      </div>
+    `;
+
+    wrap.appendChild(card);
+  });
+}
+
+
+renderCards(filteredPlayers);
+
+}
+
 
 
 /* =============================
@@ -411,77 +482,6 @@ if (!filteredPlayers.length) {
 
 renderCards(filteredPlayers);
 
-
-function renderCards(players) {
-  console.log("🃏 renderCards called", players?.length);
-
-/* =============================
-   TABLE card
-============================= */
-
-function renderCards(players) {
-  console.log("🃏 renderCards called", players.length);
-
-  const wrap = document.getElementById("playerCards");
-  if (!wrap) return;
-
-  wrap.innerHTML = "";
-
-  players.forEach((p, index) => {
-    const powerData = computeEffectivePower(p);
-    const powerM = Math.round(powerData.value / 1_000_000);
-    const squad = estimateFirstSquad(powerData.value);
-
-    const card = document.createElement("div");
-    card.className = "player-card";
-
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="card-rank">#${index + 1}</div>
-
-        <div class="card-player">
-          <div class="name-main">${p.name}</div>
-          <div class="name-meta">${p.alliance || "—"}</div>
-        </div>
-
-        <div class="card-action">
-          ${
-            window.IS_ADMIN
-              ? `<button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>`
-              : ""
-          }
-        </div>
-      </div>
-
-      <div class="card-metrics">
-        <div class="metric">
-          <span class="label">WZ</span>
-          <span class="value">${p.warzone}</span>
-        </div>
-
-        <div class="metric power ${powerData.tag}">
-          <span class="label">Power</span>
-          <span class="value">${powerM}M</span>
-          <span class="icon">
-            ${powerData.tag === "confirmed" ? "✅" : "⚙️"}
-          </span>
-        </div>
-
-        <div class="metric">
-          <span class="label">Squad</span>
-          <span class="value">⚔️ ${squad}</span>
-        </div>
-      </div>
-    `;
-
-    wrap.appendChild(card);
-  });
-}
-
-
-renderCards(filteredPlayers);
-
-}
 
 
 /* =============================
