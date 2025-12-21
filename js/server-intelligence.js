@@ -404,7 +404,8 @@ if (activeWarzone !== "ALL") {
    TABLE card
 ============================= */
 
-
+function renderCards(players) {
+  console.log("🃏 renderCards called with:", players.length);
 function renderCards(players) {
   const wrap = document.getElementById("playerCards");
   if (!wrap) return;
