@@ -228,53 +228,13 @@
   <span class="Squad"> ⚔️ Estimated Squad</span>
 
 </div>
-<!-- DESKTOP PLAYER CARDS -->
-<div id="desktopCards" class="desktop-only card-list"></div>
 
-   <!-- MOBILE PLAYER LIST --> <!-- DATA TABLE -->
-<div id="mobileList" class="mobile-only mobile-list"></div>
-<!-- DESKTOP GRID HEADER -->
-<div class="grid-header desktop-only">
-  <div class="h-rank">#</div>
-  <div class="h-player">Player</div>
-  <div class="h-warzone">Warzone</div>
-  <div class="h-power">Power</div>
-  <div class="h-squad">Squad</div>
-  <div class="h-edit"></div> <!-- ALWAYS PRESENT -->
-</div>
+<!-- PLAYER CARDS (DESKTOP + MOBILE) -->
+<section class="cards-section">
+  <div id="playerCards" class="card-list"></div>
+</section>
 
 
-<!-- DESKTOP GRID ROWS -->
-<div id="desktopGrid" class="desktop-only"></div>
-
-  <section class="table-wrap">
-    <table>
-  <thead class="desktop-only">
-  <!-- GROUP HEADER -->
-  <tr class="th-group">
-    <th class="col-rank"></th>
-    <th class="col-name">Player</th>
-    <th class="col-warzone">Server</th>
-    <th class="col-power">Power</th>
-    <th class="col-squad">Squad</th>
-    <th class="col-edit admin-only"></th>
-  </tr>
-
-  <!-- DETAIL HEADER -->
-  <tr class="th-detail">
-    <th class="col-rank">#</th>
-    <th class="col-name">Name & Alliance</th>
-    <th class="col-warzone">Warzone</th>
-    <th class="col-power">Total</th>
-    <th class="col-squad">S1 Est.</th>
-    <th class="col-edit admin-only"></th>
-  </tr>
-</thead>
-
-
-      <tbody id="tableBody"></tbody>
-    </table>
-  </section>
 <!--<div class="power-legend">
   <span>✅ Confirmed — Admin verified</span>
   <span>⚙️ Estimated — Auto growth</span>

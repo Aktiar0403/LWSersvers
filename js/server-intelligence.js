@@ -191,7 +191,7 @@ const $ = id => document.getElementById(id);
 const searchInput = $("searchInput");
 const warzoneCards = $("warzoneCards");
 const allianceCards = $("allianceCards");
-const tableBody = $("tableBody");
+
 
 const dominanceGrid = $("dominanceGrid");
 
@@ -382,8 +382,7 @@ if (activeWarzone === "ALL") {
 }
 
 
-  renderCards(filteredPlayers);   // desktop cards
-  renderTable(filteredPlayers);
+ 
   
  
 
@@ -402,111 +401,20 @@ if (activeWarzone !== "ALL") {
 }
 
 /* =============================
-   TABLE (FINAL – Phase 5.5 UI)
+   TABLE card
 ============================= */
-function renderTable(players) {
-  tableBody.innerHTML = "";
 
-  players.forEach((p, index) => {
-    const tr = document.createElement("tr");
-
-    const powerData = computeEffectivePower(p);
-    const effectivePower = powerData.value;
-    const powerM = Math.round(effectivePower / 1_000_000);
-
-    const statusIcon =
-      powerData.tag === "confirmed" ? "✅" : "⚙️";
-
-    const firstSquad = estimateFirstSquad(effectivePower);
-
-    tr.innerHTML = `
-      <!-- RANK -->
-      <td class="col-rank desktop-only">${index + 1}</td>
-
-      <!-- NAME + ALLIANCE META -->
-      <td class="col-name desktop-only">
-        <div class="name-main">${p.name}</div>
-        <div class="name-meta muted">${p.alliance}</div>
-      </td>
-
-      <!-- WARZONE -->
-      <td class="col-warzone desktop-only">
-        ${p.warzone}
-      </td>
-
-      <!-- POWER + STATUS -->
-      <td class="col-power desktop-only">
-        <span class="power-main">${powerM}m</span>
-        <span class="power-status ${powerData.tag}">
-          ${statusIcon}
-        </span>
-      </td>
-
-      <!-- SQUAD POWER -->
-      <td class="col-squad desktop-only">
-        ⚔️ ${firstSquad}
-      </td>
-  
-      <!-- EDIT (DESKTOP ONLY – ADMIN LOGIC LATER) -->
-     
-${window.IS_ADMIN ? `
-  <td class="col-edit desktop-only">
-    <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
-  </td>
-` : ``}
-
-      <!-- MOBILE CARD -->
-   <!-- MOBILE ROW -->
-<td class="mobile-only mobile-cell">
-  <div class="m-grid">
-
-    <!-- LEFT: RANK -->
-    <div class="m-rank">${index + 1}</div>
-
-    <!-- CENTER: NAME + META -->
-    <div class="m-center">
-      <div class="m-name">${p.name}</div>
-      <div class="m-meta">${p.warzone} • ${p.alliance}</div>
-    </div>
-
-    <!-- RIGHT: POWER + SQUAD -->
-    <div class="m-right">
-      <div
-        class="m-power ${powerData.tag}"
-        title="${powerData.tag === "confirmed"
-          ? "Verified"
-          : "Estimated using weekly growth model"}"
-      >
-        ${powerM}m
-      </div>
-
-      <div class="m-squad">⚔️ ${firstSquad}</div>
-    </div>
-
-  </div>
-</td>
-
-
-
-
-
-    `;
-
-    tableBody.appendChild(tr);
-  });
-}
 
 function renderCards(players) {
-  const wrap = document.getElementById("desktopCards");
+  const wrap = document.getElementById("playerCards");
   if (!wrap) return;
 
   wrap.innerHTML = "";
 
   players.forEach((p, index) => {
     const powerData = computeEffectivePower(p);
-    const effectivePower = powerData.value;
-    const powerM = Math.round(effectivePower / 1_000_000);
-    const squad = estimateFirstSquad(effectivePower);
+    const powerM = Math.round(powerData.value / 1_000_000);
+    const squad = estimateFirstSquad(powerData.value);
 
     const card = document.createElement("div");
     card.className = "player-card";
@@ -554,6 +462,8 @@ function renderCards(players) {
   });
 }
 
+
+renderCards(filteredPlayers);
 
 
 

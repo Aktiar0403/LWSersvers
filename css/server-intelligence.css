@@ -169,13 +169,6 @@ body.bg {
 /* =========================
    TABLE (DESKTOP)
 ========================= */
-.table-wrap {
-  margin-top: 20px;
-  background: linear-gradient(180deg, #0b1020, #060a14);
-  border-radius: 16px;
-  padding: 8px;
-  border: 1px solid rgba(255,255,255,0.06);
-}
 
 table {
   width: 100%;
@@ -2229,5 +2222,40 @@ thead th {
   /* Hide table on desktop */
   table {
     display: none;
+  }
+}
+@media (min-width: 1024px) {
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .player-card {
+    background: #151821;
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+
+  .card-metrics {
+    display: flex;
+    gap: 28px;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 1023px) {
+  .card-list {
+    gap: 10px;
+    padding: 0 8px;
+  }
+
+  .card-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+  }
+
+  .card-metrics .metric:last-child {
+    grid-column: span 2;
   }
 }
