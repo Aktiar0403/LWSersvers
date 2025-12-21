@@ -2085,3 +2085,49 @@ thead th {
 .th-detail th.col-squad {
   text-align: right;
 }
+/* DESKTOP GRID SYSTEM */
+@media (min-width: 1024px) {
+
+  .grid-header,
+  .grid-row {
+    display: grid;
+    grid-template-columns:
+      36px                /* rank */
+      minmax(260px, 1.6fr)/* player */
+      90px                /* warzone */
+      140px               /* power */
+      150px               /* squad */
+      48px;               /* edit */
+    align-items: center;
+    gap: 0;
+  }
+
+  .grid-header {
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.75;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .grid-row {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .h-power,
+  .c-power {
+    text-align: right;
+  }
+
+  .h-squad,
+  .c-squad {
+    white-space: nowrap;
+  }
+}
+@media (min-width: 1024px) {
+  table {
+    display: none;
+  }
+}
