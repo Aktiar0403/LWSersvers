@@ -1970,3 +1970,7 @@ body.admin-view .admin-only {
 .admin-logout-btn:hover {
   opacity: 0.9;
 }
+/* Hide admin UI by default */
+.admin-only {
+  display: none !important;
+}
