@@ -308,7 +308,8 @@
       const token = await user.getIdTokenResult(true); // force refresh
       if (token.claims.admin === true) {
         adminEls.forEach(el => {
-  el.style.display = "";
+  el.style.setProperty("display", "block", "important");
+
 });
       }
     } catch (e) {
