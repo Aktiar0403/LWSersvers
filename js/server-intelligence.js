@@ -302,7 +302,7 @@ async function loadPlayers() {
     });
 
     console.log("✅ Loaded players:", allPlayers.length);
-    renderCards(allPlayers);
+    
 
     // 🟢 Stage 3: Processing & building UI
     setProgress(70);
@@ -344,6 +344,8 @@ async function loadPlayers() {
    FILTERING
 ============================= */
 function applyFilters() {
+  if (!allPlayers.length) return;
+
   console.log("🟡 applyFilters CALLED");
   filteredPlayers = [...allPlayers];
 
@@ -402,6 +404,14 @@ if (activeWarzone !== "ALL") {
 }
 
 }
+// safety fallback
+if (!filteredPlayers.length) {
+  filteredPlayers = [...allPlayers];
+}
+
+renderCards(filteredPlayers);
+
+
 function renderCards(players) {
   console.log("🃏 renderCards called", players?.length);
 
