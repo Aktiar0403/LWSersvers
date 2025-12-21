@@ -467,6 +467,32 @@
 
 </div>
 
+<script type="module">
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { auth } from "/js/firebase-config.js";
+
+  onAuthStateChanged(auth, async (user) => {
+    const adminEls = document.querySelectorAll(".admin-only");
+
+    if (!user) return;
+
+    try {
+      // Force fresh token (important after cross-page login)
+      const token = await user.getIdTokenResult(true);
+
+      if (token.claims.admin === true) {
+        adminEls.forEach(el => {
+          el.style.display = "flex"; // admin bar uses flex
+        });
+        console.log("✅ Admin UI enabled");
+      } else {
+        console.log("❌ Logged in but not admin");
+      }
+    } catch (err) {
+      console.error("Admin check failed", err);
+    }
+  });
+</script>
 
 </body>
 </html>
