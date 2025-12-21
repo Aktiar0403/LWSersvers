@@ -2066,3 +2066,22 @@ thead th {
 .col-power  { width: 140px; }
 .col-squad  { width: 150px; }
 .col-edit   { width: 52px; }
+.th-group th {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.85;
+  text-align: left;
+}
+
+.th-detail th {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+.th-group th.col-power,
+.th-group th.col-squad,
+.th-detail th.col-power,
+.th-detail th.col-squad {
+  text-align: right;
+}
