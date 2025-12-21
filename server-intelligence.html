@@ -285,15 +285,31 @@
 <script type="module" src="/js/server-intelligence.js"></script>
 
 <!-- ADMIN VISIBILITY CONTROL -->
-<script type="module">
+
+
+  <script type="module">
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { auth } from "/js/firebase-config.js";
 
-  onAuthStateChanged(auth, user => {
-    document.querySelectorAll(".admin-only").forEach(el => {
-      el.style.display = user ? "block" : "none";
-    });
+  onAuthStateChanged(auth, async (user) => {
+    const adminEls = document.querySelectorAll(".admin-only");
+
+    if (!user) {
+      adminEls.forEach(el => el.remove());
+      return;
+    }
+
+    const token = await user.getIdTokenResult();
+    const isAdmin = token.claims.admin === true;
+
+    if (isAdmin) {
+      adminEls.forEach(el => el.style.display = "block");
+    } else {
+      adminEls.forEach(el => el.remove());
+    }
   });
+</script>
+
 </script>
 <!-- EDIT POWER MODAL -->
 <div id="editPowerModal" class="modal hidden">

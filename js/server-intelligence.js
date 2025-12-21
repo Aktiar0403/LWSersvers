@@ -1,5 +1,6 @@
 console.log("✅ Server Intelligence JS loaded");
-
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { auth } from "./firebase-config.js";
 import { db } from "./firebase-config.js";
 import {
   collection,
@@ -680,7 +681,7 @@ saveBtn.onclick = async () => {
   }
 
   alert("Data uploaded");
-  loadPlayers();
+ 
 };
 /* =============================
    ADMIN IMPORT (EXCEL / CSV)
@@ -773,8 +774,7 @@ for (const row of rows) {
 
          alert(`✅ Imported ${imported} players from Excel`);
          excelInput.value = "";
-          loadPlayers();
-
+        
     } catch (err) {
       console.error("Excel import failed:", err);
       alert("Excel import failed. Check console.");
@@ -815,7 +815,7 @@ async function deleteByUploadId(uploadId) {
   }
 
   alert(`🗑️ Deleted ${count} players from upload ${uploadId}`);
-  loadPlayers(); // refresh UI
+// refresh UI
 }
 window.deleteByUploadId = deleteByUploadId;
 
@@ -835,10 +835,7 @@ async function resolveAdminState() {
   }
 }
 
-(async () => {
-  await resolveAdminState();
-  loadPlayers();
-})();
+
 
 
 
@@ -886,11 +883,13 @@ function openEditPower(playerId) {
 
 
 
+
 function closeEditPowerModal() {
   editingPlayer = null;
   document.getElementById("editPowerModal")
     .classList.add("hidden");
 }
+
 window.openEditPower = openEditPower;
 window.closeEditPowerModal = closeEditPowerModal;
 
@@ -979,3 +978,21 @@ epSaveBtn.onclick = async () => {
     alert("❌ Failed to update power. Check console.");
   }
 };
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { auth } from "./firebase-config.js";
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    try {
+      const token = await user.getIdTokenResult();
+      window.IS_ADMIN = token.claims.admin === true;
+    } catch {
+      window.IS_ADMIN = false;
+    }
+  } else {
+    window.IS_ADMIN = false;
+  }
+
+  // 🔁 Load data ONLY after auth is resolved
+  loadPlayers();
+});
