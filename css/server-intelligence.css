@@ -1976,18 +1976,18 @@ body.admin-view .admin-only {
 }
 /* Rank */
 .col-rank {
-  width: 56px;
+  width: 12px;
   text-align: center;
 }
 
 /* Player (name + alliance) */
 .col-name {
-  width: 38%;
+  width: 28%;
 }
 
 /* Warzone (705, 685, etc.) */
 .col-warzone {
-  width: 90px;
+  width: 48px;
   text-align: center;
 }
 
@@ -2006,6 +2006,6 @@ body.admin-view .admin-only {
 
 /* Admin edit */
 .col-edit {
-  width: 56px;
+  width: 36px;
   text-align: center;
 }
