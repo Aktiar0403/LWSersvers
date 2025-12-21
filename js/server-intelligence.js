@@ -342,6 +342,7 @@ async function loadPlayers() {
    FILTERING
 ============================= */
 function applyFilters() {
+  console.log("🟡 applyFilters CALLED");
   filteredPlayers = [...allPlayers];
 
   // Search
