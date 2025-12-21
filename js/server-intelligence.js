@@ -297,11 +297,12 @@ async function loadPlayers() {
   basePower: Number(d.basePower ?? d.totalPower ?? 0),
   powerSource: d.powerSource || "confirmed",
   lastConfirmedAt: d.lastConfirmedAt || d.importedAt
-};
+    };
 
     });
 
     console.log("✅ Loaded players:", allPlayers.length);
+    renderCards(allPlayers);
 
     // 🟢 Stage 3: Processing & building UI
     setProgress(70);
@@ -326,6 +327,7 @@ async function loadPlayers() {
     setProgress(100);
 
     hideLoader(); // ✅ DATA READY
+
 
   } 
   catch (err) {
