@@ -512,39 +512,34 @@ function renderGrid(players) {
     const row = document.createElement("div");
     row.className = "grid-row";
 
-    row.innerHTML = `
-      <!-- RANK -->
-      <div class="c-rank">${index + 1}</div>
+    const isAdmin = window.IS_ADMIN === true;
 
-      <!-- PLAYER -->
-      <div class="c-player">
-        <div class="name-main">${p.name}</div>
-        <div class="name-meta">${p.alliance || "—"}</div>
-      </div>
+row.innerHTML = `
+  <div class="c-rank">${index + 1}</div>
 
-      <!-- WARZONE -->
-      <div class="c-warzone">${p.warzone}</div>
+  <div class="c-player">
+    <div class="name-main">${p.name}</div>
+    <div class="name-meta">${p.alliance || "—"}</div>
+  </div>
 
-      <!-- POWER -->
-      <div class="c-power ${powerData.tag}">
-        ${powerM}m
-        <span class="power-status">
-          ${powerData.tag === "confirmed" ? "✅" : "⚙️"}
-        </span>
-      </div>
+  <div class="c-warzone">${p.warzone}</div>
 
-      <!-- SQUAD -->
-      <div class="c-squad">⚔️ ${firstSquad}</div>
+  <div class="c-power ${powerData.tag}">
+    ${powerM}m
+    <span class="power-status">
+      ${powerData.tag === "confirmed" ? "✅" : "⚙️"}
+    </span>
+  </div>
 
-      <!-- EDIT -->
-      ${
-        window.IS_ADMIN
-          ? `<div class="c-edit admin-only">
-               <button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>
-             </div>`
-          : `<div class="c-edit"></div>`
-      }
-    `;
+  <div class="c-squad">⚔️ ${firstSquad}</div>
+
+  <div class="c-edit">
+    ${isAdmin
+      ? `<button class="edit-btn" onclick="openEditPower('${p.id}')">✏️</button>`
+      : ``}
+  </div>
+`;
+
 
     grid.appendChild(row);
   });

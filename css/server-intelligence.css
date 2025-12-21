@@ -2131,3 +2131,26 @@ thead th {
     display: none;
   }
 }
+/* DO NOT hide grid cells */
+.grid-header .h-edit,
+.grid-row .c-edit {
+  width: 48px;
+  text-align: center;
+}
+
+/* Only hide the button, not the column */
+.grid-row .c-edit:empty {
+  visibility: hidden;
+}
+.grid-header,
+.grid-row {
+  display: grid;
+  grid-template-columns:
+    36px
+    minmax(260px, 1.6fr)
+    90px
+    140px
+    150px
+    48px;
+  align-items: center;
+}
