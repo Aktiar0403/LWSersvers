@@ -463,7 +463,7 @@ function renderCards(players) {
   });
 }
 
-
+}
 renderCards(filteredPlayers);
 
 
