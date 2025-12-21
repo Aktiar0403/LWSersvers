@@ -405,8 +405,6 @@ if (activeWarzone !== "ALL") {
 ============================= */
 
 function renderCards(players) {
-  console.log("🃏 renderCards called with:", players.length);
-function renderCards(players) {
   const wrap = document.getElementById("playerCards");
   if (!wrap) return;
 
@@ -945,6 +943,7 @@ epSaveBtn.onclick = async () => {
     alert("❌ Failed to update power. Check console.");
   }
 };
+
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { auth } from "./firebase-config.js";
 
