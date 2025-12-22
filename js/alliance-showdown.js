@@ -321,20 +321,30 @@ analyzeBtn.addEventListener("click", () => {
   const alliances = [...SELECTED.values()];
   if (alliances.length < 2) return;
 
-  // 🔥 COMPUTE COMBAT SCORE
+  // 🔁 RECOMPUTE TOTAL POWER (CRITICAL FIX)
+  alliances.forEach(a => {
+    a.totalAlliancePower = computeTotalAlliancePower(a);
+  });
+
+  // 🔥 COMPUTE COMBAT SCORE (now correct)
   alliances.forEach(a => {
     a.combatScore = computeCombatScore(a);
   });
 
   // 🔥 SORT BY STRONGEST FIRST
   alliances.sort((a, b) => b.combatScore - a.combatScore);
-    computeWinProbabilities(alliances);   // 🔥 REQUIRED HERE
+
+  // 🔥 WIN PROBABILITY (depends on sorted order)
+  computeWinProbabilities(alliances);
+
+  // 🔥 RENDER
   resultsEl.classList.remove("hidden");
   resetBtn.disabled = false;
+
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
-
 });
+
 function resetShowdown() {
   // 1️⃣ Clear selection state
   SELECTED.clear();
