@@ -876,11 +876,15 @@ for (const row of rows) {
   reader.readAsArrayBuffer(file);
 };
 async function deleteByUploadId(uploadId) {
-  if (!uploadId) return;
+  console.log("🧪 uploadId param:", uploadId);
+  console.log("🧪 typeof uploadId:", typeof uploadId);
 
   const confirmText = prompt(
     `⚠️ This will permanently delete all players from upload:\n\n${uploadId}\n\nType: DELETE ${uploadId}`
   );
+
+  console.log("🧪 typed:", confirmText);
+  console.log("🧪 expected:", `DELETE ${uploadId}`);
 
   if (confirmText !== `DELETE ${uploadId}`) {
     alert("❌ Deletion cancelled");
@@ -907,8 +911,8 @@ async function deleteByUploadId(uploadId) {
   }
 
   alert(`🗑️ Deleted ${count} players from upload ${uploadId}`);
-// refresh UI
 }
+
 window.deleteByUploadId = deleteByUploadId;
 
 /* =============================
