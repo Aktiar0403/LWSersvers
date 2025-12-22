@@ -89,6 +89,47 @@ return {
 };
 
 }
+/* =============================
+   STRONG WARZONE DETECTION
+============================= */
+function isStrongWarzone(ctx) {
+  const {
+    warzoneFloorPower,
+    averageFirstSquadPower,
+    activeRealCount,
+    missingActiveCount
+  } = ctx;
+
+  const FSP_THRESHOLD = warzoneFloorPower * 0.55;
+
+  const MIN_VISIBLE = Math.min(
+    22,
+    Math.max(15, Math.round(ACTIVE_SQUAD_SIZE * 0.6))
+  );
+
+  return (
+    warzoneFloorPower > 0 &&
+    averageFirstSquadPower >= FSP_THRESHOLD &&
+    activeRealCount >= MIN_VISIBLE &&
+    missingActiveCount > 0
+  );
+}
+
+/* =============================
+   CREATE SHADOW PLAYER
+============================= */
+function createShadowPlayer(warzoneFloorPower) {
+  const inferredRaw = warzoneFloorPower * 0.85;
+  const eff = inferredRaw * CLASS_BASE_WEIGHTS.SHADOW;
+
+  return {
+    name: "Shadow",
+    effectivePower: eff,
+    class: "SHADOW",
+    firstSquadPower: eff * 0.28,
+    assumed: true
+  };
+}
 
 /* =============================
    PROCESS SINGLE ALLIANCE
@@ -140,15 +181,20 @@ const fsp = estimateFirstSquadPower(p.effectivePower);
     });
   });
 
-  /* -------- PLANKTON FILL (MISSING) -------- */
-  const activeRealCount = activeReal.length;
+ /* -------- SHADOW / PLANKTON FILL (MISSING) -------- */
+const activeRealCount = activeReal.length;
+
+const avgFSP =
+  activeRealCount > 0
+    ? activeReal.reduce(
+        (s, p) => s + estimateFirstSquadPower(p.effectivePower),
+        0
+      ) / activeRealCount
+    : 0;
 
 const strongCtx = {
   warzoneFloorPower,
-  averageFirstSquadPower:
-    activeReal.length
-      ? activeReal.reduce((s, p) => s + estimateFirstSquadPower(p.effectivePower), 0) / activeReal.length
-      : 0,
+  averageFirstSquadPower: avgFSP,
   activeRealCount,
   missingActiveCount
 };
