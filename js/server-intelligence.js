@@ -1091,35 +1091,45 @@ function buildWarzoneModalList(search) {
 
   const zones = [...new Set(allPlayers.map(p => p.warzone))]
     .sort((a,b)=>a-b)
-    .filter(z =>
-      String(z).includes(search)
-    );
+    .filter(z => String(z).includes(search));
 
-  const allItem = document.createElement("div");
-  allItem.textContent = "All Warzones";
-  allItem.onclick = () => {
+  // 🌍 ALL WARZONES CARD
+  const allCard = document.createElement("div");
+  allCard.className = "wz-card all";
+  allCard.innerHTML = `
+    <div class="wz-title">All Warzones</div>
+    <div class="wz-sub">Global ranking</div>
+  `;
+  allCard.onclick = () => {
     activeWarzone = "ALL";
     activeAlliance = "ALL";
     activeWarzoneLabel.textContent = "ALL";
     warzoneModal.classList.add("hidden");
     applyFilters();
   };
-  warzoneList.appendChild(allItem);
+  warzoneList.appendChild(allCard);
 
   zones.forEach(z => {
-    const item = document.createElement("div");
-    item.textContent = `Warzone ${z}`;
-    item.onclick = () => {
+    const card = document.createElement("div");
+    card.className = "wz-card";
+    card.innerHTML = `
+      <div class="wz-title">WZ ${z}</div>
+      <div class="wz-sub">Tap to explore</div>
+    `;
+    card.onclick = () => {
       activeWarzone = Number(z);
       activeAlliance = "ALL";
       dominanceSelectedAlliance = null;
+      // ✅ BUILD ALLIANCE PILLS AGAIN
+        buildAllianceCards(z);
       activeWarzoneLabel.textContent = z;
       warzoneModal.classList.add("hidden");
       applyFilters();
     };
-    warzoneList.appendChild(item);
+    warzoneList.appendChild(card);
   });
 }
+
 
 warzoneSearchInput.oninput = () => {
   buildWarzoneModalList(warzoneSearchInput.value.trim());
