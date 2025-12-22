@@ -23,6 +23,8 @@ const ALLIANCE_PREPARED_MAP = new Map();
 
 // 🔬 Per-alliance simulated results
 const SIMULATED_ALLIANCES = new Map();
+// 📊 Track active Chart.js instances
+const ACTIVE_CHARTS = [];
 
 /* =============================
    DOM
@@ -312,7 +314,7 @@ function rerenderUsingEffectiveData() {
   );
 
   computeWinProbabilities(alliances);
-
+destroyAllCharts();
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
 }
@@ -579,82 +581,68 @@ function renderAllianceBars(a) {
     .getElementById(`bars-${a.alliance}-${a.warzone}`)
     .getContext("2d");
 
-  new Chart(ctx, {
+  const chart = new Chart(ctx, {
     type: "bar",
     data: {
       labels: ["Win %", "Total", "Frontline", "Depth", "Stability"],
       datasets: [{
-  data: [
-  
-  clamp((a.winProbability || 0) * 100, 5, 100), // 🔥 Probability bar
-  normalizeTotalPower(a.totalAlliancePower),
-  normalizeFSP(a.averageFirstSquadPower),
-  normalizeDepth(a.benchPower / (a.activePower || 1)),
-  normalizeStability(a.stabilityFactor)
-],
-
-  
-  // 👇 THESE ARE THE LABELS SHOWN ABOVE BARS
-  rawValues: [
-  Math.round((a.winProbability || 0) * 100) + "%",
-  formatBig(a.totalAlliancePower),
-  formatPower(a.averageFirstSquadPower),
-  Math.round((a.benchPower / a.activePower) * 100) + "%",
-  Math.round(a.stabilityFactor * 100) + "%"
-],
-
-
-  backgroundColor: [
-  "#f5c542",    // 🟡 Win %
-  "#1e90ff",    // Total
-  "#bb7467ff",  // Frontline
-  "#2eca74ff",  // Depth
-  "#13a787ff"   // Stability
-]
-
-}]
+        data: [
+          clamp((a.winProbability || 0) * 100, 5, 100),
+          normalizeTotalPower(a.totalAlliancePower),
+          normalizeFSP(a.averageFirstSquadPower),
+          normalizeDepth(a.benchPower / (a.activePower || 1)),
+          normalizeStability(a.stabilityFactor)
+        ],
+        rawValues: [
+          Math.round((a.winProbability || 0) * 100) + "%",
+          formatBig(a.totalAlliancePower),
+          formatPower(a.averageFirstSquadPower),
+          Math.round((a.benchPower / a.activePower) * 100) + "%",
+          Math.round(a.stabilityFactor * 100) + "%"
+        ],
+        backgroundColor: [
+          "#f5c542",
+          "#1e90ff",
+          "#bb7467ff",
+          "#2eca74ff",
+          "#13a787ff"
+        ]
+      }]
     },
-options: {
-  responsive: true,
-  maintainAspectRatio: false,
-
-  layout: {
-    padding: {
-      top: 18   // 👈 space for numbers above bars
-    }
-  },
-
-  plugins: {
-    legend: { display: false },
-    tooltip: { enabled: false } // numbers already visible
-  },
-
-  scales: {
-    x: {
-      ticks: {
-        color: "#bdfdf0",
-        font: { size: 11 }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 18 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
       },
-      grid: { display: false }
+      scales: {
+        x: {
+          ticks: { color: "#bdfdf0", font: { size: 11 } },
+          grid: { display: false }
+        },
+        y: {
+          min: 0,
+          max: 100,
+          ticks: { display: false },
+          grid: { display: false }
+        }
+      }
     },
-    y: {
-      min: 0,
-      max: 100,
-      ticks: { display: false },
-      grid: { display: false }
-    }
-  }
-},
-plugins: [BarValuePlugin]   // 👈 REQUIRED
-});
+    plugins: [BarValuePlugin]
+  });
+
+  ACTIVE_CHARTS.push(chart);
 }
+
 
 function renderAlliancePie(a) {
   const ctx = document
     .getElementById(`pie-${a.alliance}-${a.warzone}`)
     .getContext("2d");
 
-  new Chart(ctx, {
+  const chart = new Chart(ctx, {
     type: "doughnut",
     data: {
       labels: Object.keys(a.tierCounts),
@@ -667,7 +655,15 @@ function renderAlliancePie(a) {
       cutout: "55%"
     }
   });
+
+  ACTIVE_CHARTS.push(chart);
 }
+function destroyAllCharts() {
+  while (ACTIVE_CHARTS.length) {
+    ACTIVE_CHARTS.pop().destroy();
+  }
+}
+
 // Phase 4 — effective power for showdown
 function getEffectivePowerValue(p) {
   if (p.powerSource === "confirmed") return p.basePower;
