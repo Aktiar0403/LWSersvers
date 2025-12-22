@@ -2312,11 +2312,12 @@ body.admin-view .admin-only {
 ============================= */
 .modal-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 10px;
   overflow-y: auto;
-  padding: 4px;
+  padding: 6px;
 }
+
 
 .wz-card {
   background: rgba(255,255,255,0.06);
@@ -2497,5 +2498,10 @@ body.admin-view .admin-only {
   .discovery-card input {
     padding: 8px;
     font-size: 13px;
+  }
+}
+@media (max-width: 768px) {
+  .modal-list {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
