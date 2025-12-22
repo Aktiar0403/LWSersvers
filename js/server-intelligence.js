@@ -1113,8 +1113,8 @@ function buildWarzoneModalList(search) {
     const card = document.createElement("div");
     card.className = "wz-card";
     card.innerHTML = `
-      <div class="wz-title">WZ ${z}</div>
-      <div class="wz-sub">Tap to explore</div>
+      <div class="wz-title">${z}</div>
+      
     `;
     card.onclick = () => {
       activeWarzone = Number(z);
