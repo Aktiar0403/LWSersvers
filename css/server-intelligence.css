@@ -2307,15 +2307,21 @@ body.admin-view .admin-only {
   background: rgba(255,255,255,0.05);
   margin-bottom: 6px;
 }
+
 /* =============================
-   WARZONE MODAL – PREMIUM GRID
+   WARZONE GRID – FIXED 3 COLUMNS
 ============================= */
 .modal-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   overflow-y: auto;
   padding: 6px;
+}
+
+/* ALL WARZONES FULL WIDTH */
+.wz-card.all {
+  grid-column: 1 / -1;
 }
 
 
@@ -2504,4 +2510,8 @@ body.admin-view .admin-only {
   .modal-list {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+.wz-card.all {
+  text-align: center;
+  padding: 18px 10px;
 }
