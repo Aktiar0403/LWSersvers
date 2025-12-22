@@ -29,6 +29,9 @@ const allianceListEl = document.getElementById("allianceList");
 const analyzeBtn     = document.getElementById("analyzeBtn");
 const resetBtn = document.getElementById("resetBtn");
 const resultsEl      = document.getElementById("results");
+const advPlanktonInput = document.getElementById("advPlanktonPower");
+const runAdvancedBtn = document.getElementById("runAdvancedAnalysis");
+
 
 // Chart.js plugin to draw values above bars
 const BarValuePlugin = {
@@ -333,6 +336,10 @@ analyzeBtn.addEventListener("click", () => {
   resetBtn.disabled = false;
   renderAllianceCards(alliances);
   renderMatchupCards(alliances);
+  document
+  .getElementById("advancedReanalysis")
+  .classList.remove("hidden");
+
 
 });
 function resetShowdown() {
@@ -565,6 +572,50 @@ function getEffectivePowerValue(p) {
   return Math.round(p.basePower * Math.pow(1 + rate, weeks));
 }
 
+function runAdvancedReanalysis() {
+  const assumedM =
+    Number(advPlanktonInput?.value);
+
+  const assumedPower =
+    assumedM && assumedM > 0
+      ? assumedM * 1_000_000
+      : null;
+
+  const baseAlliances =
+    [...SELECTED.values()];
+
+  if (baseAlliances.length < 2) return;
+
+  // 🔁 CLONE alliances (do NOT mutate originals)
+  const simulated = baseAlliances.map(a => {
+    const copy = structuredClone(a);
+
+    // 🔥 Override plankton power if user provided
+    if (assumedPower) {
+      copy.activePlayers.forEach(p => {
+        if (p.assumed) {
+          p.effectivePower =
+            assumedPower * 0.4; // plankton weight
+          p.firstSquadPower =
+            p.effectivePower * 0.33;
+        }
+      });
+    }
+
+    // 🔁 Recompute totals
+    copy.activePower = copy.activePlayers
+      .reduce((s, p) => s + p.effectivePower, 0);
+
+    copy.acsAbsolute =
+      copy.activePower *
+      copy.stabilityFactor *
+      (1 + copy.cqs / 100);
+
+    return copy;
+  });
+
+  renderAdvancedResults(simulated);
+}
 
 
 /* =============================
@@ -585,7 +636,33 @@ function formatBig(v) {
   return Math.round(v).toString();
 }
 
+function renderAdvancedResults(alliances) {
+  const el =
+    document.getElementById("advancedResults");
 
+  el.innerHTML = "<h3>Simulated Results</h3>";
+
+  alliances
+    .sort((a, b) => b.acsAbsolute - a.acsAbsolute)
+    .forEach((a, i) => {
+      const div = document.createElement("div");
+      div.className = "simulation-card";
+
+      div.innerHTML = `
+        <strong>#${i + 1} ${a.alliance}</strong>
+        <div>Simulated Combat Power:
+          ${formatBig(a.acsAbsolute)}
+        </div>
+      `;
+
+      el.appendChild(div);
+    });
+}
+
+runAdvancedBtn?.addEventListener(
+  "click",
+  runAdvancedReanalysis
+);
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const normalizeTotalPower = v => clamp(v / 2e10 * 100, 5, 100);

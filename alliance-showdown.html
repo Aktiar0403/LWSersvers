@@ -72,15 +72,47 @@
 <section id="results" class="panel hidden">
   <h2>Alliance Intelligence</h2>
   <div id="allianceCards"></div>
+<!-- ADVANCED RE-ANALYSIS (HIDDEN INITIALLY) -->
+<section id="advancedReanalysis" class="hidden">
+  <h2>🔬 Advanced Re-Analysis (Simulation)</h2>
+
+  <p class="note">
+    Adjust assumptions below to simulate alternate scenarios.
+    This does <strong>not</strong> affect the default analysis above.
+  </p>
+
+  <div class="advanced-controls">
+    <label>
+      Assumed Power for Missing Players (Plankton)
+      <span>(in Millions)</span>
+    </label>
+
+    <input
+      type="number"
+      id="advPlanktonPower"
+      placeholder="Default (Auto)"
+      min="50"
+      max="300"
+      step="5"
+    />
+
+    <button id="runAdvancedAnalysis">
+      Re-Analyze with Assumptions
+    </button>
+  </div>
+
+  <div id="advancedResults"></div>
+</section>
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script type="module" src="./js/alliance-showdown.js"></script>
-</main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<section id="acis-appendix">
+  <script type="module" src="./js/alliance-showdown.js"></script>
+  </main>
+
+< section id="acis-appendix">
   <div class="acis-container">
 
     <h2 class="acis-title">ACIS — Alliance Combat Intelligence System</h2>
