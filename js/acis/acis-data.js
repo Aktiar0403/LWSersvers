@@ -157,3 +157,37 @@ alliancePlayers = alliancePlayers.map(p => ({
 
   return alliances;
 }
+function isStrongWarzone(ctx) {
+  const {
+    warzoneFloorPower,
+    averageFirstSquadPower,
+    activeRealCount,
+    missingActiveCount
+  } = ctx;
+
+  const FSP_THRESHOLD = warzoneFloorPower * 0.55;
+
+  const MIN_VISIBLE = Math.min(
+    22,
+    Math.max(15, Math.round(ACTIVE_SQUAD_SIZE * 0.6))
+  );
+
+  return (
+    warzoneFloorPower > 0 &&
+    averageFirstSquadPower >= FSP_THRESHOLD &&
+    activeRealCount >= MIN_VISIBLE &&
+    missingActiveCount > 0
+  );
+}
+
+function createShadowPlayer(referencePower) {
+  const inferred = referencePower * 0.85;
+
+  return {
+    name: "Shadow",
+    effectivePower: inferred,
+    class: "SHADOW",
+    firstSquadPower: inferred * 0.28,
+    assumed: true
+  };
+}

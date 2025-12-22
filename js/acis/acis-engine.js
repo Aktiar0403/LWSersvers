@@ -141,18 +141,32 @@ const fsp = estimateFirstSquadPower(p.effectivePower);
   });
 
   /* -------- PLANKTON FILL (MISSING) -------- */
-  for (let i = 0; i < missingActiveCount; i++) {
-    const plankton = createPlankton(warzoneFloorPower);
+  const activeRealCount = activeReal.length;
 
-    tierCounts.PLANKTON++;
-    activePower += plankton.effectivePower;
-    activeFirstSquadPower += plankton.firstSquadPower;
+const strongCtx = {
+  warzoneFloorPower,
+  averageFirstSquadPower:
+    activeReal.length
+      ? activeReal.reduce((s, p) => s + estimateFirstSquadPower(p.effectivePower), 0) / activeReal.length
+      : 0,
+  activeRealCount,
+  missingActiveCount
+};
 
-    activePlayers.push({
-      ...plankton,
-      assumed: true
-    });
-  }
+const useShadow = isStrongWarzone(strongCtx);
+
+for (let i = 0; i < missingActiveCount; i++) {
+  const filler = useShadow
+    ? createShadowPlayer(warzoneFloorPower)
+    : createPlankton(warzoneFloorPower);
+
+  tierCounts[filler.class]++;
+  activePower += filler.effectivePower;
+  activeFirstSquadPower += filler.firstSquadPower;
+
+  activePlayers.push(filler);
+}
+
 
   /* -------- BENCH (REAL ONLY) -------- */
   if (benchAvailable) {

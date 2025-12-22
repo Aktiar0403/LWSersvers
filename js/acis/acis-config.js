@@ -121,3 +121,6 @@ export const OUTCOME_BANDS = [
   { min: 0.75, label: "Outmatched" },
   { min: 0.00, label: "Collapse Likely" }
 ];
+POWER_CLASSES.SHADOW = { min: 0, max: Infinity };
+
+CLASS_BASE_WEIGHTS.SHADOW = 0.85;
