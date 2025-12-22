@@ -18,6 +18,11 @@ import { buildMatchupMatrix } from "./acis/acis-matchup.js";
 ============================= */
 let ALL_ALLIANCES = [];
 let SELECTED = new Map();
+// 🔒 Prepared immutable data (before ACIS)
+const ALLIANCE_PREPARED_MAP = new Map();
+
+// 🔬 Per-alliance simulated results
+const SIMULATED_ALLIANCES = new Map();
 
 /* =============================
    DOM
@@ -95,12 +100,22 @@ async function init() {
   const players = await loadServerPlayers();
   if (!players.length) return;
 
-  const prepared = prepareAllianceData(players);
-  ALL_ALLIANCES = prepared.map(a => {
-    const scored = scoreAlliance(processAlliance(a));
-    scored.totalAlliancePower = computeTotalAlliancePower(scored);
-    return scored;
-  });
+ const prepared = prepareAllianceData(players);
+
+// 🔒 Store prepared data for re-analysis
+prepared.forEach(a => {
+  const key = `${a.alliance}|${a.warzone}`;
+  ALLIANCE_PREPARED_MAP.set(key, structuredClone(a));
+});
+
+// 🔹 Default ACIS analysis (unchanged behavior)
+ALL_ALLIANCES = prepared.map(a => {
+  const scored = scoreAlliance(processAlliance(a));
+  scored.totalAlliancePower = computeTotalAlliancePower(scored);
+  return scored;
+});
+
+
 
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
   populateWarzones();
@@ -244,6 +259,63 @@ syncSelectionUI();
     allianceSearchResults.appendChild(row);
   });
 });
+
+function runAllianceSimulation(allianceKey, planktonM) {
+  const prepared =
+    ALLIANCE_PREPARED_MAP.get(allianceKey);
+
+  if (!prepared) return;
+
+  // 🔁 Clone prepared data (never mutate original)
+  const simulatedPrepared = structuredClone(prepared);
+
+  // 🔥 Inject assumption BEFORE ACIS
+  if (planktonM && planktonM > 0) {
+    simulatedPrepared.__assumedPlanktonPower =
+      planktonM * 1_000_000;
+  }
+
+  // 🔁 Full ACIS re-run
+  const processed =
+    processAlliance(simulatedPrepared);
+
+  const scored =
+    scoreAlliance(processed);
+
+  scored.totalAlliancePower =
+    computeTotalAlliancePower(scored);
+
+  // 💾 Store simulated result
+  SIMULATED_ALLIANCES.set(allianceKey, scored);
+
+  // 🔄 Update SAME charts & matchups
+  rerenderUsingEffectiveData();
+}
+function getEffectiveAlliance(allianceKey) {
+  return (
+    SIMULATED_ALLIANCES.get(allianceKey) ||
+    ALL_ALLIANCES.find(
+      a => `${a.alliance}|${a.warzone}` === allianceKey
+    )
+  );
+}
+
+
+function rerenderUsingEffectiveData() {
+  const alliances =
+    [...SELECTED.keys()]
+      .map(getEffectiveAlliance)
+      .filter(Boolean);
+
+  alliances.sort(
+    (a, b) => b.acsAbsolute - a.acsAbsolute
+  );
+
+  computeWinProbabilities(alliances);
+
+  renderAllianceCards(alliances);
+  renderMatchupCards(alliances);
+}
 
 
 function renderMatchupCards(alliances) {
@@ -441,11 +513,56 @@ alliances.forEach((a, index) => {
       <canvas id="bars-${a.alliance}-${a.warzone}"></canvas>
     </div>
 
-     </div>
+     </div><!-- 🔬 ADVANCED RE-ANALYSIS (PER ALLIANCE) -->
+<div class="simulation-controls">
+  <label style="font-size:12px;opacity:0.7">
+    Simulated Plankton Power (M)
+  </label>
+
+  <input
+    type="number"
+    min="50"
+    max="300"
+    step="5"
+    placeholder="Auto"
+    data-sim-plankton
+  />
+
+  <button data-sim-run>
+    Re-Analyze
+  </button>
+</div>
+
 `
 ;
 
     el.appendChild(card);
+    setTimeout(() => {
+  const input =
+    card.querySelector("[data-sim-plankton]");
+  const btn =
+    card.querySelector("[data-sim-run]");
+
+  if (!input || !btn) return;
+
+  const title =
+    card.querySelector(".intel-title")?.textContent;
+
+  const match =
+    title?.match(/^(.*?)\s+\(WZ-(\d+)\)/);
+
+  if (!match) return;
+
+  const key = `${match[1]}|${match[2]}`;
+
+  btn.onclick = () => {
+    runAllianceSimulation(
+      key,
+      Number(input.value)
+    );
+  };
+}, 0);
+
 
     setTimeout(() => {
       renderAllianceBars(a);
