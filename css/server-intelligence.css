@@ -2587,3 +2587,24 @@ body.admin-view .admin-only {
   color: rgba(255,255,255,0.6);
   margin-left: 1px;
 }
+/* =============================
+   GOLDEN ALLIANCE META
+============================= */
+
+/* Meta line */
+.pc-meta {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* Alliance name highlight */
+.pc-meta .alliance-name {
+  color: #f5c542; /* premium gold */
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+@media (max-width: 768px) {
+  .pc-meta {
+    font-size: 11px;
+  }
+}

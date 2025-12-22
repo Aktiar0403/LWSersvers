@@ -497,8 +497,12 @@ function renderPlayerCards(players) {
   <div class="pc-info">
     <div class="pc-name">${p.name}</div>
     <div class="pc-meta">
-      WZ ${p.warzone} • ${p.alliance || "—"}
-    </div>
+  WZ ${p.warzone} •
+  <span class="alliance-name">
+    ${p.alliance || "—"}
+  </span>
+</div>
+
    
   </div>
 
