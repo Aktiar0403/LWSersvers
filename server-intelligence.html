@@ -156,6 +156,57 @@
   <section class="search-bar">
     <input id="searchInput" placeholder="🔎 Search player name" />
   </section>
+<!-- =============================
+     ALLIANCE → WARZONE PREVIEW
+============================= -->
+<section class="alliance-preview">
+  <div class="preview-header">
+    🔎 Find Alliance (Preview)
+  </div>
+  <div class="preview-sub">
+    Based on currently available data. More coverage coming soon.
+  </div>
+
+  <input
+    type="text"
+    id="alliancePreviewInput"
+    placeholder="Type alliance name…"
+    autocomplete="off"
+  />
+
+  <div id="alliancePreviewResults" class="preview-results"></div>
+</section>
+
+<!-- =============================
+     WARZONE SELECTOR TRIGGER
+============================= -->
+<div class="warzone-trigger" id="openWarzoneModal">
+  🌍 Warzone: <span id="activeWarzoneLabel">ALL</span> ▾
+</div>
+
+<!-- =============================
+     WARZONE MODAL
+============================= -->
+<div class="modal-overlay hidden" id="warzoneModal">
+  <div class="modal">
+    <div class="modal-header">
+      Select Warzone
+    </div>
+
+    <input
+      type="text"
+      id="warzoneSearchInput"
+      placeholder="Search warzone…"
+      autocomplete="off"
+    />
+
+    <div id="warzoneList" class="modal-list"></div>
+
+    <button class="modal-close" id="closeWarzoneModal">
+      Close
+    </button>
+  </div>
+</div>
 
   <!-- FILTERS -->
   <section class="filters">

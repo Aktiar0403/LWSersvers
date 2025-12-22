@@ -2195,3 +2195,115 @@ body.admin-view .admin-only {
 .like-btn:active {
   transform: scale(0.95);
 }
+/* =============================
+   WARZONE MODAL
+============================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: #121212;
+  width: 92%;
+  max-width: 420px;
+  max-height: 80vh;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.modal input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 12px;
+}
+
+.modal-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-list div {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-list div:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.modal-close {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* =============================
+   WARZONE TRIGGER
+============================= */
+.warzone-trigger {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  width: fit-content;
+}
+
+/* =============================
+   ALLIANCE PREVIEW
+============================= */
+.alliance-preview {
+  margin: 14px 0;
+}
+
+.preview-header {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.preview-sub {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+
+.alliance-preview input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.preview-results {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.preview-results .result {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  margin-bottom: 6px;
+}

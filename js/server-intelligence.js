@@ -370,7 +370,7 @@ window.PLAYER_LIKES = likesMap;
     activeAlliance = "ALL";
 
     // 🔥 REBUILD FILTER UI
-    buildWarzoneCards();
+    //buildWarzoneCards();
 
     // 🔥 APPLY FILTERS
     applyFilters();
@@ -1066,6 +1066,110 @@ epSaveBtn.onclick = async () => {
     alert("❌ Failed to update power. Check console.");
   }
 };
+
+// =============================
+// WARZONE MODAL LOGIC
+// =============================
+const warzoneModal = document.getElementById("warzoneModal");
+const openWarzoneModalBtn = document.getElementById("openWarzoneModal");
+const closeWarzoneModalBtn = document.getElementById("closeWarzoneModal");
+const warzoneList = document.getElementById("warzoneList");
+const warzoneSearchInput = document.getElementById("warzoneSearchInput");
+const activeWarzoneLabel = document.getElementById("activeWarzoneLabel");
+
+openWarzoneModalBtn.onclick = () => {
+  warzoneModal.classList.remove("hidden");
+  buildWarzoneModalList("");
+};
+
+closeWarzoneModalBtn.onclick = () => {
+  warzoneModal.classList.add("hidden");
+};
+
+function buildWarzoneModalList(search) {
+  warzoneList.innerHTML = "";
+
+  const zones = [...new Set(allPlayers.map(p => p.warzone))]
+    .sort((a,b)=>a-b)
+    .filter(z =>
+      String(z).includes(search)
+    );
+
+  const allItem = document.createElement("div");
+  allItem.textContent = "All Warzones";
+  allItem.onclick = () => {
+    activeWarzone = "ALL";
+    activeAlliance = "ALL";
+    activeWarzoneLabel.textContent = "ALL";
+    warzoneModal.classList.add("hidden");
+    applyFilters();
+  };
+  warzoneList.appendChild(allItem);
+
+  zones.forEach(z => {
+    const item = document.createElement("div");
+    item.textContent = `Warzone ${z}`;
+    item.onclick = () => {
+      activeWarzone = Number(z);
+      activeAlliance = "ALL";
+      dominanceSelectedAlliance = null;
+      activeWarzoneLabel.textContent = z;
+      warzoneModal.classList.add("hidden");
+      applyFilters();
+    };
+    warzoneList.appendChild(item);
+  });
+}
+
+warzoneSearchInput.oninput = () => {
+  buildWarzoneModalList(warzoneSearchInput.value.trim());
+};
+
+// =============================
+// ALLIANCE → WARZONE PREVIEW
+// =============================
+const alliancePreviewInput =
+  document.getElementById("alliancePreviewInput");
+const alliancePreviewResults =
+  document.getElementById("alliancePreviewResults");
+
+alliancePreviewInput.oninput = () => {
+  const q = alliancePreviewInput.value.trim().toLowerCase();
+  alliancePreviewResults.innerHTML = "";
+
+  if (q.length < 2) return;
+
+  const map = {};
+
+  allPlayers.forEach(p => {
+    if (!p.alliance) return;
+    const name = p.alliance.trim();
+
+    if (!name.toLowerCase().includes(q)) return;
+
+    map[name] = map[name] || new Set();
+    map[name].add(p.warzone);
+  });
+
+  const entries = Object.entries(map);
+
+  if (!entries.length) {
+    alliancePreviewResults.textContent =
+      "No alliance found in current data";
+    return;
+  }
+
+  entries.forEach(([name, zones]) => {
+    const div = document.createElement("div");
+    div.className = "result";
+    div.innerHTML = `
+      <strong>${name}</strong><br/>
+      Warzones: ${[...zones].sort((a,b)=>a-b).join(", ")}
+    `;
+    alliancePreviewResults.appendChild(div);
+  });
+};
+
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { auth } from "./firebase-config.js";
 
