@@ -1100,13 +1100,19 @@ function buildWarzoneModalList(search) {
     <div class="wz-title">All Warzones</div>
     <div class="wz-sub">Global ranking</div>
   `;
-  allCard.onclick = () => {
-    activeWarzone = "ALL";
-    activeAlliance = "ALL";
-    activeWarzoneLabel.textContent = "ALL";
-    warzoneModal.classList.add("hidden");
-    applyFilters();
-  };
+ allCard.onclick = () => {
+  activeWarzone = "ALL";
+  activeAlliance = "ALL";
+  dominanceSelectedAlliance = null;
+
+  // ✅ CLEAR ALLIANCE GRID COMPLETELY
+  allianceCards.innerHTML = "";
+
+  activeWarzoneLabel.textContent = "All Warzones";
+  warzoneModal.classList.add("hidden");
+  applyFilters();
+};
+
   warzoneList.appendChild(allCard);
 
   zones.forEach(z => {
