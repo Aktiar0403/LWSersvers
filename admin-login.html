@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>KOBRA — ADMIN ACCESS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: "Inter", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,.65);
+      overflow: hidden;
+    }
+
+    .login-card {
+      width: 380px;
+      padding: 32px;
+      border-radius: 20px;
+      background: rgba(10,14,18,.75);
+      border: 2px solid rgba(0,255,120,.4);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 75px rgba(0,255,120,.45);
+      animation: pulse 3.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 30px rgba(0,255,120,.3); }
+      50% { box-shadow: 0 0 70px rgba(0,255,120,.8); }
+      100% { box-shadow: 0 0 30px rgba(0,255,120,.3); }
+    }
+
+    .title {
+      font-family: Orbitron, sans-serif;
+      font-size: 34px;
+      text-align: center;
+      margin-bottom: 25px;
+      color: #00ffae;
+      letter-spacing: 3px;
+      text-shadow: 0 0 25px rgba(0,255,174,1);
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-top: 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #e9ffe9;
+      font-size: 15px;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,.45);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 22px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg,#00ff9d,#00d47a);
+      transition: .25s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 30px rgba(0,255,150,.9);
+    }
+
+    #loginError {
+      margin-top: 12px;
+      min-height: 20px;
+      font-size: 14px;
+      color: #ff5252;
+      background: rgba(255,50,50,.08);
+      border: 1px solid rgba(255,80,80,.35);
+      border-radius: 10px;
+      padding: 8px 10px;
+      opacity: 0;
+      transition: .3s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-card">
+    <div class="title">WELCOME KOBRA</div>
+
+    <form id="adminLoginForm">
+      <input type="email" id="adminEmail" placeholder="Provided Email Only" required />
+      <input type="password" id="adminPassword" placeholder="Provided Password Only" required />
+      <button class="login-btn" type="submit">Enter Command Center</button>
+      <div id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- FAILURE HISS ONLY -->
+  <audio id="hissFail" src="./assets/sounds/hiss-fail.mp3" preload="auto"></audio>
+
+  <!-- SCRIPT -->
+  <script type="module">
+    import { loginAdmin } from "./js/auth.js";
+    import { auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    // 🔁 Redirect if already logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) window.location.replace("admin.html");
+    });
+
+    const form = document.getElementById("adminLoginForm");
+    const errorEl = document.getElementById("loginError");
+    const hissFail = document.getElementById("hissFail");
+
+    const messages = {
+      wrongPassword: [
+        "🐍 Venom code incorrect.",
+        "🔑 Wrong fang sequence entered.",
+        "🧪 Antivenom mismatch."
+      ],
+      notApproved: [
+        "🚫 You are not approved for this lair.",
+        "👀 Cobra sees you… but Akki hasn’t approved.",
+        "🔒 Restricted zone."
+      ],
+      generic: [
+        "⚠️ Cobra protocol denied access.",
+        "🐍 The Cobra says no."
+      ]
+    };
+
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function playFail() {
+      hissFail.currentTime = 0;
+      hissFail.play().catch(() => {});
+    }
+
+    function showError(main, sub) {
+      errorEl.innerHTML = `
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span>🐍</span><span>${main}</span>
+        </div>
+        <div style="margin-top:4px;font-size:12px;color:#ff9f9f;">
+          👉 ${sub}
+        </div>
+      `;
+      errorEl.style.opacity = 1;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.style.opacity = 0;
+
+      const email = adminEmail.value.trim();
+      const pass = adminPassword.value;
+
+      const result = await loginAdmin(email, pass);
+
+      if (result.success) {
+        window.location.href = "admin.html";
+        return;
+      }
+
+      playFail();
+
+      const msg = (result.message || "").toLowerCase();
+
+      if (msg.includes("wrong-password") || msg.includes("invalid-credential")) {
+        showError(pick(messages.wrongPassword), "Too many wrong fangs wake the Cobra.");
+      } else if (msg.includes("user-not-found")) {
+        showError(pick(messages.notApproved), "Ask Akki for access");
+      } else {
+        showError(pick(messages.generic), "Ask Akki for access");
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>LWServers — Server Intelligence Gateway</title>
+  <meta name="description" content="LWServers is an independent intelligence platform for Last War Survival. Explore warzones, alliances, and power analytics." />
+<!-- Standard favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+
+<!-- PNG favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/gateway.css">
+
+</head>
+
+<body class="bg">
+
+<!-- GLOBAL HEADER -->
+
+<!-- GATEWAY -->
+<main class="gateway">
+
+  <!-- HERO -->
+  <section class="gateway-hero">
+    <h1>
+      Welcome to<br>
+      <span>LWServers</span>
+    </h1>
+
+    <p class="lead">
+      An independent intelligence layer for <strong>Last War Survival</strong>.
+    </p>
+
+    <p class="narrative">
+      This is not a leaderboard.<br>
+      This is not a stats dump.<br><br>
+      LWServers exists to help players understand
+      <em>power dynamics, dominance, and structure</em>
+      across warzones and alliances — without noise.
+    </p>
+  </section>
+
+  <!-- WHAT THIS IS -->
+  <section class="gateway-info">
+    <div class="info-card">
+      <h3>What you’ll find inside</h3>
+      <ul>
+        <li>Server-wide power intelligence</li>
+        <li>Alliance dominance & distribution</li>
+        <li>Comparative analysis between warzones</li>
+        <li>Experimental analytical tools</li>
+      </ul>
+    </div>
+
+    <div class="info-card muted">
+      <h3>What this is not</h3>
+      <ul>
+        <li>No official affiliation</li>
+        <li>No private player data</li>
+        <li>No paywalled analytics</li>
+        <li>No edits from public users</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PATH SELECTION -->
+  <section class="gateway-actions">
+    <h2>Choose where you want to begin</h2>
+
+   
+  <h3>
+    Server Intelligence
+  <a href="/server-intelligence.html" class="action-card primary">
+  <h3>Server Intelligence</h3>
+  <p>
+    Deep analytics of player power, growth trends, and server dominance.
+  </p>
+</a>
+
+
+
+      <a href="/server-compare.html" class="action-card">
+        <h3>Compare Servers</h3>
+        <p>Side-by-side analysis of alliances and warzones.</p>
+      </a>
+
+      <a href="/alliance-showdown.html" class="action-card experimental">
+        <h3>Alliance Showdown</h3>
+        <p>Experimental analysis and stress testing of alliance strength.</p>
+        <span class="tag">Experimental</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SUPPORT -->
+  <section class="gateway-support">
+    <h2>Support the project</h2>
+
+    <p>
+      LWServers is built and maintained independently.
+      Data processing, analysis, and updates take time and resources.
+    </p>
+
+    <p class="support-note">
+      If this platform helps you, consider supporting its development.
+    </p>
+
+    <!-- KO-FI SUPPORT -->
+<
+
+  </section>
+
+  <!-- TRANSPARENCY -->
+  <section class="gateway-disclaimer">
+    <p>
+      LWServers is a fan-made, independent analytics platform.
+      It is not affiliated with or endorsed by the game developers.
+      All insights are derived from publicly observable game data.
+    </p>
+  </section>
+
+</main>
+<script>
+  // === MAINTENANCE COUNTDOWN (48 HOURS) ===
+  const COUNTDOWN_HOURS = 48;
+
+  // Persist start time so refresh doesn't reset
+  let startTime = localStorage.getItem("si_maintenance_start");
+
+  if (!startTime) {
+    startTime = Date.now();
+    localStorage.setItem("si_maintenance_start", startTime);
+  }
+
+  const endTime = Number(startTime) + COUNTDOWN_HOURS * 60 * 60 * 1000;
+  const timerEl = document.getElementById("countdownTimer");
+
+  function updateCountdown() {
+    const now = Date.now();
+    let diff = endTime - now;
+
+    if (diff <= 0) {
+      timerEl.textContent = "00:00:00";
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    timerEl.textContent =
+      String(hours).padStart(2, "0") + ":" +
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
+<!-- FLOATING BUY ME A COFFEE (PayPal.me) -->
+<a href="https://www.paypal.com/paypalme/lwservers"
+   target="_blank"
+   title="Buy me a coffee"
+   style="
+     position:fixed;
+     bottom:20px;
+     right:20px;
+     z-index:9999;
+     display:flex;
+     align-items:center;
+     gap:10px;
+     padding:10px 14px;
+     background:#ffdd00;
+     color:#000;
+     font-size:14px;
+     font-weight:600;
+     text-decoration:none;
+     border-radius:999px;
+     box-shadow:0 10px 25px rgba(0,0,0,0.35);
+     font-family:inherit;
+   ">
+
+  <!-- Coffee Cup Icon -->
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path fill="#000"
+      d="M3 8h13a4 4 0 0 1 0 8h-1a6 6 0 0 1-12 0V8z"/>
+    <path fill="#000"
+      d="M17 9h1a2 2 0 0 1 0 4h-1V9z"/>
+  </svg>
+
+  Buy me a coffee
+</a>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2025 LWServers</span>
+    <nav>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
