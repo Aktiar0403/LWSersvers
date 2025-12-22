@@ -2577,7 +2577,7 @@ body.admin-view .admin-only {
 
 /* POWER VALUE */
 .pc-power-value {
-  color: #39ff14; /* neon green */
+  color: #1cf3bd; /* neon green */
   font-weight: 700;
   text-shadow: 0 0 6px rgba(57, 255, 20, 0.35);
 }
