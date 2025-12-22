@@ -2564,3 +2564,26 @@ body.admin-view .admin-only {
     padding: 8px 4px;
   }
 }
+/* =============================
+   NEON HIGHLIGHT (NAME + POWER)
+============================= */
+
+/* PLAYER NAME */
+.pc-name {
+  color: #7df9ff; /* neon cyan */
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* POWER VALUE */
+.pc-power-value {
+  color: #39ff14; /* neon green */
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(57, 255, 20, 0.35);
+}
+
+/* POWER UNIT (m) */
+.pc-power-unit {
+  color: rgba(255,255,255,0.6);
+  margin-left: 1px;
+}
