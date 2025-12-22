@@ -145,7 +145,11 @@ warzoneSelect.addEventListener("change", () => {
       const key = `${a.alliance}|${a.warzone}`;
       if (SELECTED.has(key)) row.classList.add("selected");
 
-      row.onclick = () => toggleAlliance(a, row);
+    row.onclick = () => {
+  toggleAlliance(a);
+  syncSelectionUI();
+};
+
       allianceListEl.appendChild(row);
     });
 });
@@ -153,20 +157,19 @@ warzoneSelect.addEventListener("change", () => {
 /* =============================
    TOGGLE SELECTION
 ============================= */
-function toggleAlliance(a, el) {
+function toggleAlliance(a) {
   const key = `${a.alliance}|${a.warzone}`;
 
   if (SELECTED.has(key)) {
     SELECTED.delete(key);
-    el.classList.remove("selected");
   } else {
     if (SELECTED.size >= 8) return;
     SELECTED.set(key, a);
-    el.classList.add("selected");
   }
 
   analyzeBtn.disabled = SELECTED.size < 2;
 }
+
 function searchAlliances(query) {
   if (!query) return [];
 
@@ -178,6 +181,30 @@ function searchAlliances(query) {
     .slice(0, 12); // global top matches
 }
 
+function syncSelectionUI() {
+  const keys = new Set(SELECTED.keys());
+
+  // 🔹 Warzone list
+  document.querySelectorAll(".alliance-row").forEach(row => {
+    const alliance = row.textContent;
+    const wz = warzoneSelect.value;
+    const key = `${alliance}|${wz}`;
+
+    row.classList.toggle("selected", keys.has(key));
+  });
+
+  // 🔹 Search results
+  document.querySelectorAll(".search-result-item").forEach(row => {
+    const match = row.textContent.match(/\(WZ-(\d+)\)/);
+    if (!match) return;
+
+    const wz = match[1];
+    const alliance = row.textContent.replace(/\s*\(WZ-\d+\)/, "");
+    const key = `${alliance}|${wz}`;
+
+    row.classList.toggle("selected", keys.has(key));
+  });
+}
 
 
 allianceSearchInput.addEventListener("input", () => {
@@ -203,7 +230,9 @@ row.onclick = () => {
   warzoneSelect.dispatchEvent(new Event("change"));
 
   // 🔁 Select alliance
-  toggleAlliance(a, row);
+  toggleAlliance(a);
+syncSelectionUI();
+
 
   allianceSearchInput.value = "";
   allianceSearchResults.innerHTML = "";
