@@ -35,20 +35,24 @@
 </header>
 <main class="page">
   
-<section class="panel">
-  <label>Warzone</label>
-  <select id="warzoneSelect">
-    <option value="">Loading…</option>
-  </select>
-  <input
-  type="text"
-  id="allianceSearch"
-  placeholder="Search alliance…"
-  class="alliance-search"
-/>
+<section class="panel selector-grid">
+  <div class="selector-item">
+    <label>Warzone</label>
+    <select id="warzoneSelect">
+      <option value="">Loading…</option>
+    </select>
+  </div>
 
-<div id="allianceSearchResults" class="search-results"></div>
-
+  <div class="selector-item">
+    <label>Alliance</label>
+    <input
+      type="text"
+      id="allianceSearch"
+      placeholder="Search alliance…"
+      class="alliance-search"
+    />
+    <div id="allianceSearchResults" class="search-results"></div>
+  </div>
 </section>
 
 <section class="panel">
