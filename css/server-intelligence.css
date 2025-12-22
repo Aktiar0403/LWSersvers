@@ -2389,3 +2389,113 @@ body.admin-view .admin-only {
   font-size: 12px;
   opacity: 0.7;
 }
+/* =============================
+   DISCOVERY GRID (2 PRODUCTS)
+============================= */
+.discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+
+/* STACK ON MOBILE */
+@media (max-width: 768px) {
+  .discovery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* COMMON CARD STYLE */
+.discovery-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* =============================
+   ALLIANCE PREVIEW CARD
+============================= */
+.discovery-card input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.preview-header {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.preview-sub {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* =============================
+   DIVE CARD
+============================= */
+.dive-trigger {
+  cursor: pointer;
+  justify-content: center;
+}
+
+.dive-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dive-sub {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.dive-hint {
+  font-size: 12px;
+  opacity: 0.5;
+}
+/* =============================
+   DISCOVERY GRID – ALWAYS 2 CARDS
+============================= */
+.discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+
+/* MOBILE COMPACT TUNING */
+@media (max-width: 768px) {
+  .discovery-card {
+    padding: 10px;
+  }
+
+  .dive-title {
+    font-size: 14px;
+  }
+
+  .dive-sub {
+    font-size: 11px;
+  }
+
+  .dive-hint {
+    display: none; /* keep mobile clean */
+  }
+
+  .preview-header {
+    font-size: 13px;
+  }
+
+  .preview-sub {
+    font-size: 11px;
+  }
+
+  .discovery-card input {
+    padding: 8px;
+    font-size: 13px;
+  }
+}

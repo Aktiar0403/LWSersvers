@@ -156,37 +156,55 @@
   <section class="search-bar">
     <input id="searchInput" placeholder="🔎 Search player name" />
   </section>
+
 <!-- =============================
-     ALLIANCE → WARZONE PREVIEW
+     DISCOVERY SECTION
 ============================= -->
-<section class="alliance-preview">
-  <div class="preview-header">
-    🔎 Find Alliance (Preview)
-  </div>
-  <div class="preview-sub">
-    Based on currently available data. More coverage coming soon.
-  </div>
+<section class="discovery-grid">
 
-  <input
-    type="text"
-    id="alliancePreviewInput"
-    placeholder="Type alliance name…"
-    autocomplete="off"
-  />
+  <!-- DIVE INTO SERVER DATA CARD -->
+  <div
+    class="discovery-card dive-trigger"
+    id="openWarzoneModal"
+  >
+    <div class="dive-title">
+      🌍 Dive into Server Data
+    </div>
 
-  <div id="alliancePreviewResults" class="preview-results"></div>
+    <div class="dive-sub">
+      Currently viewing:
+      <strong id="activeWarzoneLabel">
+        All Warzones
+      </strong>
+    </div>
+
+    <div class="dive-hint">
+      Explore servers, alliances & power trends
+    </div>
+  </div>
+ <!-- ALLIANCE PREVIEW CARD -->
+  <div class="discovery-card">
+    <div class="preview-header">
+      🔎 Find Alliance (Preview)
+    </div>
+
+    <div class="preview-sub">
+      Based on current data. More coverage coming soon.
+    </div>
+
+    <input
+      type="text"
+      id="alliancePreviewInput"
+      placeholder="Type alliance name…"
+      autocomplete="off"
+    />
+
+    <div
+      id="alliancePreviewResults"
+      class="preview-results"
+    ></div>
+  </div>
 </section>
-
-<!-- =============================
-     WARZONE SELECTOR TRIGGER
-============================= -->
-<div class="warzone-trigger dive-trigger" id="openWarzoneModal">
-  <div class="dive-title">🌍 Dive into Server Data</div>
-  <div class="dive-sub">
-    Currently viewing:
-    <strong id="activeWarzoneLabel">All Warzones</strong>
-  </div>
-</div>
 
 <!-- =============================
      WARZONE MODAL
