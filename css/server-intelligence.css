@@ -2515,3 +2515,52 @@ body.admin-view .admin-only {
   text-align: center;
   padding: 18px 10px;
 }
+/* =============================
+   ALLIANCE GRID (NO SCROLL)
+============================= */
+#allianceCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* ALLIANCE CARD */
+#allianceCards .filter-card {
+  padding: 10px 8px;
+  text-align: center;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  font-size: 13px;
+  white-space: normal; /* 🔑 allows wrapping */
+}
+
+/* ACTIVE ALLIANCE */
+#allianceCards .filter-card.active {
+  background: rgba(255,255,255,0.18);
+  font-weight: 600;
+}
+
+/* HOVER / TAP FEEDBACK */
+#allianceCards .filter-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
+/* =============================
+   ALLIANCE GRID – SMART MOBILE
+============================= */
+#allianceCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 8px;
+}
+
+/* MOBILE TUNING */
+@media (max-width: 768px) {
+  #allianceCards .filter-card {
+    font-size: 11px;
+    padding: 8px 4px;
+  }
+}
