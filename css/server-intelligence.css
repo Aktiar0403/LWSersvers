@@ -2508,7 +2508,7 @@ body.admin-view .admin-only {
 }
 @media (max-width: 768px) {
   .modal-list {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 .wz-card.all {
