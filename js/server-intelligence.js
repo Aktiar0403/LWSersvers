@@ -98,8 +98,23 @@ function renderPagedPlayers(players) {
   const start = currentPage * PAGE_SIZE;
   const end = start + PAGE_SIZE;
   const slice = players.slice(start, end);
+  
   renderPlayerCards(slice, start);
+  updateLoadMoreVisibility(players.length);
 }
+
+function updateLoadMoreVisibility(totalCount) {
+  if (!loadMoreBtn) return;
+
+  const shown = (currentPage + 1) * PAGE_SIZE;
+
+  if (shown >= totalCount) {
+    loadMoreBtn.style.display = "none";
+  } else {
+    loadMoreBtn.style.display = "block";
+  }
+}
+
 
 // =============================
 // PHASE 4.1 — CACHE COMPUTED POWER
