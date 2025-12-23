@@ -2608,3 +2608,36 @@ body.admin-view .admin-only {
     font-size: 11px;
   }
 }
+.kobra-card-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Each card takes equal space */
+.kobra-card-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0; /* important for mobile */
+}
+
+/* Mobile: still single row, no wrap */
+@media (max-width: 768px) {
+  .kobra-card-row {
+    gap: 8px;
+  }
+
+  .kobra-card-btn {
+    padding: 10px;
+  }
+
+  .kobra-card-title {
+    font-size: 12px;
+  }
+
+  .kobra-card-sub {
+    font-size: 10px;
+  }
+}
