@@ -2,7 +2,7 @@
   "name": "LWS Server Intelligence",
   "short_name": "LWS",
   "description": "Server intelligence, alliance dominance, power analytics and comparisons.",
-  "start_url": "/index.html",
+  "start_url": "/server-intelligence.html",
   "display": "standalone",
   "background_color": "#05060a",
   "theme_color": "#00ffc8",

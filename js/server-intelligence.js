@@ -1289,7 +1289,21 @@ openWarzoneModalBtn.onclick = () => {
   warzoneModal.classList.remove("hidden");
   buildWarzoneModalList("");
 };
+warzoneModal.addEventListener("click", (e) => {
+  if (e.target === warzoneModal) {
+    warzoneModal.classList.add("hidden");
+  }
+});
 
+// Close on ESC key
+document.addEventListener("keydown", (e) => {
+  if (
+    e.key === "Escape" &&
+    !warzoneModal.classList.contains("hidden")
+  ) {
+    warzoneModal.classList.add("hidden");
+  }
+});
 closeWarzoneModalBtn.onclick = () => {
   warzoneModal.classList.add("hidden");
 };
