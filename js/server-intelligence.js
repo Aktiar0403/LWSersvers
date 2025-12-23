@@ -105,39 +105,15 @@ function hydrateComputedFields(players) {
 }
 
 const loaderStart = Date.now();
-let fakeProgress = 0;
-let dataReady = false;
-let progressRAF = null;
 
-const progressText = document.getElementById("progressText");
-const progressCircle = document.querySelector(".progress-ring .progress");
 
 function setProgress(pct) {
-  fakeProgress = pct;
+
   const dash = 163 - (163 * pct) / 100;
   progressCircle.style.strokeDashoffset = dash;
   progressText.textContent = pct + "%";
 }
 
-function startFakeProgress() {
-  const maxFake = 88;
-
-  function tick() {
-    if (dataReady) return;
-
-    let speed = 0.5;
-    if (fakeProgress > 30) speed = 0.35;
-    if (fakeProgress > 60) speed = 0.2;
-    if (fakeProgress >= maxFake) speed = 0;
-
-    fakeProgress = Math.min(fakeProgress + speed, maxFake);
-    setProgress(Math.floor(fakeProgress));
-
-    progressRAF = requestAnimationFrame(tick);
-  }
-
-  tick();
-}
 
 
 function hideLoader() {
@@ -151,25 +127,7 @@ function hideLoader() {
     loader.classList.add("hide");
   }, delay);
 }
-function completeProgress() {
-  cancelAnimationFrame(progressRAF);
 
-  let current = fakeProgress;
-
-  function finish() {
-    if (current >= 100) {
-      setProgress(100);
-      hideLoader();
-      return;
-    }
-
-    current += 2;
-    setProgress(current);
-    requestAnimationFrame(finish);
-  }
-
-  finish();
-}
 function timeAgo(date) {
   if (!date) return "";
 
@@ -361,7 +319,7 @@ function updateLastUpdated(players) {
   });
 }
 
-startFakeProgress();
+
 
 /* =============================
    LOAD FROM FIRESTORE
@@ -370,13 +328,11 @@ async function loadPlayers() {
   console.log("📡 Loading server_players from Firestore...");
 
   try {
-    // 🟢 Stage 1: Connecting
-    setProgress(10);
+
 
     const snap = await getDocs(collection(db, "server_players"));
 
-    // 🟢 Stage 2: Data received
-    setProgress(40);
+   
 
     allPlayers = snap.docs.map(doc => {
       const d = doc.data();
@@ -403,8 +359,6 @@ hydrateComputedFields(allPlayers);
 window.PLAYER_LIKES = likesMap;
 
 
-    // 🟢 Stage 3: Processing & building UI
-    setProgress(70);
 
     // 🔥 RESET FILTERS AFTER LOAD
     activeWarzone = "ALL";
@@ -422,8 +376,6 @@ window.PLAYER_LIKES = likesMap;
     updateLastUpdated(allPlayers);
 
 
-    // 🟢 Stage 4: Ready
-    setProgress(100);
 
     hideLoader(); // ✅ DATA READY
 
