@@ -604,8 +604,8 @@ function renderPlayerCards(players) {
   list.innerHTML = "";
 
   players.forEach((p, index) => {
-    const powerData = computeEffectivePower(p);
-    const effectivePower = powerData.value;
+    const effectivePower = p._effectivePower;
+    const powerTag = p._powerTag;
     const powerM = Math.round(effectivePower / 1_000_000);
     const firstSquad = estimateFirstSquad(effectivePower);
 
@@ -641,7 +641,7 @@ function renderPlayerCards(players) {
     ⚔️ ${firstSquad}
   </div>
 
-  <div class="pc-power-meta ${powerData.tag}">
+  <div class="pc-power-meta ${powerTag}">
     ${getPowerMeta(p)}
   </div>
 
