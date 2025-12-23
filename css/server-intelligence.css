@@ -2685,3 +2685,100 @@ body.admin-view .admin-only {
 .hidden {
   display: none !important;
 }
+/* =============================
+   🥇 TOP RANK SEGMENT
+============================= */
+
+.top-rank-segment {
+  margin: 18px auto 8px;
+  max-width: 720px;
+}
+
+.top-rank-card {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    #0b1a17,
+    #071412
+  );
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.15),
+    0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Gold accent line */
+.top-rank-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 14px 0 0 14px;
+  background: linear-gradient(
+    to bottom,
+    #ffd700,
+    #ffb700
+  );
+}
+
+/* Label */
+.top-rank-label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffd700;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+/* Player name */
+.top-rank-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* Meta info */
+.top-rank-meta {
+  margin-top: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Power */
+.top-rank-power {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #00ffc8;
+}
+
+/* Crown icon */
+.top-rank-card::after {
+  content: "👑";
+  position: absolute;
+  top: -12px;
+  right: 14px;
+  font-size: 26px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.6));
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .top-rank-card {
+    padding: 14px;
+  }
+
+  .top-rank-name {
+    font-size: 19px;
+  }
+
+  .top-rank-power {
+    font-size: 16px;
+  }
+}
