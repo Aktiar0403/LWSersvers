@@ -595,6 +595,9 @@ if (activeWarzone === "ALL") {
   dominanceSection.style.display = "none";
   dominanceGrid.innerHTML = "";
 
+
+  updateTopRankSegment([]);
+
   return; // ⛔ IMPORTANT
 }
 
