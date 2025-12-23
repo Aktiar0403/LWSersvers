@@ -397,7 +397,7 @@ async function loadPlayers() {
     });
 
     // 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
-    hydrateComputedFields(allPlayers);
+
 
     console.log("✅ Loaded players:", allPlayers.length);
     const likesMap = await loadLikesForPlayers(allPlayers);
