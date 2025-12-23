@@ -2686,52 +2686,60 @@ body.admin-view .admin-only {
   display: none !important;
 }
 /* =============================
-   🥇 TOP RANK SEGMENT
+   🥇 TOP RANK – FULL ROW CARD
 ============================= */
 
 .top-rank-segment {
-  margin: 18px auto 8px;
-  max-width: 720px;
+  width: 100%;
+  margin: 16px 0 10px;
 }
 
 .top-rank-card {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   background: linear-gradient(
-    135deg,
+    90deg,
     #0b1a17,
     #071412
   );
+
   border: 1px solid rgba(255, 215, 0, 0.35);
   border-radius: 14px;
-  padding: 16px 18px;
+
+  padding: 14px 18px;
   box-shadow:
     0 0 0 1px rgba(255, 215, 0, 0.15),
-    0 10px 30px rgba(0, 0, 0, 0.45);
+    0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
-/* Gold accent line */
-.top-rank-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  border-radius: 14px 0 0 14px;
-  background: linear-gradient(
-    to bottom,
-    #ffd700,
-    #ffb700
-  );
+/* Left side */
+.top-rank-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Crown badge */
+.top-rank-crown {
+  font-size: 30px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.6));
+}
+
+/* Text block */
+.top-rank-text {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Label */
 .top-rank-label {
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #ffd700;
-  margin-bottom: 6px;
   font-weight: 700;
 }
 
@@ -2740,45 +2748,39 @@ body.admin-view .admin-only {
   font-size: 22px;
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
-/* Meta info */
+/* Meta */
 .top-rank-meta {
-  margin-top: 4px;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.65);
+  margin-top: 2px;
 }
 
-/* Power */
+/* Right side – power */
 .top-rank-power {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: #00ffc8;
+  white-space: nowrap;
 }
 
-/* Crown icon */
-.top-rank-card::after {
-  content: "👑";
-  position: absolute;
-  top: -12px;
-  right: 14px;
-  font-size: 26px;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,.6));
-}
-
-/* Mobile adjustments */
+/* Mobile */
 @media (max-width: 600px) {
   .top-rank-card {
-    padding: 14px;
+    padding: 12px 14px;
   }
 
   .top-rank-name {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .top-rank-power {
-    font-size: 16px;
+    font-size: 18px;
+  }
+
+  .top-rank-crown {
+    font-size: 26px;
   }
 }
