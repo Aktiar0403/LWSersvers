@@ -2717,3 +2717,30 @@ body.admin-view .admin-only {
 .intel-loader.phase-ready .map-layer {
   opacity: 0.6;
 }
+/* Base */
+.progress-ring {
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+/* LOCKING — one controlled rotation */
+.intel-loader.phase-lock .progress {
+  animation: lock-spin 0.8s linear 1;
+  opacity: 0.8;
+}
+
+/* READY — confirmation pulse */
+.intel-loader.phase-ready .progress {
+  animation: lock-confirm 0.25s ease-out 1;
+  opacity: 1;
+}
+
+@keyframes lock-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes lock-confirm {
+  0%   { stroke-width: 3; }
+  100% { stroke-width: 6; }
+}
