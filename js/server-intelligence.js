@@ -477,10 +477,38 @@ function applyFilters() {
       );
     }
 
-    // 🔢 Sort by effective power
-    filteredPlayers.sort(
-      (a, b) => b._effectivePower - a._effectivePower
+// 🌍 ==========================
+// 🌍 GLOBAL MODE (TOP ONLY)
+// 🌍 ==========================
+if (activeWarzone === "ALL") {
+
+  // Always start from pre-sorted index
+  filteredPlayers = SORTED_BY_POWER;
+
+  // 🔍 Search
+  if (q) {
+    filteredPlayers = filteredPlayers.filter(p =>
+      p.name.toLowerCase().includes(q)
     );
+  }
+
+  // ✂️ Top slice
+  filteredPlayers = filteredPlayers.slice(0, globalLimit);
+
+  // 🔄 Render
+  renderPlayerCards(filteredPlayers);
+
+  // 📊 Stats
+  updatePowerSegments(filteredPlayers);
+  updateOverviewStats(allPlayers);
+
+  // 🚫 No dominance in global
+  dominanceSection.style.display = "none";
+  dominanceGrid.innerHTML = "";
+
+  return; // ⛔ IMPORTANT
+}
+
 
     // ✂️ Slice by TOP limit
     filteredPlayers = filteredPlayers.slice(0, globalLimit);
@@ -520,10 +548,38 @@ function applyFilters() {
     );
   }
 
-  // 🔢 Sort
-  filteredPlayers.sort(
-    (a, b) => b._effectivePower - a._effectivePower
+  // 🎯 ==========================
+// 🎯 WARZONE MODE
+// 🎯 ==========================
+filteredPlayers = SORTED_BY_POWER.filter(
+  p => p.warzone === Number(activeWarzone)
+);
+
+// 🔍 Search
+if (q) {
+  filteredPlayers = filteredPlayers.filter(p =>
+    p.name.toLowerCase().includes(q)
   );
+}
+
+// 🧬 Alliance filter
+if (activeAlliance !== "ALL") {
+  filteredPlayers = filteredPlayers.filter(
+    p => p.alliance === activeAlliance
+  );
+}
+
+// 🔄 Render
+renderPlayerCards(filteredPlayers);
+
+// 📊 Stats
+updatePowerSegments(filteredPlayers);
+updateOverviewStats(allPlayers);
+
+// 👑 Dominance
+dominanceSection.style.display = "block";
+renderAllianceDominance(filteredPlayers);
+
 
   // 🔄 Render
   renderPlayerCards(filteredPlayers);
