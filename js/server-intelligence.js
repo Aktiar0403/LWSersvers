@@ -272,11 +272,11 @@ const dominanceSection = document.getElementById("dominanceSection");
 if (dominanceSection) dominanceSection.style.display = "none";
 const globalTopToggle = document.getElementById("globalTopToggle");
 const globalTopTitle = document.getElementById("globalTopTitle");
-const globalTopSub = document.getElementById("globalTopSub");
+//const globalTopSub = document.getElementById("globalTopSub");
 
 function updateGlobalTopCard() {
   globalTopTitle.textContent = `TOP ${globalLimit}`;
-  globalTopSub.textContent = `Global top ${globalLimit} players`;
+ // globalTopSub.textContent = `Global top ${globalLimit} players`;
 }
 
 globalTopToggle.onclick = () => {
