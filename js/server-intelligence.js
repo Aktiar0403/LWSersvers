@@ -23,7 +23,8 @@ let LIKES_ENABLED = false;
 
 let globalLimit = 20;
 const GLOBAL_LIMITS = [20, 50, 100];
-
+const PAGE_SIZE = 50;
+let currentPage = 0;
 /* =============================
    PHASE 4 — POWER COMPUTATION
 ============================= */
@@ -245,7 +246,7 @@ function estimateFirstSquad(totalPower) {
 ============================= */
 let allPlayers = [];
 let filteredPlayers = [];
-
+let SORTED_BY_POWER = [];
 let activeWarzone = "ALL";
 let activeAlliance = "ALL";
 let dominanceSelectedAlliance = null;
@@ -387,20 +388,32 @@ async function loadPlayers() {
   alliance: d.alliance || "",
   warzone: Number(d.warzone),
 
-  totalPower: Number(d.totalPower ?? 0), // keep for admin
-  basePower: Number(d.basePower ?? d.totalPower ?? 0),
-  powerSource: d.powerSource || "confirmed",
-  lastConfirmedAt: d.lastConfirmedAt || d.importedAt
-};
+    totalPower: Number(d.totalPower ?? 0), // keep for admin
+   basePower: Number(d.basePower ?? d.totalPower ?? 0),
+   powerSource: d.powerSource || "confirmed",
+   lastConfirmedAt: d.lastConfirmedAt || d.importedAt
+  };
 
     });
 
-// 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
-hydrateComputedFields(allPlayers);
+    // 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
+    hydrateComputedFields(allPlayers);
 
     console.log("✅ Loaded players:", allPlayers.length);
     const likesMap = await loadLikesForPlayers(allPlayers);
-window.PLAYER_LIKES = likesMap;
+   window.PLAYER_LIKES = likesMap;
+// =============================
+// PHASE 4.2 — PRE-SORT INDEXES (10K SAFE)
+// =============================
+let SORTED_BY_POWER = [];
+
+function prepareSortedIndexes() {
+  SORTED_BY_POWER = [...allPlayers].sort(
+    (a, b) => b._effectivePower - a._effectivePower
+  );
+}
+hydrateComputedFields(allPlayers);
+prepareSortedIndexes();
 
 
     // 🟢 Stage 3: Processing & building UI
@@ -467,15 +480,25 @@ function applyFilters() {
     }
 
     // 🔢 Sort by effective power
-    filteredPlayers.sort(
-      (a, b) => b._effectivePower - a._effectivePower
-    );
+filteredPlayers = SORTED_BY_POWER;
+
+// 🔍 Search
+if (q) {
+  filteredPlayers = filteredPlayers.filter(p =>
+    p.name.toLowerCase().includes(q)
+  );
+}
+
+// ✂️ Top slice
+filteredPlayers = filteredPlayers.slice(0, globalLimit);
+
 
     // ✂️ Slice by TOP limit
     filteredPlayers = filteredPlayers.slice(0, globalLimit);
 
     // 🔄 Render
-    renderPlayerCards(filteredPlayers);
+    currentPage = 0;
+renderPagedPlayers(filteredPlayers);
 
     // 📊 Stats (global)
     updatePowerSegments(filteredPlayers);
@@ -510,12 +533,28 @@ function applyFilters() {
   }
 
   // 🔢 Sort
-  filteredPlayers.sort(
-    (a, b) => b._effectivePower - a._effectivePower
+filteredPlayers = SORTED_BY_POWER.filter(
+  p => p.warzone === Number(activeWarzone)
+);
+
+// 🔍 Search
+if (q) {
+  filteredPlayers = filteredPlayers.filter(p =>
+    p.name.toLowerCase().includes(q)
   );
+}
+
+// 🧬 Alliance
+if (activeAlliance !== "ALL") {
+  filteredPlayers = filteredPlayers.filter(
+    p => p.alliance === activeAlliance
+  );
+}
+
 
   // 🔄 Render
-  renderPlayerCards(filteredPlayers);
+  currentPage = 0;
+renderPagedPlayers(filteredPlayers);
 
   // 📊 Stats
   updatePowerSegments(filteredPlayers);
@@ -526,6 +565,11 @@ function applyFilters() {
   renderAllianceDominance(filteredPlayers);
 }
 
+function renderPagedPlayers(players) {
+  const start = currentPage * PAGE_SIZE;
+  const slice = players.slice(start, start + PAGE_SIZE);
+  renderPlayerCards(slice);
+}
 
 /* =============================
    TABLE (FINAL – Phase 5.5 UI)
@@ -537,8 +581,9 @@ function renderPlayerCards(players) {
   list.innerHTML = "";
 
   players.forEach((p, index) => {
-    const powerData = computeEffectivePower(p);
-    const effectivePower = powerData.value;
+const effectivePower = p._effectivePower;
+const powerTag = p._powerTag;
+
     const powerM = Math.round(effectivePower / 1_000_000);
     const firstSquad = estimateFirstSquad(effectivePower);
 
@@ -608,8 +653,8 @@ ${LIKES_ENABLED ? `
   });
 }
 
-const likesMap = await loadLikesForPlayers(allPlayers);
-window.PLAYER_LIKES = likesMap;
+if (progressRAF) cancelAnimationFrame(progressRAF);
+
 
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest(".like-btn");
@@ -974,7 +1019,16 @@ window.deleteByUploadId = deleteByUploadId;
 /* =============================
    SEARCH
 ============================= */
-searchInput.oninput = applyFilters;
+function debounce(fn, delay = 200) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), delay);
+  };
+}
+
+searchInput.oninput = debounce(applyFilters, 200);
+
 
 /* =============================
    INIT
