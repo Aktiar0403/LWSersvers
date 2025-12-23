@@ -452,6 +452,7 @@ async function loadPlayers() {
 
     // 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
     hydrateComputedFields(allPlayers);
+    await new Promise(r => setTimeout(r, 0));
     prepareSortedIndexes();
 
     console.log("✅ Loaded players:", allPlayers.length);
@@ -473,9 +474,10 @@ async function loadPlayers() {
     applyFilters();
 
     // 🏆 TOP 5 ELITE
-    renderTop5Elite(allPlayers);
-
-    updateLastUpdated(allPlayers);
+    requestIdleCallback(() => {
+  renderTop5Elite(allPlayers);
+  updateLastUpdated(allPlayers);
+});
 
 
     // 🟢 Stage 4: Ready
@@ -733,8 +735,11 @@ ${LIKES_ENABLED ? `
   });
 }
 
-const likesMap = await loadLikesForPlayers(allPlayers);
-window.PLAYER_LIKES = likesMap;
+requestIdleCallback(async () => {
+  const likesMap = await loadLikesForPlayers(allPlayers);
+  window.PLAYER_LIKES = likesMap;
+});
+
 
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest(".like-btn");
