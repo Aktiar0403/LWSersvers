@@ -385,6 +385,9 @@ async function loadPlayers() {
 
     });
 
+// 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
+hydrateComputedFields(allPlayers);
+
     console.log("✅ Loaded players:", allPlayers.length);
     const likesMap = await loadLikesForPlayers(allPlayers);
 window.PLAYER_LIKES = likesMap;
@@ -434,71 +437,85 @@ async function loadLikesForPlayers(players) {
   return map;
 }
 
-
-/* =============================
-   FILTERING
-============================= */
 function applyFilters() {
-  filteredPlayers = [...allPlayers];
 
-  // Search
   const q = searchInput.value.trim().toLowerCase();
+
+  // 🌍 ==========================
+  // 🌍 GLOBAL MODE (TOP ONLY)
+  // 🌍 ==========================
+  if (activeWarzone === "ALL") {
+
+    // Always start clean
+    filteredPlayers = [...allPlayers];
+
+    // 🔍 Apply search ONLY on global list
+    if (q) {
+      filteredPlayers = filteredPlayers.filter(p =>
+        p.name.toLowerCase().includes(q)
+      );
+    }
+
+    // 🔢 Sort by effective power
+    filteredPlayers.sort(
+      (a, b) => b._effectivePower - a._effectivePower
+    );
+
+    // ✂️ Slice by TOP limit
+    filteredPlayers = filteredPlayers.slice(0, globalLimit);
+
+    // 🔄 Render
+    renderPlayerCards(filteredPlayers);
+
+    // 📊 Stats (global)
+    updatePowerSegments(filteredPlayers);
+    updateOverviewStats(allPlayers);
+
+    // 🚫 No dominance in global
+    dominanceSection.style.display = "none";
+    dominanceGrid.innerHTML = "";
+
+    return; // ⛔ IMPORTANT — stop here
+  }
+
+  // 🎯 ==========================
+  // 🎯 WARZONE MODE
+  // 🎯 ==========================
+  filteredPlayers = allPlayers.filter(
+    p => p.warzone === Number(activeWarzone)
+  );
+
+  // 🔍 Search
   if (q) {
     filteredPlayers = filteredPlayers.filter(p =>
       p.name.toLowerCase().includes(q)
     );
   }
 
- // 🔑 WARZONE LOGIC
-// 🔑 WARZONE LOGIC
-if (activeWarzone === "ALL") {
-  // 🌍 GLOBAL MODE (Top 20 / 50 / 100)
-
-  filteredPlayers.sort(
-    (a, b) => b._effectivePower - a._effectivePower
-  );
-
-  filteredPlayers = filteredPlayers.slice(0, globalLimit);
-
-} else {
-  // 🎯 WARZONE SELECTED
-  filteredPlayers = filteredPlayers.filter(
-    p => p.warzone === Number(activeWarzone)
-  );
-
-  // 🧬 ALLIANCE FILTER (only inside warzone)
+  // 🧬 Alliance filter
   if (activeAlliance !== "ALL") {
     filteredPlayers = filteredPlayers.filter(
       p => p.alliance === activeAlliance
     );
   }
 
-  // Rank inside warzone / alliance
+  // 🔢 Sort
   filteredPlayers.sort(
     (a, b) => b._effectivePower - a._effectivePower
   );
-}
 
-// 🔄 RENDER
-renderPlayerCards(filteredPlayers);
+  // 🔄 Render
+  renderPlayerCards(filteredPlayers);
 
-// 📊 STATS
-updatePowerSegments(filteredPlayers);
-updateOverviewStats(allPlayers);
+  // 📊 Stats
+  updatePowerSegments(filteredPlayers);
+  updateOverviewStats(allPlayers);
 
-// 👑 DOMINANCE (only in warzone mode)
-const dominanceSection = document.getElementById("dominanceSection");
-
-if (activeWarzone !== "ALL") {
+  // 👑 Dominance
   dominanceSection.style.display = "block";
   renderAllianceDominance(filteredPlayers);
-} else {
-  dominanceSection.style.display = "none";
-  dominanceGrid.innerHTML = "";
 }
 
-
-}
 
 /* =============================
    TABLE (FINAL – Phase 5.5 UI)
