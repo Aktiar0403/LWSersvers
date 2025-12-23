@@ -1037,11 +1037,19 @@ async function deleteByUploadId(uploadId) {
 }
 
 window.deleteByUploadId = deleteByUploadId;
+function debounce(fn, delay = 200) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
 
 /* =============================
    SEARCH
 ============================= */
-searchInput.oninput = applyFilters;
+searchInput.oninput = debounce(applyFilters, 200);
+
 
 /* =============================
    INIT
