@@ -477,16 +477,7 @@ async function loadPlayers() {
     //buildWarzoneCards();
 
     // 🔥 APPLY FILTERS
-    if (isMobile()) {
-  // TEMP limit for initial interaction
-  filteredPlayers = SORTED_BY_POWER.slice(0, 500);
-  currentPage = 0;
-  renderPagedPlayers(filteredPlayers);
-  setupInfiniteScroll();
-} else {
-  applyFilters();
-}
-;
+    applyFilters();
 
     // 🏆 TOP 5 ELITE
     requestIdleCallback(() => {
