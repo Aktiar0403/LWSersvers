@@ -2682,3 +2682,6 @@ body.admin-view .admin-only {
     text-align: center;
   }
 }
+.hidden {
+  display: none !important;
+}
