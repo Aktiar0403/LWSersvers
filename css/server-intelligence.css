@@ -2698,11 +2698,6 @@ body.admin-view .admin-only {
 .intel-loader.phase-ready .map-layer {
   opacity: 0.6;
 }
-/* Base */
-.progress-ring {
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
-}
 
 /* LOCKING — one controlled rotation */
 .intel-loader.phase-lock .progress {
@@ -2716,12 +2711,46 @@ body.admin-view .admin-only {
   opacity: 1;
 }
 
-@keyframes lock-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+
+/* =============================
+   CORE APP LOADER (BASE)
+============================= */
+
+#appLoader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: radial-gradient(
+    circle at center,
+    #0b1f1a 0%,
+    #060c0a 60%,
+    #020403 100%
+  );
+
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
-@keyframes lock-confirm {
-  0%   { stroke-width: 3; }
-  100% { stroke-width: 6; }
+/* Hide state */
+#appLoader.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.intel-loader .map-layer {
+  position: relative;
+  width: 280px;
+  height: 160px;
+  opacity: 0.9;
+}
+
+.intel-loader .world-map {
+  width: 100%;
+  height: auto;
+  opacity: 0.35;
 }
