@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LWS Showdown</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Standard favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+
+<!-- PNG favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+
+  <!-- KOBRA Base -->
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!-- Showdown Neon -->
+  <link rel="stylesheet" href="./css/alliance-showdown.css" />
+</head>
+
+<body class="kobra-dark">
+
+<header class="site-header">
+  <div class="logo">
+    <a href="/">LWServers</a>
+  </div>
+  <nav class="nav">
+    <a href="/server-intelligence.html">Server Intelligence</a>
+    <a href="/server-compare.html">Compare</a>
+    <a href="/alliance-showdown.html" class="badge-link">
+      Alliance Showdown
+      <span class="badge">Experimental</span>
+    </a>
+  </nav>
+</header>
+<main class="page">
+  
+<section class="panel selector-grid">
+  <div class="selector-item">
+    <label>Warzone</label>
+    <select id="warzoneSelect">
+      <option value="">Loading…</option>
+    </select>
+  </div>
+
+  <div class="selector-item">
+    <label>Alliance</label>
+    <input
+      type="text"
+      id="allianceSearch"
+      placeholder="Search alliance…"
+      class="alliance-search"
+    />
+    <div id="allianceSearchResults" class="search-results"></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Top Alliances</h2>
+  <p class="hint">Select up to 8 alliances · Cross-warzone allowed</p>
+  <div id="allianceList" class="alliance-list"></div>
+</section>
+
+<section class="panel center">
+  <button id="analyzeBtn" disabled>⚔️ Analyze Showdown</button>
+  <button id="resetBtn" class="reset-btn" disabled>
+  Reset
+</button>
+
+</section>
+
+<section id="results" class="panel hidden">
+  <h2>Alliance Intelligence</h2>
+  <div id="allianceCards"></div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module" src="./js/alliance-showdown.js"></script>
+</main>
+
+<section id="acis-appendix">
+  <div class="acis-container">
+
+    <h2 class="acis-title">ACIS — Alliance Combat Intelligence System</h2>
+
+    <p class="acis-summary">
+      ACIS is a multi-model combat inference framework derived from aggregated
+      Top-200 Warzone telemetry, designed to estimate alliance-level combat
+      readiness under sustained attrition rather than raw power comparison.
+    </p>
+
+    <div class="acis-equation-inline">
+      <code>CCI = α·ECP + β·FEV + γ·DEI + δ·σ</code>
+      <span>Composite Combat Index</span>
+    </div>
+
+    <ul class="acis-points">
+      <li><strong>ECP</strong> — Time-corrected Effective Combat Power</li>
+      <li><strong>FEV</strong> — Frontline Engagement Vector (first-squad force)</li>
+      <li><strong>DEI</strong> — Depth Elasticity Index (bench sustainability)</li>
+      <li><strong>σ</strong> — Stability Coefficient (collapse resistance)</li>
+    </ul>
+
+    <p class="acis-ai-compact">
+  Designed by <strong>Akki</strong> (also known as <strong>AkkiGPT</strong>),
+  ACIS operates on a version-pinned ensemble of
+  <strong>GPT-4.1.x reasoning models</strong>,
+  <strong>GPT-4o (o-series) inference units</strong>, and
+  <strong>GPT-4-class analytical variants</strong>.
+  Probabilistic weighting is handled by decision-transformer ensembles,
+  with uncertainty evaluated via Monte Carlo simulation and resolved through
+  an <strong>inference arbitration layer</strong>.
+  This system was developed with tremendous support, validation input,
+  and field-level insights from
+  <strong>SleepyRahul</strong>,
+  <strong>Mighty07</strong>,
+  <strong>SuperSnail</strong>,
+  <strong>Alex (President Server 704)</strong>,
+  and many others across multiple warzones.
+</p>
+
+
+
+    <p class="acis-footnote">
+      Outputs represent probabilistic readiness estimates, not deterministic
+      outcomes. Tactical execution, leadership, and diplomacy are non-modeled variables.
+    </p>
+
+  </div>
+
+<!-- FLOATING BUY ME A COFFEE (PayPal.me) -->
+<a href="https://www.paypal.com/paypalme/lwservers"
+   target="_blank"
+   title="Buy me a coffee"
+   style="
+     position:fixed;
+     bottom:20px;
+     right:20px;
+     z-index:9999;
+     display:flex;
+     align-items:center;
+     gap:10px;
+     padding:10px 14px;
+     background:#ffdd00;
+     color:#000;
+     font-size:14px;
+     font-weight:600;
+     text-decoration:none;
+     border-radius:999px;
+     box-shadow:0 10px 25px rgba(0,0,0,0.35);
+     font-family:inherit;
+   ">
+
+  <!-- Coffee Cup Icon -->
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path fill="#000"
+      d="M3 8h13a4 4 0 0 1 0 8h-1a6 6 0 0 1-12 0V8z"/>
+    <path fill="#000"
+      d="M17 9h1a2 2 0 0 1 0 4h-1V9z"/>
+  </svg>
+
+  Buy me a coffee
+</a>
+
+
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2025 LWServers</span>
+    <small style="opacity:.75;">
+      Independent fan-made analytics. Not affiliated with or endorsed by the game developers.
+    </small>
+    <nav>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
