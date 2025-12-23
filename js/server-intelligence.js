@@ -98,7 +98,7 @@ function renderPagedPlayers(players) {
   const start = currentPage * PAGE_SIZE;
   const end = start + PAGE_SIZE;
   const slice = players.slice(start, end);
-  renderPlayerCards(slice);
+  renderPlayerCards(slice, start);
 }
 
 // =============================
@@ -615,11 +615,14 @@ renderPagedPlayers(filteredPlayers);
 /* =============================
    TABLE (FINAL – Phase 5.5 UI)
 ============================= */
-function renderPlayerCards(players) {
+function renderPlayerCards(players, rankOffset = 0) {
   const list = document.getElementById("playerList");
   if (!list) return;
 
+  if (rankOffset === 0) {
   list.innerHTML = "";
+}
+
 
   players.forEach((p, index) => {
     const effectivePower = p._effectivePower;
@@ -633,7 +636,8 @@ function renderPlayerCards(players) {
 
     card.innerHTML = `
       <div class="pc-main">
-  <div class="pc-rank">#${index + 1}</div>
+  <div class="pc-rank">#${rankOffset + index + 1}</div>
+
 
   <div class="pc-info">
     <div class="pc-name">${p.name}</div>
