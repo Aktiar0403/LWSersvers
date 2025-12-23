@@ -526,22 +526,19 @@ function updateTopRankSegment(players) {
   ) {
     topRankSegment.classList.add("hidden");
 
-    // 🔒 Clear text to avoid stale content
     topRankLabel.textContent = "";
     topRankName.textContent = "";
-
     topRankPower.textContent = "";
+    topRankS1.textContent = "";
     return;
   }
 
-  // ✅ Rank #1 (already sorted list)
   const topPlayer = players[0];
   if (!topPlayer) {
     topRankSegment.classList.add("hidden");
     return;
   }
 
-  // 🏷️ Context label
   topRankLabel.textContent =
     activeAlliance !== "ALL"
       ? "Alliance Rank #1"
@@ -549,12 +546,19 @@ function updateTopRankSegment(players) {
 
   topRankName.textContent = topPlayer.name;
 
-
+  // Total power
   topRankPower.textContent =
     `⚡ ${formatPowerM(getEffectivePowerValue(topPlayer))}`;
 
+  // Estimated S1 power
+  const s1Range = estimateFirstSquad(
+    getEffectivePowerValue(topPlayer)
+  );
+  topRankS1.textContent = `⚔️: ${s1Range}`;
+
   topRankSegment.classList.remove("hidden");
 }
+
 
 function applyFilters() {
 
