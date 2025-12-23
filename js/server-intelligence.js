@@ -571,16 +571,32 @@ function updateBasePowerSegment() {
         warzoneBasePower) *
       100;
 
-    const sign = diffPct >= 0 ? "+" : "";
+   const sign = diffPct >= 0 ? "+" : "";
 
-    basePowerValue.textContent =
-      `${sign}${diffPct.toFixed(1)}%`;
+basePowerValue.textContent =
+  `${sign}${diffPct.toFixed(1)}%`;
 
-    basePowerLabel.textContent =
-      "vs warzone base";
+basePowerLabel.textContent =
+  "vs warzone base";
 
-    basePowerSegment.classList.remove("hidden");
-    return;
+// 🔥 COLOR CODING
+basePowerSegment.classList.remove(
+  "base-power-positive",
+  "base-power-negative",
+  "base-power-neutral"
+);
+
+if (diffPct > 0) {
+  basePowerSegment.classList.add("base-power-positive");
+} else if (diffPct < 0) {
+  basePowerSegment.classList.add("base-power-negative");
+} else {
+  basePowerSegment.classList.add("base-power-neutral");
+}
+
+basePowerSegment.classList.remove("hidden");
+return;
+
   }
 
   // ==========================
