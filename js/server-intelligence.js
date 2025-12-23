@@ -330,7 +330,6 @@ const dominanceSection = document.getElementById("dominanceSection");
 const topRankSegment = document.getElementById("topRankSegment");
 const topRankLabel = document.getElementById("topRankLabel");
 const topRankName = document.getElementById("topRankName");
-const topRankMeta = document.getElementById("topRankMeta");
 const topRankPower = document.getElementById("topRankPower");
 
 
@@ -530,7 +529,7 @@ function updateTopRankSegment(players) {
     // 🔒 Clear text to avoid stale content
     topRankLabel.textContent = "";
     topRankName.textContent = "";
-    topRankMeta.textContent = "";
+
     topRankPower.textContent = "";
     return;
   }
@@ -549,8 +548,7 @@ function updateTopRankSegment(players) {
       : "Warzone Rank #1";
 
   topRankName.textContent = topPlayer.name;
-  topRankMeta.textContent =
-    `WZ ${topPlayer.warzone} • ${topPlayer.alliance || "—"}`;
+
 
   topRankPower.textContent =
     `⚡ ${formatPowerM(getEffectivePowerValue(topPlayer))}`;
