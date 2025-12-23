@@ -2682,3 +2682,38 @@ body.admin-view .admin-only {
     text-align: center;
   }
 }
+.intel-loader {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.intel-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.intel-loader.phase-scan .pulse {
+  animation: pulse-in 1.2s infinite ease-in-out;
+}
+
+.intel-loader.phase-scan .flow-lines line {
+  stroke: rgba(0,255,200,0.35);
+  animation: flow-glow 1.2s infinite alternate;
+}
+.intel-loader.phase-lock .pulse {
+  animation: none;
+  opacity: 0.4;
+}
+
+.intel-loader.phase-lock .intel-core {
+  box-shadow: 0 0 18px rgba(0,255,200,0.7);
+  transform: scale(1.05);
+  transition: all 0.4s ease;
+}
+.intel-loader.phase-ready .intel-core {
+  box-shadow: 0 0 26px rgba(0,255,200,1);
+  transform: scale(1.1);
+}
+
+.intel-loader.phase-ready .map-layer {
+  opacity: 0.6;
+}

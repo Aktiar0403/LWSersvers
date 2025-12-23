@@ -127,6 +127,34 @@ function hideLoader() {
     loader.classList.add("hide");
   }, delay);
 }
+/* =============================
+   ADAPTIVE INTEL LOADER CONTROL
+============================= */
+const loader = document.getElementById("appLoader");
+const intelFeed = document.getElementById("intelFeed");
+
+let dataResolved = false;
+let scanStart = Date.now();
+
+function setPhase(phase, text) {
+  if (!loader) return;
+
+  loader.classList.remove(
+    "phase-scan",
+    "phase-lock",
+    "phase-ready"
+  );
+
+  loader.classList.add(`phase-${phase}`);
+
+  if (intelFeed && text) {
+    intelFeed.textContent = text;
+  }
+}
+
+/* 🔰 INITIAL PHASE (runs immediately) */
+setPhase("scan", "Scanning global warzones…");
+
 
 function timeAgo(date) {
   if (!date) return "";
@@ -377,7 +405,26 @@ window.PLAYER_LIKES = likesMap;
 
 
 
-    hideLoader(); // ✅ DATA READY
+    // 📡 DATA READY — TRANSITION LOADER
+dataResolved = true;
+
+const scanElapsed = Date.now() - scanStart;
+const remainingScan = Math.max(0, 600 - scanElapsed);
+
+setTimeout(() => {
+  setPhase("lock", "Locking intelligence…");
+
+  setTimeout(() => {
+    setPhase("ready", "Intelligence ready.");
+
+    setTimeout(() => {
+      hideLoader();
+    }, 250);
+
+  }, 400);
+
+}, remainingScan);
+
 
   } 
   catch (err) {
