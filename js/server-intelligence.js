@@ -490,8 +490,16 @@ async function loadPlayers() {
 
     // 🏆 TOP 5 ELITE
     requestIdleCallback(() => {
+ if (isMobile()) {
+  requestIdleCallback(() => {
+    renderTop5Elite(allPlayers);
+    updateLastUpdated(allPlayers);
+  });
+} else {
   renderTop5Elite(allPlayers);
   updateLastUpdated(allPlayers);
+}
+
   });
 
 
