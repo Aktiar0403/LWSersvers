@@ -21,6 +21,8 @@ window.IS_ADMIN = false;
 let editingPlayer = null;
 let LIKES_ENABLED = false;
 
+let globalLimit = 100;
+const GLOBAL_LIMITS = [20, 50, 100];
 
 /* =============================
    PHASE 4 — POWER COMPUTATION
@@ -254,7 +256,33 @@ const dominanceGrid = $("dominanceGrid");
 const pasteData = $("pasteData");
 const saveBtn = $("saveBtn");
 const dominanceSection = document.getElementById("dominanceSection");
+
+
+
 if (dominanceSection) dominanceSection.style.display = "none";
+const globalTopToggle = document.getElementById("globalTopToggle");
+const globalTopTitle = document.getElementById("globalTopTitle");
+const globalTopSub = document.getElementById("globalTopSub");
+
+function updateGlobalTopCard() {
+  globalTopTitle.textContent = `TOP ${globalLimit}`;
+  globalTopSub.textContent = `Global top ${globalLimit} players`;
+}
+
+globalTopToggle.onclick = () => {
+  // Only active in GLOBAL mode
+  if (activeWarzone !== "ALL") return;
+
+  const idx = GLOBAL_LIMITS.indexOf(globalLimit);
+  globalLimit = GLOBAL_LIMITS[(idx + 1) % GLOBAL_LIMITS.length];
+
+  updateGlobalTopCard();
+  applyFilters();
+};
+
+// init
+updateGlobalTopCard();
+
 
 /* =============================
    TOP 5 ELITE PLAYERS
@@ -422,14 +450,15 @@ function applyFilters() {
   }
 
  // 🔑 WARZONE LOGIC
+// 🔑 WARZONE LOGIC
 if (activeWarzone === "ALL") {
-  // 🌍 LANDING: GLOBAL TOP 50 ONLY
-  filteredPlayers.sort((a, b) =>
-    getEffectivePowerValue(b) - getEffectivePowerValue(a)
-  
+  // 🌍 GLOBAL MODE (Top 20 / 50 / 100)
+
+  filteredPlayers.sort(
+    (a, b) => b._effectivePower - a._effectivePower
   );
 
-  filteredPlayers = filteredPlayers.slice(0, 100);
+  filteredPlayers = filteredPlayers.slice(0, globalLimit);
 
 } else {
   // 🎯 WARZONE SELECTED
@@ -445,21 +474,20 @@ if (activeWarzone === "ALL") {
   }
 
   // Rank inside warzone / alliance
-  filteredPlayers.sort((a, b) =>
-    getEffectivePowerValue(b) - getEffectivePowerValue(a)
+  filteredPlayers.sort(
+    (a, b) => b._effectivePower - a._effectivePower
   );
 }
 
-
-
+// 🔄 RENDER
 renderPlayerCards(filteredPlayers);
 
-  
- 
-
-  updatePowerSegments(filteredPlayers);
+// 📊 STATS
+updatePowerSegments(filteredPlayers);
 updateOverviewStats(allPlayers);
-  const dominanceSection = document.getElementById("dominanceSection");
+
+// 👑 DOMINANCE (only in warzone mode)
+const dominanceSection = document.getElementById("dominanceSection");
 
 if (activeWarzone !== "ALL") {
   dominanceSection.style.display = "block";
@@ -468,6 +496,7 @@ if (activeWarzone !== "ALL") {
   dominanceSection.style.display = "none";
   dominanceGrid.innerHTML = "";
 }
+
 
 }
 
