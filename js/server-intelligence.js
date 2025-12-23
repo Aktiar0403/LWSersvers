@@ -93,6 +93,14 @@ function getEffectivePowerValue(p) {
   return computeEffectivePower(p).value;
 }
 
+
+function renderPagedPlayers(players) {
+  const start = currentPage * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
+  const slice = players.slice(start, end);
+  renderPlayerCards(slice);
+}
+
 // =============================
 // PHASE 4.1 — CACHE COMPUTED POWER
 // =============================
@@ -259,6 +267,8 @@ let SORTED_BY_POWER = [];
 let activeWarzone = "ALL";
 let activeAlliance = "ALL";
 let dominanceSelectedAlliance = null;
+const PAGE_SIZE = 50;
+let currentPage = 0;
 
 
 /* =============================
@@ -496,7 +506,9 @@ if (activeWarzone === "ALL") {
   filteredPlayers = filteredPlayers.slice(0, globalLimit);
 
   // 🔄 Render
-  renderPlayerCards(filteredPlayers);
+  currentPage = 0;
+renderPagedPlayers(filteredPlayers);
+
 
   // 📊 Stats
   updatePowerSegments(filteredPlayers);
@@ -514,7 +526,9 @@ if (activeWarzone === "ALL") {
     filteredPlayers = filteredPlayers.slice(0, globalLimit);
 
     // 🔄 Render
-    renderPlayerCards(filteredPlayers);
+    currentPage = 0;
+renderPagedPlayers(filteredPlayers);
+
 
     // 📊 Stats (global)
     updatePowerSegments(filteredPlayers);
@@ -570,7 +584,9 @@ if (activeAlliance !== "ALL") {
 }
 
 // 🔄 Render
-renderPlayerCards(filteredPlayers);
+currentPage = 0;
+renderPagedPlayers(filteredPlayers);
+
 
 // 📊 Stats
 updatePowerSegments(filteredPlayers);
@@ -582,7 +598,9 @@ renderAllianceDominance(filteredPlayers);
 
 
   // 🔄 Render
-  renderPlayerCards(filteredPlayers);
+  currentPage = 0;
+renderPagedPlayers(filteredPlayers);
+
 
   // 📊 Stats
   updatePowerSegments(filteredPlayers);
@@ -1383,5 +1401,13 @@ if (logoutBtn) {
       alert("Logout failed");
       console.error(err);
     }
+  };
+}
+const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+if (loadMoreBtn) {
+  loadMoreBtn.onclick = () => {
+    currentPage++;
+    renderPagedPlayers(filteredPlayers);
   };
 }
