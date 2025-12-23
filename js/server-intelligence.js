@@ -327,6 +327,12 @@ const dominanceGrid = $("dominanceGrid");
 const pasteData = $("pasteData");
 const saveBtn = $("saveBtn");
 const dominanceSection = document.getElementById("dominanceSection");
+const topRankSegment = document.getElementById("topRankSegment");
+const topRankLabel = document.getElementById("topRankLabel");
+const topRankName = document.getElementById("topRankName");
+const topRankMeta = document.getElementById("topRankMeta");
+const topRankPower = document.getElementById("topRankPower");
+
 
 
 
@@ -552,46 +558,6 @@ if (activeWarzone === "ALL") {
 }
 
 
-    // ✂️ Slice by TOP limit
-    filteredPlayers = filteredPlayers.slice(0, globalLimit);
-
-    // 🔄 Render
-    currentPage = 0;
-renderPagedPlayers(filteredPlayers);
-setupInfiniteScroll();
-
-    // 📊 Stats (global)
-    updatePowerSegments(filteredPlayers);
-    updateOverviewStats(allPlayers);
-
-    // 🚫 No dominance in global
-    dominanceSection.style.display = "none";
-    dominanceGrid.innerHTML = "";
-
-    return; // ⛔ IMPORTANT — stop here
-  }
-
-  // 🎯 ==========================
-  // 🎯 WARZONE MODE
-  // 🎯 ==========================
-  filteredPlayers = allPlayers.filter(
-    p => p.warzone === Number(activeWarzone)
-  );
-
-  // 🔍 Search
-  if (q) {
-    filteredPlayers = filteredPlayers.filter(p =>
-      p.name.toLowerCase().includes(q)
-    );
-  }
-
-  // 🧬 Alliance filter
-  if (activeAlliance !== "ALL") {
-    filteredPlayers = filteredPlayers.filter(
-      p => p.alliance === activeAlliance
-    );
-  }
-
   // 🎯 ==========================
 // 🎯 WARZONE MODE
 // 🎯 ==========================
@@ -613,20 +579,6 @@ if (activeAlliance !== "ALL") {
   );
 }
 
-// 🔄 Render
-currentPage = 0;
-renderPagedPlayers(filteredPlayers);
-setupInfiniteScroll();
-
-// 📊 Stats
-updatePowerSegments(filteredPlayers);
-updateOverviewStats(allPlayers);
-
-// 👑 Dominance
-dominanceSection.style.display = "block";
-renderAllianceDominance(filteredPlayers);
-
-
   // 🔄 Render
   currentPage = 0;
 renderPagedPlayers(filteredPlayers);
@@ -639,6 +591,8 @@ setupInfiniteScroll();
   // 👑 Dominance
   dominanceSection.style.display = "block";
   renderAllianceDominance(filteredPlayers);
+  updateTopRankSegment(filteredPlayers);
+
 }
 
 
