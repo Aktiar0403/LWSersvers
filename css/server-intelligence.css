@@ -2944,3 +2944,6 @@ body.admin-view .admin-only {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
+body.loading .page {
+  filter: blur(2px) brightness(0.6);
+}

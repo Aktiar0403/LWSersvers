@@ -127,14 +127,8 @@ function hideLoader() {
     loader.classList.add("hide");
   }, delay);
 }
-/* =============================
-   ADAPTIVE INTEL LOADER CONTROL
-============================= */
-const loader = document.getElementById("appLoader");
-const intelFeed = document.getElementById("intelFeed");
 
-let dataResolved = false;
-let scanStart = Date.now();
+
 
 function setPhase(phase, text) {
   if (!loader) return;
