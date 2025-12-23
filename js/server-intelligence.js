@@ -515,21 +515,7 @@ function applyFilters() {
 
   const q = searchInput.value.trim().toLowerCase();
 
-  // 🌍 ==========================
-  // 🌍 GLOBAL MODE (TOP ONLY)
-  // 🌍 ==========================
-  if (activeWarzone === "ALL") {
-
-    // Always start clean
-    filteredPlayers = [...allPlayers];
-
-    // 🔍 Apply search ONLY on global list
-    if (q) {
-      filteredPlayers = filteredPlayers.filter(p =>
-        p.name.toLowerCase().includes(q)
-      );
-    }
-
+  
 // 🌍 ==========================
 // 🌍 GLOBAL MODE (TOP ONLY)
 // 🌍 ==========================
@@ -550,8 +536,8 @@ if (activeWarzone === "ALL") {
 
   // 🔄 Render
   currentPage = 0;
-renderPagedPlayers(filteredPlayers);
-setupInfiniteScroll();
+  renderPagedPlayers(filteredPlayers);
+  setupInfiniteScroll();
 
 
   // 📊 Stats
