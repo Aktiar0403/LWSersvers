@@ -332,6 +332,9 @@ const topRankLabel = document.getElementById("topRankLabel");
 const topRankName = document.getElementById("topRankName");
 const topRankPower = document.getElementById("topRankPower");
 
+const basePowerSegment = document.getElementById("basePowerSegment");
+const basePowerValue = document.getElementById("basePowerValue");
+const basePowerLabel = document.getElementById("basePowerLabel");
 
 
 
@@ -516,6 +519,82 @@ async function loadPlayers() {
   return map;
 }
 
+function updateBasePowerSegment() {
+  // 🌍 GLOBAL MODE → hide
+  if (activeWarzone === "ALL") {
+    basePowerSegment.classList.add("hidden");
+    basePowerValue.textContent = "—";
+    basePowerLabel.textContent = "";
+    return;
+  }
+
+  // ==========================
+  // WARZONE BASE POWER
+  // ==========================
+  const warzonePlayers = SORTED_BY_POWER.filter(
+    p => p.warzone === Number(activeWarzone)
+  );
+
+  if (!warzonePlayers.length) {
+    basePowerSegment.classList.add("hidden");
+    return;
+  }
+
+  const wzIndex =
+    warzonePlayers.length >= 200
+      ? 199
+      : warzonePlayers.length - 1;
+
+  const warzoneBasePower =
+    getEffectivePowerValue(warzonePlayers[wzIndex]);
+
+  // ==========================
+  // ALLIANCE MODE → % COMPARE
+  // ==========================
+  if (activeAlliance !== "ALL") {
+    const alliancePlayers = warzonePlayers.filter(
+      p => p.alliance === activeAlliance
+    );
+
+    if (!alliancePlayers.length) {
+      basePowerSegment.classList.add("hidden");
+      return;
+    }
+
+    const weakestAlliancePower =
+      getEffectivePowerValue(
+        alliancePlayers[alliancePlayers.length - 1]
+      );
+
+    const diffPct =
+      ((weakestAlliancePower - warzoneBasePower) /
+        warzoneBasePower) *
+      100;
+
+    const sign = diffPct >= 0 ? "+" : "";
+
+    basePowerValue.textContent =
+      `${sign}${diffPct.toFixed(1)}%`;
+
+    basePowerLabel.textContent =
+      "vs warzone base";
+
+    basePowerSegment.classList.remove("hidden");
+    return;
+  }
+
+  // ==========================
+  // WARZONE ONLY → BASE POWER
+  // ==========================
+  basePowerValue.textContent =
+    formatPowerM(warzoneBasePower);
+
+  basePowerLabel.textContent =
+    "200th player";
+
+  basePowerSegment.classList.remove("hidden");
+}
+
 
 function updateTopRankSegment(players) {
   // ❌ Global / no warzone → ALWAYS HIDE
@@ -599,6 +678,8 @@ if (activeWarzone === "ALL") {
 
 
   updateTopRankSegment([]);
+  updateBasePowerSegment(); // ⛔ hide base power in global mode
+
 
   return; // ⛔ IMPORTANT
 }
@@ -638,6 +719,7 @@ setupInfiniteScroll();
   dominanceSection.style.display = "block";
   renderAllianceDominance(filteredPlayers);
   updateTopRankSegment(filteredPlayers);
+  updateBasePowerSegment();
 
 }
 
