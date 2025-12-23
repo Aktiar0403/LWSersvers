@@ -516,6 +516,37 @@ async function loadPlayers() {
 
   return map;
 }
+function updateTopRankSegment(players) {
+  // 🌍 GLOBAL MODE → hide
+  if (activeWarzone === "ALL" || !players.length) {
+    topRankSegment.classList.add("hidden");
+    return;
+  }
+
+  // 🥇 Rank #1 = strongest in current view
+  const topPlayer = players[0]; // already sorted by power
+
+  if (!topPlayer) {
+    topRankSegment.classList.add("hidden");
+    return;
+  }
+
+  // 🧠 Label logic
+  if (activeAlliance !== "ALL") {
+    topRankLabel.textContent = "Alliance Rank #1";
+  } else {
+    topRankLabel.textContent = "Warzone Rank #1";
+  }
+
+  topRankName.textContent = topPlayer.name;
+  topRankMeta.textContent =
+    `WZ ${topPlayer.warzone} • ${topPlayer.alliance || "—"}`;
+
+  topRankPower.textContent =
+    `⚡ ${formatPowerM(getEffectivePowerValue(topPlayer))}`;
+
+  topRankSegment.classList.remove("hidden");
+}
 
 function applyFilters() {
 
