@@ -2807,3 +2807,22 @@ body.admin-view .admin-only {
   color: rgba(255, 255, 255, 0.55);
   white-space: nowrap;
 }
+/* Base Power Segment – Value Colors */
+.segment.base-power span {
+  font-weight: 700;
+}
+
+/* Positive (Alliance stronger) */
+.base-power-positive span {
+  color: #2eea8f; /* green */
+}
+
+/* Negative (Alliance weaker) */
+.base-power-negative span {
+  color: #ff6b6b; /* red */
+}
+
+/* Neutral */
+.base-power-neutral span {
+  color: rgba(255, 255, 255, 0.8);
+}
