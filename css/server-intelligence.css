@@ -2912,3 +2912,35 @@ body.admin-view .admin-only {
   from { top: -20%; }
   to   { top: 120%; }
 }
+/* FULLSCREEN LOADER OVERLAY */
+#appLoader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(0,255,200,0) 40%,
+      rgba(0,255,200,0.12) 50%,
+      rgba(0,255,200,0) 60%
+    ),
+    radial-gradient(circle at center, #071916, #020707 70%);
+
+  background-size: 200% 100%;
+  animation: scanSweep 1.6s linear infinite;
+}
+
+/* SCAN LINE ANIMATION */
+@keyframes scanSweep {
+  from { background-position: -120% 0; }
+  to   { background-position: 120% 0; }
+}
+
+/* HIDE LOADER */
+#appLoader.hide {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
