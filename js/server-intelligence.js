@@ -93,6 +93,16 @@ function getEffectivePowerValue(p) {
   return computeEffectivePower(p).value;
 }
 
+// =============================
+// PHASE 4.1 — CACHE COMPUTED POWER
+// =============================
+function hydrateComputedFields(players) {
+  players.forEach(p => {
+    const res = computeEffectivePower(p);
+    p._effectivePower = res.value;
+    p._powerTag = res.tag;
+  });
+}
 
 const loaderStart = Date.now();
 let fakeProgress = 0;
