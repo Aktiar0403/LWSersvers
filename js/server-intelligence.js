@@ -21,7 +21,7 @@ window.IS_ADMIN = false;
 let editingPlayer = null;
 let LIKES_ENABLED = false;
 
-let globalLimit = 100;
+let globalLimit = 20;
 const GLOBAL_LIMITS = [20, 50, 100];
 
 /* =============================
