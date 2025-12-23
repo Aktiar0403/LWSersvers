@@ -2744,3 +2744,10 @@ body.admin-view .admin-only {
   0%   { stroke-width: 3; }
   100% { stroke-width: 6; }
 }
+.progress {
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
