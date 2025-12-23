@@ -100,7 +100,7 @@ function renderPagedPlayers(players) {
   const slice = players.slice(start, end);
 
   renderPlayerCards(slice, start);
-  updateLoadMoreVisibility(players.length);
+
 }
 // =============================
 // INFINITE SCROLL (INTERSECTION OBSERVER)
@@ -133,17 +133,7 @@ function setupInfiniteScroll() {
   scrollObserver.observe(sentinel);
 }
 
-function updateLoadMoreVisibility(totalCount) {
-  if (!loadMoreBtn) return;
 
-  const shown = (currentPage + 1) * PAGE_SIZE;
-
-  if (shown >= totalCount) {
-    loadMoreBtn.style.display = "none";
-  } else {
-    loadMoreBtn.style.display = "block";
-  }
-}
 
 
 // =============================
@@ -1455,6 +1445,3 @@ if (logoutBtn) {
 }
 
 
-if (loadMoreBtn) {
-
-}
