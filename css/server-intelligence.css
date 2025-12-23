@@ -2826,3 +2826,53 @@ body.admin-view .admin-only {
 .base-power-neutral span {
   color: rgba(255, 255, 255, 0.8);
 }
+/* Tooltip wrapper */
+.info-tooltip {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 12px;
+  cursor: help;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Tooltip box */
+.info-tooltip .tooltip-content {
+  position: absolute;
+  bottom: 125%;
+  right: 0;
+  width: 240px;
+  background: #111;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: all 0.15s ease;
+  z-index: 1000;
+}
+
+/* Tooltip arrow */
+.info-tooltip .tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 12px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #111 transparent transparent transparent;
+}
+
+/* Show on hover */
+.info-tooltip:hover .tooltip-content {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.segment {
+  position: relative;
+}
