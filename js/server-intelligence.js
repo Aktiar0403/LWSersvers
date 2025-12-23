@@ -265,6 +265,12 @@ function formatPowerM(power) {
   if (!power) return "0M";
   return Math.round(power / 1_000_000) + "M";
 }
+
+function isMobile() {
+  return window.innerWidth < 768;
+}
+
+
 function estimateFirstSquad(totalPower) {
   const m = totalPower / 1_000_000;
 
@@ -471,13 +477,22 @@ async function loadPlayers() {
     //buildWarzoneCards();
 
     // 🔥 APPLY FILTERS
-    applyFilters();
+    if (isMobile()) {
+  // TEMP limit for initial interaction
+  filteredPlayers = SORTED_BY_POWER.slice(0, 500);
+  currentPage = 0;
+  renderPagedPlayers(filteredPlayers);
+  setupInfiniteScroll();
+} else {
+  applyFilters();
+}
+;
 
     // 🏆 TOP 5 ELITE
     requestIdleCallback(() => {
   renderTop5Elite(allPlayers);
   updateLastUpdated(allPlayers);
-});
+  });
 
 
     // 🟢 Stage 4: Ready
@@ -492,9 +507,9 @@ async function loadPlayers() {
     // ⚠️ Always hide loader even on error
     hideLoader();
   }
-}
+  }
 
-async function loadLikesForPlayers(players) {
+  async function loadLikesForPlayers(players) {
   const likesSnap = await getDocs(collection(db, "player_likes"));
 
   const map = {};
