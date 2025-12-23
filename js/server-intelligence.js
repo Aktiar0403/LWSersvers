@@ -98,9 +98,39 @@ function renderPagedPlayers(players) {
   const start = currentPage * PAGE_SIZE;
   const end = start + PAGE_SIZE;
   const slice = players.slice(start, end);
-  
+
   renderPlayerCards(slice, start);
   updateLoadMoreVisibility(players.length);
+}
+// =============================
+// INFINITE SCROLL (INTERSECTION OBSERVER)
+// =============================
+const sentinel = document.getElementById("scrollSentinel");
+let scrollObserver = null;
+
+function setupInfiniteScroll() {
+  if (!sentinel) return;
+
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+  }
+
+  scrollObserver = new IntersectionObserver(entries => {
+    const entry = entries[0];
+    if (!entry.isIntersecting) return;
+
+    const shown = (currentPage + 1) * PAGE_SIZE;
+    if (shown >= filteredPlayers.length) return;
+
+    currentPage++;
+    renderPagedPlayers(filteredPlayers);
+  }, {
+    root: null,
+    rootMargin: "200px",
+    threshold: 0
+  });
+
+  scrollObserver.observe(sentinel);
 }
 
 function updateLoadMoreVisibility(totalCount) {
@@ -523,6 +553,7 @@ if (activeWarzone === "ALL") {
   // 🔄 Render
   currentPage = 0;
 renderPagedPlayers(filteredPlayers);
+setupInfiniteScroll();
 
 
   // 📊 Stats
@@ -543,7 +574,7 @@ renderPagedPlayers(filteredPlayers);
     // 🔄 Render
     currentPage = 0;
 renderPagedPlayers(filteredPlayers);
-
+setupInfiniteScroll();
 
     // 📊 Stats (global)
     updatePowerSegments(filteredPlayers);
@@ -601,7 +632,7 @@ if (activeAlliance !== "ALL") {
 // 🔄 Render
 currentPage = 0;
 renderPagedPlayers(filteredPlayers);
-
+setupInfiniteScroll();
 
 // 📊 Stats
 updatePowerSegments(filteredPlayers);
@@ -615,7 +646,7 @@ renderAllianceDominance(filteredPlayers);
   // 🔄 Render
   currentPage = 0;
 renderPagedPlayers(filteredPlayers);
-
+setupInfiniteScroll();
 
   // 📊 Stats
   updatePowerSegments(filteredPlayers);
@@ -1422,11 +1453,8 @@ if (logoutBtn) {
     }
   };
 }
-const loadMoreBtn = document.getElementById("loadMoreBtn");
+
 
 if (loadMoreBtn) {
-  loadMoreBtn.onclick = () => {
-    currentPage++;
-    renderPagedPlayers(filteredPlayers);
-  };
+
 }
