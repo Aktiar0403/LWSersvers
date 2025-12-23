@@ -23,8 +23,7 @@ let LIKES_ENABLED = false;
 
 let globalLimit = 20;
 const GLOBAL_LIMITS = [20, 50, 100];
-const PAGE_SIZE = 50;
-let currentPage = 0;
+
 /* =============================
    PHASE 4 — POWER COMPUTATION
 ============================= */
@@ -104,6 +103,15 @@ function hydrateComputedFields(players) {
     p._powerTag = res.tag;
   });
 }
+// =============================
+// PHASE 4.2 — PRE-SORT INDEX (10K SAFE)
+// =============================
+function prepareSortedIndexes() {
+  SORTED_BY_POWER = [...allPlayers].sort(
+    (a, b) => b._effectivePower - a._effectivePower
+  );
+}
+
 
 const loaderStart = Date.now();
 let fakeProgress = 0;
@@ -397,23 +405,12 @@ async function loadPlayers() {
     });
 
     // 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
-
+    hydrateComputedFields(allPlayers);
+    prepareSortedIndexes();
 
     console.log("✅ Loaded players:", allPlayers.length);
     const likesMap = await loadLikesForPlayers(allPlayers);
    window.PLAYER_LIKES = likesMap;
-// =============================
-// PHASE 4.2 — PRE-SORT INDEXES (10K SAFE)
-// =============================
-let SORTED_BY_POWER = [];
-
-function prepareSortedIndexes() {
-  SORTED_BY_POWER = [...allPlayers].sort(
-    (a, b) => b._effectivePower - a._effectivePower
-  );
-}
-hydrateComputedFields(allPlayers);
-prepareSortedIndexes();
 
 
     // 🟢 Stage 3: Processing & building UI
@@ -480,25 +477,15 @@ function applyFilters() {
     }
 
     // 🔢 Sort by effective power
-filteredPlayers = SORTED_BY_POWER;
-
-// 🔍 Search
-if (q) {
-  filteredPlayers = filteredPlayers.filter(p =>
-    p.name.toLowerCase().includes(q)
-  );
-}
-
-// ✂️ Top slice
-filteredPlayers = filteredPlayers.slice(0, globalLimit);
-
+    filteredPlayers.sort(
+      (a, b) => b._effectivePower - a._effectivePower
+    );
 
     // ✂️ Slice by TOP limit
     filteredPlayers = filteredPlayers.slice(0, globalLimit);
 
     // 🔄 Render
-    currentPage = 0;
-renderPagedPlayers(filteredPlayers);
+    renderPlayerCards(filteredPlayers);
 
     // 📊 Stats (global)
     updatePowerSegments(filteredPlayers);
@@ -533,28 +520,12 @@ renderPagedPlayers(filteredPlayers);
   }
 
   // 🔢 Sort
-filteredPlayers = SORTED_BY_POWER.filter(
-  p => p.warzone === Number(activeWarzone)
-);
-
-// 🔍 Search
-if (q) {
-  filteredPlayers = filteredPlayers.filter(p =>
-    p.name.toLowerCase().includes(q)
+  filteredPlayers.sort(
+    (a, b) => b._effectivePower - a._effectivePower
   );
-}
-
-// 🧬 Alliance
-if (activeAlliance !== "ALL") {
-  filteredPlayers = filteredPlayers.filter(
-    p => p.alliance === activeAlliance
-  );
-}
-
 
   // 🔄 Render
-  currentPage = 0;
-renderPagedPlayers(filteredPlayers);
+  renderPlayerCards(filteredPlayers);
 
   // 📊 Stats
   updatePowerSegments(filteredPlayers);
@@ -565,11 +536,6 @@ renderPagedPlayers(filteredPlayers);
   renderAllianceDominance(filteredPlayers);
 }
 
-function renderPagedPlayers(players) {
-  const start = currentPage * PAGE_SIZE;
-  const slice = players.slice(start, start + PAGE_SIZE);
-  renderPlayerCards(slice);
-}
 
 /* =============================
    TABLE (FINAL – Phase 5.5 UI)
@@ -581,9 +547,8 @@ function renderPlayerCards(players) {
   list.innerHTML = "";
 
   players.forEach((p, index) => {
-const effectivePower = p._effectivePower;
-const powerTag = p._powerTag;
-
+    const powerData = computeEffectivePower(p);
+    const effectivePower = powerData.value;
     const powerM = Math.round(effectivePower / 1_000_000);
     const firstSquad = estimateFirstSquad(effectivePower);
 
@@ -653,8 +618,8 @@ ${LIKES_ENABLED ? `
   });
 }
 
-if (progressRAF) cancelAnimationFrame(progressRAF);
-
+const likesMap = await loadLikesForPlayers(allPlayers);
+window.PLAYER_LIKES = likesMap;
 
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest(".like-btn");
@@ -1019,16 +984,7 @@ window.deleteByUploadId = deleteByUploadId;
 /* =============================
    SEARCH
 ============================= */
-function debounce(fn, delay = 200) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), delay);
-  };
-}
-
-searchInput.oninput = debounce(applyFilters, 200);
-
+searchInput.oninput = applyFilters;
 
 /* =============================
    INIT
