@@ -745,10 +745,7 @@ tbody td {
 .intel-core,
 .pulse,
 .flow-lines,
-.progress-ring {
-  transform: translateZ(0);
-  will-change: transform, opacity;
-}
+
 
 /* Hide animation */
 .intel-loader.hide {
@@ -764,41 +761,15 @@ tbody td {
 .flow-lines line {
   stroke: rgba(0,255,200,0.4);
   stroke-width: 1;
-  stroke-dasharray: 4;
+
   animation: flow 1.5s linear infinite;
 }
 
-@keyframes flow {
-  to { stroke-dashoffset: -20; }
-}
-.progress-ring {
-  position: relative;
-  margin-top: 14px;
-}
 
-.progress-ring circle {
-  fill: none;
-  stroke: rgba(255,255,255,0.1);
-  stroke-width: 4;
-}
 
-.progress-ring .progress {
-  stroke: #00ffc8;
-  stroke-dasharray: 163;
-  stroke-dashoffset: 163;
-  transform: rotate(-90deg);
-  transform-origin: center;
-  transition: stroke-dashoffset .3s ease;
-}
 
-.progress-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-}
+
+
 .last-updated {
   margin: 6px 0 14px;
   font-size: 0.8rem;
@@ -2744,10 +2715,47 @@ body.admin-view .admin-only {
   0%   { stroke-width: 3; }
   100% { stroke-width: 6; }
 }
-.progress {
-  animation: spin 1.2s linear infinite;
+/* =============================
+   INTEL SCAN-LINE SWEEP
+============================= */
+
+.intel-loader .map-layer {
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* Scan line */
+.intel-loader.phase-scan .map-layer::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -20%;
+  width: 100%;
+  height: 12%;
+  pointer-events: none;
+
+  /* Subtle neon scan gradient */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 200, 0.08) 50%,
+    transparent 100%
+  );
+
+  animation: scan-sweep 2.2s linear infinite;
+}
+
+/* Stop scan when locking or ready */
+.intel-loader.phase-lock .map-layer::after,
+.intel-loader.phase-ready .map-layer::after {
+  display: none;
+}
+
+@keyframes scan-sweep {
+  from {
+    top: -20%;
+  }
+  to {
+    top: 120%;
+  }
 }
