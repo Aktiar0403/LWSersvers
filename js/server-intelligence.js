@@ -110,6 +110,7 @@ function prepareSortedIndexes() {
   SORTED_BY_POWER = [...allPlayers].sort(
     (a, b) => b._effectivePower - a._effectivePower
   );
+   console.log("🧪 Sorted index prepared:", SORTED_BY_POWER.length);
 }
 
 
