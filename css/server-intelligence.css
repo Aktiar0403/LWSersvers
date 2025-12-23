@@ -2838,3 +2838,77 @@ body.admin-view .admin-only {
     top: 120%;
   }
 }
+/* =============================
+   INTELLIGENCE LOADER (BASE)
+============================= */
+
+#appLoader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  background: radial-gradient(
+    circle at center,
+    #0b1f1a 0%,
+    #060c0a 65%,
+    #020403 100%
+  );
+
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+#appLoader.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intel-loader .map-layer {
+  position: relative;
+  width: 280px;
+  height: 160px;
+  overflow: hidden;
+}
+
+.intel-loader .world-map {
+  width: 100%;
+  opacity: 0.35;
+}
+
+.intel-text {
+  font-size: 14px;
+  color: #9fffe8;
+  letter-spacing: 0.4px;
+}
+/* =============================
+   SCAN LINE (SCAN PHASE)
+============================= */
+
+.intel-loader.phase-scan .map-layer::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 14%;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 255, 200, 0.08),
+    transparent
+  );
+
+  animation: scanSweep 2.4s linear infinite;
+}
+
+@keyframes scanSweep {
+  from { top: -20%; }
+  to   { top: 120%; }
+}

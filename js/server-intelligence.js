@@ -353,9 +353,9 @@ function updateLastUpdated(players) {
    LOAD FROM FIRESTORE
 ============================= */
 async function loadPlayers() {
-  console.log("📡 Loading server_players from Firestore...");
+   console.log("📡 Loading server_players from Firestore...");
 
-  try {
+   try {
 
 
     const snap = await getDocs(collection(db, "server_players"));
@@ -365,26 +365,26 @@ async function loadPlayers() {
     allPlayers = snap.docs.map(doc => {
       const d = doc.data();
     return {
-  id: doc.id,
-  rank: Number(d.rank ?? 0),
-  name: d.name || "",
-  alliance: d.alliance || "",
-  warzone: Number(d.warzone),
+   id: doc.id,
+   rank: Number(d.rank ?? 0),
+   name: d.name || "",
+   alliance: d.alliance || "",
+   warzone: Number(d.warzone),
 
-  totalPower: Number(d.totalPower ?? 0), // keep for admin
-  basePower: Number(d.basePower ?? d.totalPower ?? 0),
-  powerSource: d.powerSource || "confirmed",
-  lastConfirmedAt: d.lastConfirmedAt || d.importedAt
-};
+   totalPower: Number(d.totalPower ?? 0), // keep for admin
+   basePower: Number(d.basePower ?? d.totalPower ?? 0),
+   powerSource: d.powerSource || "confirmed",
+   lastConfirmedAt: d.lastConfirmedAt || d.importedAt
+    };
 
     });
 
-// 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
-hydrateComputedFields(allPlayers);
+    // 🔥 PHASE 4.1 — CACHE COMPUTED POWER (CRITICAL)
+    hydrateComputedFields(allPlayers);
 
     console.log("✅ Loaded players:", allPlayers.length);
     const likesMap = await loadLikesForPlayers(allPlayers);
-window.PLAYER_LIKES = likesMap;
+    window.PLAYER_LIKES = likesMap;
 
 
 
@@ -406,10 +406,9 @@ window.PLAYER_LIKES = likesMap;
 
 
     // 📡 DATA READY — TRANSITION LOADER
-dataResolved = true;
-
-const scanElapsed = Date.now() - scanStart;
-const remainingScan = Math.max(0, 600 - scanElapsed);
+  // 🧠 DATA READY → TRANSITION LOADER
+const elapsed = Date.now() - scanStart;
+const delay = Math.max(0, 600 - elapsed);
 
 setTimeout(() => {
   setPhase("lock", "Locking intelligence…");
@@ -423,16 +422,17 @@ setTimeout(() => {
 
   }, 400);
 
-}, remainingScan);
+}, delay);
 
 
-  } 
-  catch (err) {
+
+    } 
+    catch (err) {
     console.error("❌ Failed to load server_players:", err);
 
     // ⚠️ Always hide loader even on error
     hideLoader();
-  }
+   }
 }
 
 async function loadLikesForPlayers(players) {
