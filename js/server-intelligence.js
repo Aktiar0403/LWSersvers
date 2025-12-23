@@ -517,6 +517,46 @@ async function loadPlayers() {
   return map;
 }
 function updateTopRankSegment(players) {
+  // ❌ Global / no warzone → ALWAYS HIDE
+  if (
+    activeWarzone === "ALL" ||
+    !Array.isArray(players) ||
+    players.length === 0
+  ) {
+    topRankSegment.classList.add("hidden");
+
+    // 🔒 Clear text to avoid stale content
+    topRankLabel.textContent = "";
+    topRankName.textContent = "";
+    topRankMeta.textContent = "";
+    topRankPower.textContent = "";
+    return;
+  }
+
+  // ✅ Rank #1 (already sorted list)
+  const topPlayer = players[0];
+  if (!topPlayer) {
+    topRankSegment.classList.add("hidden");
+    return;
+  }
+
+  // 🏷️ Context label
+  topRankLabel.textContent =
+    activeAlliance !== "ALL"
+      ? "Alliance Rank #1"
+      : "Warzone Rank #1";
+
+  topRankName.textContent = topPlayer.name;
+  topRankMeta.textContent =
+    `WZ ${topPlayer.warzone} • ${topPlayer.alliance || "—"}`;
+
+  topRankPower.textContent =
+    `⚡ ${formatPowerM(getEffectivePowerValue(topPlayer))}`;
+
+  topRankSegment.classList.remove("hidden");
+}
+
+function updateTopRankSegment(players) {
   // 🌍 GLOBAL MODE → hide
   if (activeWarzone === "ALL" || !players.length) {
     topRankSegment.classList.add("hidden");
