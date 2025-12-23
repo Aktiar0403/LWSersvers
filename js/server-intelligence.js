@@ -607,7 +607,11 @@ return;
 
   basePowerLabel.textContent =
     "200th player";
-
+  basePowerSegment.classList.remove(
+  "base-power-positive",
+  "base-power-negative"
+);
+basePowerSegment.classList.add("base-power-neutral");
   basePowerSegment.classList.remove("hidden");
 }
 
