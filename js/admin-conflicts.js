@@ -80,54 +80,53 @@ async function loadConflicts() {
 
     listEl.innerHTML = "";
 
-    snap.forEach(doc => {
-      const c = doc.data();
+   snap.forEach(doc => {
+  const c = doc.data();
 
-      const card = document.createElement("div");
-      card.className = "conflict-card";
+  const card = document.createElement("div");
+  card.className = "conflict-card";
 
-      card.innerHTML = `
-                <div class="conflict-candidates">
-            ${c.candidates && c.candidates.length
-                ? c.candidates.map(p => `
-                <div class="candidate">
-                    <span class="name">${p.name}</span>
-                    <span class="meta">
-                    ${formatPowerM(p.power)}
-                    ${p.hasPlayerId ? "• 🆔 linked" : ""}
-                    </span>
-                </div>
-                `).join("")
-                : "<div class='candidate none'>No candidates</div>"
-            }
-            </div>
+  card.innerHTML = `
+    <div class="conflict-candidates">
+      ${c.candidates && c.candidates.length
+        ? c.candidates.map(p => `
+          <div class="candidate">
+            <span class="name">${p.name}</span>
+            <span class="meta">
+              ${formatPowerM(p.power)}
+              ${p.hasPlayerId ? "• 🆔 linked" : ""}
+            </span>
+          </div>
+        `).join("")
+        : "<div class='candidate none'>No candidates</div>"
+      }
+    </div>
 
-            <div class="conflict-actions">
-            <button data-action="use-existing">Use Existing</button>
-            <button data-action="rename-existing">Rename Existing</button>
-            <button data-action="create-new">Create New</button>
-            <button data-action="ignore">Ignore</button>
-            </div>
-            
-                `;
+    <div class="conflict-actions">
+      <button data-action="use-existing">Use Existing</button>
+      <button data-action="rename-existing">Rename Existing</button>
+      <button data-action="create-new">Create New</button>
+      <button data-action="ignore">Ignore</button>
+    </div>
+  `;
 
-      listEl.appendChild(card);
-    });
-
-    card.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    console.log("🧠 Admin action clicked", {
-      conflictId: doc.id,
-      action: btn.dataset.action,
-      excelName: c.excelName,
-      warzone: c.warzone,
-      alliance: c.alliance
+  // ✅ ACTION PLACEHOLDERS (LOG ONLY)
+  card.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      console.log("🧠 Admin action clicked", {
+        conflictId: doc.id,
+        action: btn.dataset.action,
+        excelName: c.excelName,
+        warzone: c.warzone,
+        alliance: c.alliance
+      });
     });
   });
+
+  listEl.appendChild(card);
 });
 
-
-  } catch (err) {
+   } catch (err) {
     console.error("Failed to load conflicts:", err);
     listEl.innerHTML = "<p>Failed to load conflicts</p>";
   }
