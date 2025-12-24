@@ -1141,135 +1141,55 @@ if (!cleanName || !cleanAlliance || !wz || !pwr) {
   continue;
 }
 
+// =============================
+// STEP 3.1 — MATCHING & CONFLICT DETECTION (FINAL)
+// =============================
 
-  
-        // =============================
-    // STEP 3.1 — CONFLICT DETECTION
-    // =============================
+// 🟢 NEW WARZONE → AUTO CREATE
+const warzoneExists = allPlayers.some(p => p.warzone === wz);
 
-    // All players in same warzone + alliance
-   // 1️⃣ Exact identity match (warzone + name)
+if (!warzoneExists) {
+  await addDoc(collection(db, "server_players"), {
+    rank: Number(rank),
+    alliance: cleanAlliance,
+    name: cleanName,
+    warzone: wz,
+    totalPower: pwr,
+    basePower: pwr,
+    powerSource: "confirmed",
+    lastConfirmedAt: serverTimestamp(),
+    snapshotStatus: "present",
+    growthModel: "tiered-percent-v1",
+    uploadId,
+    importedAt: serverTimestamp()
+  });
+
+  imported++;
+  continue;
+}
+
+// 1️⃣ Exact identity match (warzone + name)
 const exactMatch = allPlayers.find(p =>
   p.warzone === wz && p.name === cleanName
 );
 
+// 2️⃣ Candidates in same warzone + alliance
+const candidates = allPlayers.filter(p =>
+  p.warzone === wz && p.alliance === cleanAlliance
+);
+
+// 🟢 Exact match → safe update
 if (exactMatch) {
-  // ✅ Safe path → will update later
-}
-else {
-  // 2️⃣ Candidates by warzone + alliance (for conflict detection)
-  const candidates = allPlayers.filter(p =>
-    p.warzone === wz && p.alliance === cleanAlliance
-  );
-
-  // 🔴 Multiple possible identities → ambiguous
-  if (candidates.length > 1) {
-    await logExcelConflict({
-      uploadId,
-      rowIndex,
-      warzone: wz,
-      alliance: cleanAlliance,
-      excelName: cleanName,
-      excelPower: pwr,
-      reason: "AMBIGUOUS",
-      candidates: candidates.map(p => ({
-        id: p.id,
-        name: p.name,
-        power: p.totalPower,
-        hasPlayerId: !!p.playerId
-      }))
-    });
-
-    conflicts++;
-    continue;
-  }
-
-  // 🟡 Single candidate but name differs → rename conflict
-  if (candidates.length === 1) {
-    const existing = candidates[0];
-
-    await logExcelConflict({
-      uploadId,
-      rowIndex,
-      warzone: wz,
-      alliance: cleanAlliance,
-      excelName: cleanName,
-      excelPower: pwr,
-      reason: "NAME_MISMATCH",
-      candidates: [{
-        id: existing.id,
-        name: existing.name,
-        power: existing.totalPower,
-        hasPlayerId: !!existing.playerId
-      }]
-    });
-
-    conflicts++;
-    continue;
-  }
-
-  
+  // fall through to update logic
 }
 
-    // 🟢 CASE: new warzone entirely → auto-create (no conflict)
-    // 🟢 NEW WARZONE → AUTO CREATE
-    const warzoneExists = allPlayers.some(p => p.warzone === wz);
-
-    if (!warzoneExists) {
-      // treat as brand-new warzone player
-      await addDoc(collection(db, "server_players"), {
-        rank: Number(rank),
-        alliance: String(alliance || "").trim(),
-        name: cleanName,
-        warzone: wz,
-        totalPower: pwr,
-        basePower: pwr,
-        powerSource: "confirmed",
-        lastConfirmedAt: serverTimestamp(),
-        snapshotStatus: "present",
-        growthModel: "tiered-percent-v1",
-        uploadId,
-        importedAt: serverTimestamp()
-      });
-
-      imported++;
-      continue;
-     }
-
-      // 🟡 CASE: exactly ONE candidate
-    // 🟡 CASE: exactly ONE candidate
-if (candidates.length === 1) {
-  const existing = candidates[0];
-
-  if (existing.name !== cleanName) {
-    await logExcelConflict({
-      uploadId,
-      rowIndex,
-      warzone: wz,
-      alliance: String(alliance || "").trim(),
-      excelName: cleanName,
-      excelPower: pwr,
-      reason: "NAME_MISMATCH",
-      candidates: [{
-        id: existing.id,
-        name: existing.name,
-        power: existing.totalPower,
-        hasPlayerId: !!existing.playerId
-      }]
-    });
-
-    conflicts++;
-    continue;
-  }
-}
-
-// 🔴 CASE: multiple candidates → ambiguous
-if (candidates.length > 1) {
+// 🔴 Ambiguous → multiple alliance candidates
+else if (candidates.length > 1) {
   await logExcelConflict({
     uploadId,
     rowIndex,
     warzone: wz,
-    alliance: String(alliance || "").trim(),
+    alliance: cleanAlliance,
     excelName: cleanName,
     excelPower: pwr,
     reason: "AMBIGUOUS",
@@ -1285,6 +1205,33 @@ if (candidates.length > 1) {
   continue;
 }
 
+// 🟡 Rename detected → single candidate, name mismatch
+else if (candidates.length === 1) {
+  const existing = candidates[0];
+
+  await logExcelConflict({
+    uploadId,
+    rowIndex,
+    warzone: wz,
+    alliance: cleanAlliance,
+    excelName: cleanName,
+    excelPower: pwr,
+    reason: "NAME_MISMATCH",
+    candidates: [{
+      id: existing.id,
+      name: existing.name,
+      power: existing.totalPower,
+      hasPlayerId: !!existing.playerId
+    }]
+  });
+
+  conflicts++;
+  continue;
+}
+
+// 🟢 No candidates → new player (falls through to create)
+
+ 
   // 🔍 Check if player already exists (name + warzone)
   const q = query(
     collection(db, "server_players"),
