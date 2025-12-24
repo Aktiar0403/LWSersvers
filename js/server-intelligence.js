@@ -1118,7 +1118,9 @@ excelInput.onchange = async (e) => {
 
     const uploadId = `upload-${Date.now()}`;
 
-for (const row of rows) {
+for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+  const row = rows[rowIndex];
+
   if (row.length < 5) continue;
 
   const [rank, alliance, name, warzone, power] = row;
@@ -1128,6 +1130,67 @@ for (const row of rows) {
   const pwr = Number(power);
 
   if (!cleanName || !wz || !pwr) continue;
+
+  
+// =============================
+// STEP 3.1 — CONFLICT DETECTION
+// =============================
+
+// All players in same warzone + alliance
+const candidates = allPlayers.filter(p =>
+  p.warzone === wz &&
+  p.alliance === String(alliance || "").trim()
+);
+
+// 🟢 CASE: new warzone entirely → auto-create (no conflict)
+if (!candidates.length) {
+  // continue to normal create/update logic below
+} 
+// 🟡 CASE: exactly ONE candidate
+else if (candidates.length === 1) {
+  const existing = candidates[0];
+
+  // ❗ Name mismatch → HARD STOP + log conflict
+  if (existing.name !== cleanName) {
+    await logExcelConflict({
+      uploadId,
+      rowIndex,
+      warzone: wz,
+      alliance: String(alliance || "").trim(),
+      excelName: cleanName,
+      excelPower: pwr,
+      reason: "NAME_MISMATCH",
+      candidates: [{
+        id: existing.id,
+        name: existing.name,
+        power: existing.totalPower,
+        hasPlayerId: !!existing.playerId
+      }]
+    });
+
+    continue; // ⛔ skip this row entirely
+  }
+}
+// 🔴 CASE: multiple candidates → ambiguous
+else {
+  await logExcelConflict({
+    uploadId,
+    rowIndex,
+    warzone: wz,
+    alliance: String(alliance || "").trim(),
+    excelName: cleanName,
+    excelPower: pwr,
+    reason: "AMBIGUOUS",
+    candidates: candidates.map(p => ({
+      id: p.id,
+      name: p.name,
+      power: p.totalPower,
+      hasPlayerId: !!p.playerId
+    }))
+  });
+
+  continue; // ⛔ skip this row entirely
+}
 
   // 🔍 Check if player already exists (name + warzone)
   const q = query(
@@ -1236,6 +1299,42 @@ function debounce(fn, delay = 200) {
     timer = setTimeout(() => fn(...args), delay);
   };
 }
+
+// =============================
+// STEP 3.0 — EXCEL CONFLICT LOGGER
+// =============================
+async function logExcelConflict({
+  uploadId,
+  rowIndex,
+  warzone,
+  alliance,
+  excelName,
+  excelPower,
+  reason,
+  candidates = []
+}) {
+  try {
+    await addDoc(collection(db, "excel_conflicts"), {
+      uploadId,
+      rowIndex,
+
+      warzone,
+      alliance,
+
+      excelName,
+      excelPower,
+
+      reason,
+      candidates,
+
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+  } catch (err) {
+    console.error("Failed to log Excel conflict:", err);
+  }
+}
+window.logExcelConflict = logExcelConflict;
 
 /* =============================
    SEARCH
