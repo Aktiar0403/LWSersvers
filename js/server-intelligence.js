@@ -1148,10 +1148,68 @@ if (!cleanName || !cleanAlliance || !wz || !pwr) {
     // =============================
 
     // All players in same warzone + alliance
-    const candidates = allPlayers.filter(p =>
-      p.warzone === wz &&
-      p.alliance === String(alliance || "").trim()
-    );
+   // 1️⃣ Exact identity match (warzone + name)
+const exactMatch = allPlayers.find(p =>
+  p.warzone === wz && p.name === cleanName
+);
+
+if (exactMatch) {
+  // ✅ Safe path → will update later
+}
+else {
+  // 2️⃣ Candidates by warzone + alliance (for conflict detection)
+  const candidates = allPlayers.filter(p =>
+    p.warzone === wz && p.alliance === cleanAlliance
+  );
+
+  // 🔴 Multiple possible identities → ambiguous
+  if (candidates.length > 1) {
+    await logExcelConflict({
+      uploadId,
+      rowIndex,
+      warzone: wz,
+      alliance: cleanAlliance,
+      excelName: cleanName,
+      excelPower: pwr,
+      reason: "AMBIGUOUS",
+      candidates: candidates.map(p => ({
+        id: p.id,
+        name: p.name,
+        power: p.totalPower,
+        hasPlayerId: !!p.playerId
+      }))
+    });
+
+    conflicts++;
+    continue;
+  }
+
+  // 🟡 Single candidate but name differs → rename conflict
+  if (candidates.length === 1) {
+    const existing = candidates[0];
+
+    await logExcelConflict({
+      uploadId,
+      rowIndex,
+      warzone: wz,
+      alliance: cleanAlliance,
+      excelName: cleanName,
+      excelPower: pwr,
+      reason: "NAME_MISMATCH",
+      candidates: [{
+        id: existing.id,
+        name: existing.name,
+        power: existing.totalPower,
+        hasPlayerId: !!existing.playerId
+      }]
+    });
+
+    conflicts++;
+    continue;
+  }
+
+  // 🟢 No candidates → new player (falls through to create)
+}
 
     // 🟢 CASE: new warzone entirely → auto-create (no conflict)
     // 🟢 NEW WARZONE → AUTO CREATE
