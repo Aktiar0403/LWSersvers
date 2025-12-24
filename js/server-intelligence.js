@@ -1208,7 +1208,7 @@ else {
     continue;
   }
 
-  // 🟢 No candidates → new player (falls through to create)
+  
 }
 
     // 🟢 CASE: new warzone entirely → auto-create (no conflict)
