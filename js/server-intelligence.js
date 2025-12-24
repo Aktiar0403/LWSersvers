@@ -297,6 +297,41 @@ function estimateFirstSquad(totalPower) {
   // Early
   return "40–43M";
 }
+/* =============================
+   PLAYER ID UTILITY (SAFE)
+============================= */
+
+// Generates a stable random id (browser-safe)
+function generatePlayerId() {
+  return "p_" + crypto.randomUUID();
+}
+
+// Ensures a player has a playerId (non-breaking)
+async function ensurePlayerId(player) {
+  // Already has one → do nothing
+  if (player.playerId) return player.playerId;
+
+  // Generate new id
+  const newPlayerId = generatePlayerId();
+
+  try {
+    // Persist quietly
+    await updateDoc(
+      doc(db, "server_players", player.id),
+      { playerId: newPlayerId }
+    );
+
+    // Sync local cache
+    player.playerId = newPlayerId;
+
+    console.log("🆔 playerId assigned:", player.name, newPlayerId);
+    return newPlayerId;
+
+  } catch (err) {
+    console.error("❌ Failed to assign playerId", err);
+    return null;
+  }
+}
 
 
 /* =============================
