@@ -474,7 +474,26 @@
         <span class="label">Current Power</span>
         <span id="epCurrentPower">—</span>
       </div>
+<!-- 🔥 NEW: Editable Name -->
+<div class="modal-row">
+  <label class="label">Player Name</label>
+  <input
+    id="epNewName"
+    type="text"
+    placeholder="Edit name (any language / emoji allowed)"
+  />
+</div>
 
+<!-- 🔥 NEW: Editable Warzone -->
+<div class="modal-row">
+  <label class="label">Warzone</label>
+  <input
+    id="epNewWarzone"
+    type="number"
+    min="1"
+    placeholder="Transfer to warzone"
+  />
+</div>
       <div class="modal-row">
         <label class="label">New Power</label>
         <input
@@ -492,7 +511,7 @@
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeEditPowerModal()">Cancel</button>
       <button class="btn-primary" id="epSaveBtn" disabled>
-        Save (disabled)
+       Save (disabled)
       </button>
     </div>
 

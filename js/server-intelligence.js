@@ -1289,6 +1289,9 @@ function openEditPower(playerId) {
   document.getElementById("epWarzone").textContent = `WZ-${player.warzone}`;
   document.getElementById("epCurrentPower").textContent =
     Math.round(player.totalPower / 1e6) + "M";
+    document.getElementById("epNewName").value = player.name;
+document.getElementById("epNewWarzone").value = player.warzone;
+
 
   document.getElementById("epNewPower").value = "";
   document.getElementById("epHint").textContent =
@@ -1315,12 +1318,31 @@ window.closeEditPowerModal = closeEditPowerModal;
 const epNewPowerInput = document.getElementById("epNewPower");
 const epSaveBtn = document.getElementById("epSaveBtn");
 const epHint = document.getElementById("epHint");
+const epNewName = document.getElementById("epNewName");
+const epNewWarzone = document.getElementById("epNewWarzone");
+
 
 epNewPowerInput.addEventListener("input", () => {
   if (!editingPlayer) return;
 
   const newPower = Number(epNewPowerInput.value);
   const currentPower = editingPlayer.totalPower;
+const newName = epNewName.value;
+const newWarzone = Number(epNewWarzone.value);
+
+// ❌ Name empty
+if (!newName || !newName.trim()) {
+  epSaveBtn.disabled = true;
+  epHint.textContent = "❌ Name cannot be empty";
+  return;
+}
+
+// ❌ Invalid warzone
+if (!newWarzone || newWarzone < 1) {
+  epSaveBtn.disabled = true;
+  epHint.textContent = "❌ Invalid warzone";
+  return;
+}
 
   // ❌ Invalid number
   if (!newPower || newPower <= 0) {
@@ -1358,46 +1380,88 @@ epSaveBtn.onclick = async () => {
 
   if (!editingPlayer) return;
 
-  const newPower = Number(epNewPowerInput.value);
+  await ensurePlayerId(editingPlayer);
+
+const newName = epNewName.value.trim();
+const newWarzone = Number(epNewWarzone.value);
+const newPower = Number(epNewPowerInput.value);
+
+// =============================
+// BUILD UPDATE PAYLOAD (DIFF)
+// =============================
+const updates = {};
+
+// ✏️ NAME CHANGE
+if (newName !== editingPlayer.name) {
+  updates.name = newName;
+}
+
+// 🔁 WARZONE TRANSFER
+if (newWarzone !== editingPlayer.warzone) {
+  updates.warzone = newWarzone;
+  updates.transferAt = serverTimestamp();
+}
+
+// ⚡ POWER CHANGE
+if (newPower !== editingPlayer.totalPower) {
+  updates.totalPower = newPower;
+  updates.basePower = newPower;
+  updates.powerSource = "confirmed";
+  updates.lastConfirmedAt = serverTimestamp();
+  updates.overrideAt = serverTimestamp();
+}
+
+// 🚫 NOTHING CHANGED
+if (!Object.keys(updates).length) {
+  alert("No changes detected");
+  return;
+}
+
   if (!newPower || newPower <= 0) return;
 
-  const ok = confirm(
-    `Confirm power update?\n\n` +
-    `${editingPlayer.name}\n` +
-    `Old: ${Math.round(editingPlayer.totalPower / 1e6)}M\n` +
-    `New: ${Math.round(newPower / 1e6)}M`
+// =============================
+// CONFIRM CHANGES
+// =============================
+let summary = `Confirm changes for ${editingPlayer.name}`;
+
+if (updates.name) {
+  summary += `\n• Name → ${updates.name}`;
+}
+
+if (updates.warzone) {
+  summary += `\n• Warzone → ${updates.warzone}`;
+}
+
+if (updates.totalPower) {
+  summary += `\n• Power → ${Math.round(newPower / 1e6)}M`;
+}
+
+if (!confirm(summary)) return;
+
+try {
+  await updateDoc(
+    doc(db, "server_players", editingPlayer.id),
+    updates
   );
 
-  if (!ok) return;
+  // 🔁 Sync local cache
+  Object.assign(editingPlayer, {
+    ...updates,
+    lastConfirmedAt: updates.lastConfirmedAt
+      ? new Date()
+      : editingPlayer.lastConfirmedAt
+  });
 
-  try {
-    // 🔐 Ensure persistent identity before any admin mutation
-    await ensurePlayerId(editingPlayer);
-    const ref = doc(db, "server_players", editingPlayer.id);
+  closeEditPowerModal();
+  applyFilters();
+  alert("✅ Player updated successfully");
 
-    await updateDoc(ref, {
-      totalPower: newPower,
-      basePower: newPower,
-      powerSource: "confirmed",
-      lastConfirmedAt: serverTimestamp(),
-      overrideAt: serverTimestamp()
-    });
+} catch (err) {
+  console.error("Player update failed:", err);
+  alert("❌ Failed to update player. Check console.");
+}
 
-    // 🔁 Sync local cache
-    editingPlayer.totalPower = newPower;
-    editingPlayer.basePower = newPower;
-    editingPlayer.powerSource = "confirmed";
-    editingPlayer.lastConfirmedAt = new Date();
 
-    closeEditPowerModal();
-    applyFilters();
-
-    alert("✅ Power updated successfully");
-
-  } catch (err) {
-    console.error("Power update failed:", err);
-    alert("❌ Failed to update power. Check console.");
-  }
 };
 
 // =============================
