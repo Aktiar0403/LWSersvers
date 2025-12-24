@@ -111,3 +111,75 @@ body {
 .conflict-actions button[data-action="ignore"] {
   background: #8b949e;
 }
+select {
+  background: #0d1117;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.conflict-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.badge.reason {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.badge.reason.NAME_MISMATCH {
+  background: rgba(88, 166, 255, 0.15);
+  color: #58a6ff;
+  border: 1px solid rgba(88, 166, 255, 0.4);
+}
+.badge.reason.AMBIGUOUS {
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
+  border: 1px solid rgba(248, 81, 73, 0.4);
+}
+.conflict-header .meta {
+  font-size: 13px;
+  opacity: 0.85;
+}
+.conflict-header .upload {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-left: auto;
+}
+@media (max-width: 600px) {
+  .conflict-header .upload {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+.filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0e1117;
+  border-bottom: 1px solid #262c36;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-bar input,
+.filter-bar select {
+  background: #0d1117;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+@media (max-width: 600px) {
+  .filter-bar {
+    flex-direction: column;
+  }
+}

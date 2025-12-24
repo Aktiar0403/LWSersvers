@@ -21,6 +21,9 @@ import {
 const listEl = document.getElementById("conflictList");
 const wzInput = document.getElementById("filterWarzone");
 const alInput = document.getElementById("filterAlliance");
+const reasonInput = document.getElementById("filterReason");
+const uploadInput = document.getElementById("filterUpload");
+
 
 // -----------------------------
 // UTIL
@@ -45,14 +48,20 @@ async function loadConflicts() {
   listEl.innerHTML = "<p>Loading conflicts…</p>";
 
   try {
+
+
+
     const constraints = [
       where("status", "==", "pending"),
       orderBy("createdAt", "desc")
+
     ];
 
     // Optional filters
     const wz = wzInput.value.trim();
     const al = alInput.value.trim();
+    const reason = reasonInput.value.trim(); // 👈 ADD THIS LINE
+    const uploadMode = uploadInput.value;
 
     if (wz) {
       constraints.unshift(
@@ -64,7 +73,22 @@ async function loadConflicts() {
       constraints.unshift(
         where("alliance", "==", al)
       );
+
     }
+
+    if (reason) {
+  constraints.unshift(
+    where("reason", "==", reason)
+  );
+    }
+
+    if (uploadMode === "latest" && LATEST_UPLOAD_ID) {
+  constraints.unshift(
+    where("uploadId", "==", LATEST_UPLOAD_ID)
+  );
+    }
+
+
 
     const q = query(
       collection(db, "excel_conflicts"),
@@ -86,7 +110,21 @@ async function loadConflicts() {
   const card = document.createElement("div");
   card.className = "conflict-card";
 
-  card.innerHTML = `
+  card.innerHTML = `<div class="conflict-header">
+    <span class="badge reason ${c.reason}">
+      ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
+    </span>
+
+    <span class="meta">
+      WZ ${c.warzone} • ${c.alliance || "—"}
+    </span>
+
+    <span class="upload">
+      Upload: ${c.uploadId?.replace("upload-", "") || "—"}
+    </span>
+  </div>
+
+  
  <div class="conflict-candidates">
   ${c.candidates && c.candidates.length
     ? c.candidates.map(p => `
@@ -172,6 +210,10 @@ card.querySelectorAll("button").forEach(btn => {
   if (!inp) return;
   inp.addEventListener("input", debounce(loadConflicts, 300));
 });
+    uploadInput.addEventListener(
+  "change",
+  debounce(loadConflicts, 200)
+);
 
 // -----------------------------
 // AUTH GUARD

@@ -7,10 +7,21 @@
 <body>
 
 <h2>⚠️ Pending Excel Conflicts</h2>
-
+<div class="filter-bar">
 <div id="conflictFilters">
   <input id="filterWarzone" placeholder="Filter warzone" />
   <input id="filterAlliance" placeholder="Filter alliance" />
+  <select id="filterReason">
+  <option value="">All Conflicts</option>
+  <option value="NAME_MISMATCH">Name mismatch</option>
+  <option value="AMBIGUOUS">Ambiguous</option>
+</select>
+<select id="filterUpload">
+  <option value="latest">Latest upload only</option>
+  <option value="all">All uploads</option>
+</select>
+</div>
+
 </div>
 
 <div id="conflictList"></div>
