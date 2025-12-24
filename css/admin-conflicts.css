@@ -1,0 +1,21 @@
+.conflict-card {
+  border: 1px solid #333;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.conflict-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.conflict-meta {
+  color: #aaa;
+  font-size: 0.9em;
+  margin: 4px 0;
+}
+
+.candidate {
+  padding: 4px 0;
+}
