@@ -1099,6 +1099,7 @@ excelInput.onchange = async (e) => {
 
   const reader = new FileReader();
 
+
   reader.onload = async (evt) => {
     try {
       const data = new Uint8Array(evt.target.result);
@@ -1115,42 +1116,73 @@ excelInput.onchange = async (e) => {
       }
 
       let imported = 0;
+let conflicts = 0;
+let skipped = 0;
 
     const uploadId = `upload-${Date.now()}`;
 
-for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-  const row = rows[rowIndex];
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+    const row = rows[rowIndex];
 
-  if (row.length < 5) continue;
+   if (row.length < 5) {
+  skipped++;
+  continue;
+}
 
-  const [rank, alliance, name, warzone, power] = row;
+const [rank, alliance, name, warzone, power] = row;
 
-  const cleanName = String(name || "").trim();
-  const wz = Number(warzone);
-  const pwr = Number(power);
+const cleanName = String(name || "").trim();
+const cleanAlliance = String(alliance || "").trim();
+const wz = Number(warzone);
+const pwr = Number(power);
 
-  if (!cleanName || !wz || !pwr) continue;
+if (!cleanName || !cleanAlliance || !wz || !pwr) {
+  skipped++;
+  continue;
+}
+
 
   
-// =============================
-// STEP 3.1 — CONFLICT DETECTION
-// =============================
+        // =============================
+    // STEP 3.1 — CONFLICT DETECTION
+    // =============================
 
-// All players in same warzone + alliance
-const candidates = allPlayers.filter(p =>
-  p.warzone === wz &&
-  p.alliance === String(alliance || "").trim()
-);
+    // All players in same warzone + alliance
+    const candidates = allPlayers.filter(p =>
+      p.warzone === wz &&
+      p.alliance === String(alliance || "").trim()
+    );
 
-// 🟢 CASE: new warzone entirely → auto-create (no conflict)
-if (!candidates.length) {
-  // continue to normal create/update logic below
-} 
-// 🟡 CASE: exactly ONE candidate
-else if (candidates.length === 1) {
+    // 🟢 CASE: new warzone entirely → auto-create (no conflict)
+    // 🟢 NEW WARZONE → AUTO CREATE
+    const warzoneExists = allPlayers.some(p => p.warzone === wz);
+
+    if (!warzoneExists) {
+      // treat as brand-new warzone player
+      await addDoc(collection(db, "server_players"), {
+        rank: Number(rank),
+        alliance: String(alliance || "").trim(),
+        name: cleanName,
+        warzone: wz,
+        totalPower: pwr,
+        basePower: pwr,
+        powerSource: "confirmed",
+        lastConfirmedAt: serverTimestamp(),
+        snapshotStatus: "present",
+        growthModel: "tiered-percent-v1",
+        uploadId,
+        importedAt: serverTimestamp()
+      });
+
+      imported++;
+      continue;
+     }
+
+      // 🟡 CASE: exactly ONE candidate
+    // 🟡 CASE: exactly ONE candidate
+if (candidates.length === 1) {
   const existing = candidates[0];
 
-  // ❗ Name mismatch → HARD STOP + log conflict
   if (existing.name !== cleanName) {
     await logExcelConflict({
       uploadId,
@@ -1168,11 +1200,13 @@ else if (candidates.length === 1) {
       }]
     });
 
-    continue; // ⛔ skip this row entirely
+    conflicts++;
+    continue;
   }
 }
+
 // 🔴 CASE: multiple candidates → ambiguous
-else {
+if (candidates.length > 1) {
   await logExcelConflict({
     uploadId,
     rowIndex,
@@ -1189,7 +1223,8 @@ else {
     }))
   });
 
-  continue; // ⛔ skip this row entirely
+  conflicts++;
+  continue;
 }
 
   // 🔍 Check if player already exists (name + warzone)
@@ -1240,15 +1275,22 @@ else {
   }
 
   imported++;
-}
-
-         alert(`✅ Imported ${imported} players from Excel`);
-         excelInput.value = "";
-        
-    } catch (err) {
-      console.error("Excel import failed:", err);
-      alert("Excel import failed. Check console.");
     }
+
+        alert(
+        `Upload complete\n\n` +
+        `✅ Imported: ${imported}\n` +
+          `⚠️ Conflicts: ${conflicts}\n` +
+         `⏭ Skipped: ${skipped}`
+         );
+
+         await loadPlayers();
+          excelInput.value = "";
+        
+           } catch (err) {
+           console.error("Excel import failed:", err);
+          alert("Excel import failed. Check console.");
+         }
   };
 
   reader.readAsArrayBuffer(file);
