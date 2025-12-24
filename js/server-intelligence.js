@@ -94,6 +94,7 @@ function getEffectivePowerValue(p) {
 }
 
 
+
 function renderPagedPlayers(players) {
   const start = currentPage * PAGE_SIZE;
   const end = start + PAGE_SIZE;
@@ -257,6 +258,46 @@ function getPowerMeta(player) {
   }
 
   return "Computed";
+}
+
+function normalizeName(name) {
+  return String(name || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[%\p{P}\p{S}]/gu, "") // remove symbols
+    .replace(/\s+/g, " ");
+}
+
+async function updateExistingPlayer(player, { rank, alliance, power, uploadId }) {
+  const ref = doc(db, "server_players", player.id);
+
+  await updateDoc(ref, {
+    rank: Number(rank),
+    alliance,
+    totalPower: power,
+    basePower: power,
+    powerSource: "confirmed",
+    lastConfirmedAt: serverTimestamp(),
+    snapshotStatus: "present",
+    uploadId
+  });
+}
+
+async function addNewPlayer({ rank, alliance, name, warzone, power, uploadId }) {
+  await addDoc(collection(db, "server_players"), {
+    rank: Number(rank),
+    alliance,
+    name,
+    warzone,
+    totalPower: power,
+    basePower: power,
+    powerSource: "confirmed",
+    lastConfirmedAt: serverTimestamp(),
+    snapshotStatus: "present",
+    growthModel: "tiered-percent-v1",
+    uploadId,
+    importedAt: serverTimestamp()
+  });
 }
 
 
@@ -1142,49 +1183,53 @@ if (!cleanName || !cleanAlliance || !wz || !pwr) {
 }
 
 // =============================
-// STEP 3.1 — MATCHING & CONFLICT DETECTION (FINAL)
+// STEP 3.6 — SAFE MATCHING
 // =============================
 
-// 🟢 NEW WARZONE → AUTO CREATE
-const warzoneExists = allPlayers.some(p => p.warzone === wz);
+// Level 1 — exact name match (strong)
+const exactMatch = allPlayers.find(p =>
+  p.warzone === wz && p.name === cleanName
+);
 
-if (!warzoneExists) {
-  await addDoc(collection(db, "server_players"), {
-    rank: Number(rank),
+if (exactMatch) {
+  await updateExistingPlayer(exactMatch, {
+    rank,
     alliance: cleanAlliance,
-    name: cleanName,
-    warzone: wz,
-    totalPower: pwr,
-    basePower: pwr,
-    powerSource: "confirmed",
-    lastConfirmedAt: serverTimestamp(),
-    snapshotStatus: "present",
-    growthModel: "tiered-percent-v1",
-    uploadId,
-    importedAt: serverTimestamp()
+    power: pwr,
+    uploadId
   });
 
   imported++;
   continue;
 }
 
-// 1️⃣ Exact identity match (warzone + name)
-const exactMatch = allPlayers.find(p =>
-  p.warzone === wz && p.name === cleanName
+// Level 2 — normalized name match (still safe)
+const normalizedExcelName = normalizeName(cleanName);
+
+const normalizedMatch = allPlayers.find(p =>
+  p.warzone === wz &&
+  normalizeName(p.name) === normalizedExcelName
 );
 
-// 2️⃣ Candidates in same warzone + alliance
-const candidates = allPlayers.filter(p =>
-  p.warzone === wz && p.alliance === cleanAlliance
-);
+if (normalizedMatch) {
+  await updateExistingPlayer(normalizedMatch, {
+    rank,
+    alliance: cleanAlliance,
+    power: pwr,
+    uploadId
+  });
 
-// 🟢 Exact match → safe update
-if (exactMatch) {
-  // fall through to update logic
+  imported++;
+  continue;
 }
 
-// 🔴 Ambiguous → multiple alliance candidates
-else if (candidates.length > 1) {
+// Level 3 — alliance scan (conflict only)
+const candidates = allPlayers.filter(p =>
+  p.warzone === wz &&
+  p.alliance === cleanAlliance
+);
+
+if (candidates.length) {
   await logExcelConflict({
     uploadId,
     rowIndex,
@@ -1192,7 +1237,7 @@ else if (candidates.length > 1) {
     alliance: cleanAlliance,
     excelName: cleanName,
     excelPower: pwr,
-    reason: "AMBIGUOUS",
+    reason: candidates.length > 1 ? "AMBIGUOUS" : "NAME_MISMATCH",
     candidates: candidates.map(p => ({
       id: p.id,
       name: p.name,
@@ -1205,81 +1250,18 @@ else if (candidates.length > 1) {
   continue;
 }
 
-// 🟡 Rename detected → single candidate, name mismatch
-else if (candidates.length === 1) {
-  const existing = candidates[0];
+// Level 4 — brand new player
+await addNewPlayer({
+  rank,
+  alliance: cleanAlliance,
+  name: cleanName,
+  warzone: wz,
+  power: pwr,
+  uploadId
+});
 
-  await logExcelConflict({
-    uploadId,
-    rowIndex,
-    warzone: wz,
-    alliance: cleanAlliance,
-    excelName: cleanName,
-    excelPower: pwr,
-    reason: "NAME_MISMATCH",
-    candidates: [{
-      id: existing.id,
-      name: existing.name,
-      power: existing.totalPower,
-      hasPlayerId: !!existing.playerId
-    }]
-  });
+imported++;
 
-  conflicts++;
-  continue;
-}
-
-// 🟢 No candidates → new player (falls through to create)
-
- 
-  // 🔍 Check if player already exists (name + warzone)
-  const q = query(
-    collection(db, "server_players"),
-    where("name", "==", cleanName),
-    where("warzone", "==", wz)
-  );
-
-  const snap = await getDocs(q);
-
-  if (!snap.empty) {
-    // 🔁 UPDATE existing player
-    const docRef = snap.docs[0].ref;
-
-    await updateDoc(docRef, {
-      rank: Number(rank), // snapshot rank (admin-only)
-      alliance: String(alliance || "").trim(),
-      totalPower: pwr,
-
-      // Phase 1 metadata refresh
-      basePower: pwr,
-      powerSource: "confirmed",
-      lastConfirmedAt: serverTimestamp(),
-      snapshotStatus: "present",
-      uploadId: uploadId
-    });
-
-  } else {
-    // 🆕 ADD new player
-    await addDoc(collection(db, "server_players"), {
-      rank: Number(rank),
-      alliance: String(alliance || "").trim(),
-      name: cleanName,
-      warzone: wz,
-      totalPower: pwr,
-
-      // Phase 1 metadata
-      basePower: pwr,
-      powerSource: "confirmed",
-      lastConfirmedAt: serverTimestamp(),
-      snapshotStatus: "present",
-      growthModel: "tiered-percent-v1",
-      uploadId: uploadId,
-
-      importedAt: serverTimestamp()
-    });
-  }
-
-  imported++;
     }
 
         alert(
