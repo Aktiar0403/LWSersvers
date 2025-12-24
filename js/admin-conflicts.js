@@ -87,36 +87,45 @@ async function loadConflicts() {
       card.className = "conflict-card";
 
       card.innerHTML = `
-        <div class="conflict-header">
-          <div>
-            <strong>${c.excelName}</strong>
-            <span class="power">⚡ ${formatPowerM(c.excelPower)}</span>
-          </div>
-          <span class="reason">${c.reason}</span>
-        </div>
+                <div class="conflict-candidates">
+            ${c.candidates && c.candidates.length
+                ? c.candidates.map(p => `
+                <div class="candidate">
+                    <span class="name">${p.name}</span>
+                    <span class="meta">
+                    ${formatPowerM(p.power)}
+                    ${p.hasPlayerId ? "• 🆔 linked" : ""}
+                    </span>
+                </div>
+                `).join("")
+                : "<div class='candidate none'>No candidates</div>"
+            }
+            </div>
 
-        <div class="conflict-meta">
-          WZ ${c.warzone} • ${c.alliance}
-        </div>
-
-        <div class="conflict-candidates">
-          ${c.candidates && c.candidates.length
-            ? c.candidates.map(p => `
-              <div class="candidate">
-                <span class="name">${p.name}</span>
-                <span class="meta">
-                  ${formatPowerM(p.power)}
-                  ${p.hasPlayerId ? "• 🆔 linked" : ""}
-                </span>
-              </div>
-            `).join("")
-            : "<div class='candidate none'>No candidates</div>"
-          }
-        </div>
-      `;
+            <div class="conflict-actions">
+            <button data-action="use-existing">Use Existing</button>
+            <button data-action="rename-existing">Rename Existing</button>
+            <button data-action="create-new">Create New</button>
+            <button data-action="ignore">Ignore</button>
+            </div>
+            
+                `;
 
       listEl.appendChild(card);
     });
+
+    card.querySelectorAll("button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    console.log("🧠 Admin action clicked", {
+      conflictId: doc.id,
+      action: btn.dataset.action,
+      excelName: c.excelName,
+      warzone: c.warzone,
+      alliance: c.alliance
+    });
+  });
+});
+
 
   } catch (err) {
     console.error("Failed to load conflicts:", err);

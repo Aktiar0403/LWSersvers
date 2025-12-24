@@ -19,3 +19,13 @@
 .candidate {
   padding: 4px 0;
 }
+.conflict-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.conflict-actions button {
+  padding: 6px 10px;
+  cursor: pointer;
+}
