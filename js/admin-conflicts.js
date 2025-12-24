@@ -117,6 +117,7 @@ async function loadConflicts() {
     conflictIndex++;
 
   const c = doc.data();
+  const uploadId = c.uploadId || "legacy";
 
   const card = document.createElement("div");
   card.className = "conflict-card";
@@ -128,6 +129,9 @@ async function loadConflicts() {
     <span class="badge reason ${c.reason}">
       ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
     </span>
+    <span class="badge upload">
+  ${c.uploadId || "legacy"}
+</span>
 
     <span class="meta">
       WZ ${c.warzone} • ${c.alliance || "—"}
@@ -165,6 +169,13 @@ async function loadConflicts() {
 const header = card.querySelector("[data-toggle]");
 const body = card.querySelector(".conflict-body");
 const chevron = card.querySelector(".chevron");
+
+header.addEventListener("click", () => {
+  body.classList.toggle("hidden");
+  header.querySelector(".chevron").textContent =
+    body.classList.contains("hidden") ? "▸" : "▾";
+});
+
 
 header.addEventListener("click", () => {
   // close all others

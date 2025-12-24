@@ -209,3 +209,16 @@ select {
 .conflict-body {
   margin-top: 12px;
 }
+.badge.upload {
+  background: #1f2937;
+  color: #93c5fd;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+.badge.upload:not(:contains("legacy")) {
+  background: #0f766e;
+  color: #99f6e4;
+}
