@@ -29,3 +29,85 @@
   padding: 6px 10px;
   cursor: pointer;
 }
+body {
+  background: #0e1117;
+  color: #e6edf3;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+#conflictList {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.conflict-card {
+  background: #161b22;
+  border: 1px solid #262c36;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.conflict-candidates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.candidate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #0d1117;
+  border: 1px solid #202636;
+}
+
+.candidate.none {
+  opacity: 0.6;
+  font-style: italic;
+}
+.conflict-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.conflict-actions button {
+  background: #1f6feb;
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.conflict-actions button:hover {
+  background: #388bfd;
+}
+.conflict-actions button[data-action="rename-existing"] {
+  background: #a371f7;
+}
+
+.conflict-actions button[data-action="create-new"] {
+  background: #238636;
+}
+
+.conflict-actions button[data-action="ignore"] {
+  background: #8b949e;
+}
+.conflict-actions button[data-action="rename-existing"] {
+  background: #a371f7;
+}
+
+.conflict-actions button[data-action="create-new"] {
+  background: #238636;
+}
+
+.conflict-actions button[data-action="ignore"] {
+  background: #8b949e;
+}
