@@ -1371,6 +1371,8 @@ epSaveBtn.onclick = async () => {
   if (!ok) return;
 
   try {
+    // 🔐 Ensure persistent identity before any admin mutation
+    await ensurePlayerId(editingPlayer);
     const ref = doc(db, "server_players", editingPlayer.id);
 
     await updateDoc(ref, {
