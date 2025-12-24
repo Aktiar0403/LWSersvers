@@ -87,20 +87,26 @@ async function loadConflicts() {
   card.className = "conflict-card";
 
   card.innerHTML = `
-    <div class="conflict-candidates">
-      ${c.candidates && c.candidates.length
-        ? c.candidates.map(p => `
-          <div class="candidate">
-            <span class="name">${p.name}</span>
-            <span class="meta">
-              ${formatPowerM(p.power)}
-              ${p.hasPlayerId ? "• 🆔 linked" : ""}
-            </span>
-          </div>
-        `).join("")
-        : "<div class='candidate none'>No candidates</div>"
-      }
-    </div>
+ <div class="conflict-candidates">
+  ${c.candidates && c.candidates.length
+    ? c.candidates.map(p => `
+      <label class="candidate selectable">
+        <input
+          type="radio"
+          name="pick-${doc.id}"
+          value="${p.id}"
+        />
+        <span class="name">${p.name}</span>
+        <span class="meta">
+          ${formatPowerM(p.power)}
+          ${p.hasPlayerId ? "• 🆔 linked" : ""}
+        </span>
+      </label>
+    `).join("")
+    : "<div class='candidate none'>No candidates</div>"
+  }
+</div>
+
 
     <div class="conflict-actions">
       <button data-action="use-existing">Use Existing</button>
@@ -111,17 +117,44 @@ async function loadConflicts() {
   `;
 
   // ✅ ACTION PLACEHOLDERS (LOG ONLY)
-  card.querySelectorAll("button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      console.log("🧠 Admin action clicked", {
+card.querySelectorAll("button").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // =============================
+    // USE EXISTING PLAYER (LOG ONLY)
+    // =============================
+    if (btn.dataset.action === "use-existing") {
+      const picked = card.querySelector(
+        `input[name="pick-${doc.id}"]:checked`
+      );
+
+      if (!picked) {
+        alert("Please select a player first");
+        return;
+      }
+
+      console.log("✅ USE EXISTING selected", {
         conflictId: doc.id,
-        action: btn.dataset.action,
+        playerId: picked.value,
         excelName: c.excelName,
+        excelPower: c.excelPower,
         warzone: c.warzone,
         alliance: c.alliance
       });
+
+      return;
+    }
+
+    // =============================
+    // OTHER ACTIONS (PLACEHOLDER)
+    // =============================
+    console.log("🧠 Admin action clicked", {
+      conflictId: doc.id,
+      action: btn.dataset.action
     });
   });
+});
+
 
   listEl.appendChild(card);
 });
