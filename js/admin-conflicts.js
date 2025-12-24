@@ -25,6 +25,15 @@ const reasonInput = document.getElementById("filterReason");
 const uploadInput = document.getElementById("filterUpload");
 
 
+
+
+// -----------------------------
+// STATE
+// -----------------------------
+let LATEST_UPLOAD_ID = null;
+
+
+
 // -----------------------------
 // UTIL
 // -----------------------------
@@ -124,7 +133,7 @@ async function loadConflicts() {
     </span>
   </div>
 
-  
+
  <div class="conflict-candidates">
   ${c.candidates && c.candidates.length
     ? c.candidates.map(p => `
