@@ -112,14 +112,19 @@ async function loadConflicts() {
     }
 
     listEl.innerHTML = "";
-
+    let conflictIndex = 0;
    snap.forEach(doc => {
+    conflictIndex++;
+
   const c = doc.data();
 
   const card = document.createElement("div");
   card.className = "conflict-card";
 
-  card.innerHTML = `<div class="conflict-header">
+  card.innerHTML = `
+  <div class="conflict-header" data-toggle>
+    <span class="conflict-number">${conflictIndex}</span>
+
     <span class="badge reason ${c.reason}">
       ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
     </span>
@@ -128,32 +133,25 @@ async function loadConflicts() {
       WZ ${c.warzone} • ${c.alliance || "—"}
     </span>
 
-    <span class="upload">
-      Upload: ${c.uploadId?.replace("upload-", "") || "—"}
-    </span>
+    <span class="chevron">▸</span>
   </div>
 
-
- <div class="conflict-candidates">
-  ${c.candidates && c.candidates.length
-    ? c.candidates.map(p => `
-      <label class="candidate selectable">
-        <input
-          type="radio"
-          name="pick-${doc.id}"
-          value="${p.id}"
-        />
-        <span class="name">${p.name}</span>
-        <span class="meta">
-          ${formatPowerM(p.power)}
-          ${p.hasPlayerId ? "• 🆔 linked" : ""}
-        </span>
-      </label>
-    `).join("")
-    : "<div class='candidate none'>No candidates</div>"
-  }
-</div>
-
+  <div class="conflict-body hidden">
+    <div class="conflict-candidates">
+      ${c.candidates && c.candidates.length
+        ? c.candidates.map(p => `
+          <label class="candidate selectable">
+            <input type="radio" name="pick-${doc.id}" value="${p.id}" />
+            <span class="name">${p.name}</span>
+            <span class="meta">
+              ${formatPowerM(p.power)}
+              ${p.hasPlayerId ? "• 🆔 linked" : ""}
+            </span>
+          </label>
+        `).join("")
+        : "<div class='candidate none'>No candidates</div>"
+      }
+    </div>
 
     <div class="conflict-actions">
       <button data-action="use-existing">Use Existing</button>
@@ -161,10 +159,32 @@ async function loadConflicts() {
       <button data-action="create-new">Create New</button>
       <button data-action="ignore">Ignore</button>
     </div>
-  `;
+  </div>
+    `;
+
+const header = card.querySelector("[data-toggle]");
+const body = card.querySelector(".conflict-body");
+const chevron = card.querySelector(".chevron");
+
+header.addEventListener("click", () => {
+  // close all others
+  document.querySelectorAll(".conflict-body").forEach(b => {
+    if (b !== body) b.classList.add("hidden");
+  });
+
+  document.querySelectorAll(".chevron").forEach(c => {
+    if (c !== chevron) c.textContent = "▸";
+  });
+
+  // toggle this one
+  const isOpen = !body.classList.contains("hidden");
+  body.classList.toggle("hidden");
+  chevron.textContent = isOpen ? "▸" : "▾";
+});
+
 
   // ✅ ACTION PLACEHOLDERS (LOG ONLY)
-card.querySelectorAll("button").forEach(btn => {
+    card.querySelectorAll("button").forEach(btn => {
   btn.addEventListener("click", () => {
 
     // =============================
