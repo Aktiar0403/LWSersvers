@@ -1,7 +1,34 @@
 {
+  "redirects": [
+    {
+      "source": "/server-intelligence.html",
+      "destination": "/server-intelligence",
+      "permanent": true
+    },
+    {
+      "source": "/server-compare.html",
+      "destination": "/server-compare",
+      "permanent": true
+    },
+    {
+      "source": "/alliance-showdown.html",
+      "destination": "/alliance-showdown",
+      "permanent": true
+    }
+  ],
+
   "rewrites": [
-    { "source": "/server-intelligence", "destination": "/server-intelligence.html" },
-    { "source": "/server-compare", "destination": "/server-compare.html" },
-    { "source": "/alliance-showdown", "destination": "/alliance-showdown.html" }
+    {
+      "source": "/server-intelligence",
+      "destination": "/server-intelligence.html"
+    },
+    {
+      "source": "/server-compare",
+      "destination": "/server-compare.html"
+    },
+    {
+      "source": "/alliance-showdown",
+      "destination": "/alliance-showdown.html"
+    }
   ]
 }
