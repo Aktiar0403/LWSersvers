@@ -28,6 +28,31 @@
   <link rel="stylesheet" href="/css/server-compare.css" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1248850512161754"
      crossorigin="anonymous"></script>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6SBZ7TWCCE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6SBZ7TWCCE');
+  gtag('event', 'compare_server_selected', {
+  event_category: 'Compare',
+  event_label: 'Server A',
+  warzone: warzoneA
+});
+gtag('event', 'compare_server_selected', {
+  event_category: 'Compare',
+  event_label: 'Server B',
+  warzone: warzoneB
+});
+gtag('event', 'compare_reset', {
+  event_category: 'Compare'
+});
+
+
+
+</script>
 </head>
 
 
