@@ -23,33 +23,6 @@ let LIKES_ENABLED = false;
 
 let globalLimit = 20;
 const GLOBAL_LIMITS = [20, 50, 100];
-let ALLIANCE_REFERENCE = [];
-
-fetch("/data/alliance_index.json?v=2025-11-30")
-  .then(r => r.json())
-  .then(data => {
-    ALLIANCE_REFERENCE = data;
-    console.log("📘 Alliance reference loaded:", data.length);
-  })
-  .catch(err => {
-    console.warn("Alliance reference failed to load", err);
-  });
-
-  function previewReferenceSearch(query) {
-  const q = query.trim().toLowerCase();
-  if (q.length < 2) return [];
-
-  const map = new Map();
-
-  ALLIANCE_REFERENCE.forEach(r => {
-    if (r.tag.toLowerCase().includes(q)) {
-      if (!map.has(r.tag)) map.set(r.tag, 0);
-      map.set(r.tag, map.get(r.tag) + 1);
-    }
-  });
-
-  return [...map.keys()];
-}
 
 /* =============================
    PHASE 4 — POWER COMPUTATION
@@ -1723,7 +1696,6 @@ alliancePreviewInput.oninput = () => {
 
   const map = {};
 
-  // 🔴 PRIMARY: CURRENT DATA (UNCHANGED)
   allPlayers.forEach(p => {
     if (!p.alliance) return;
     const name = p.alliance.trim();
@@ -1736,42 +1708,12 @@ alliancePreviewInput.oninput = () => {
 
   const entries = Object.entries(map);
 
-  // 🟢 FALLBACK: EXCEL REFERENCE (ADD HERE)
   if (!entries.length) {
-    const refMap = {};
-
-    ALLIANCE_REFERENCE.forEach(r => {
-      if (!r.tag) return;
-      if (!r.tag.toLowerCase().includes(q)) return;
-
-      refMap[r.tag] = refMap[r.tag] || new Set();
-      refMap[r.tag].add(r.warzone);
-    });
-
-    const refEntries = Object.entries(refMap);
-
-    if (!refEntries.length) {
-      alliancePreviewResults.textContent =
-        "No alliance found in current or reference data";
-      return;
-    }
-
-    // Render reference hint (visually distinct)
-    refEntries.forEach(([name, zones]) => {
-      const div = document.createElement("div");
-      div.className = "result reference";
-      div.innerHTML = `
-        <strong>${name}</strong><br/>
-        <span class="ref-label">Reference</span>
-        Warzones: ${[...zones].sort((a,b)=>a-b).join(", ")}
-      `;
-      alliancePreviewResults.appendChild(div);
-    });
-
+    alliancePreviewResults.textContent =
+      "No alliance found in current data";
     return;
   }
 
-  // 🔴 NORMAL RENDER (UNCHANGED)
   entries.forEach(([name, zones]) => {
     const div = document.createElement("div");
     div.className = "result";
