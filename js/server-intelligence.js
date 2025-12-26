@@ -25,31 +25,52 @@ let globalLimit = 20;
 const GLOBAL_LIMITS = [20, 50, 100];
 let ALLIANCE_REFERENCE = [];
 
-fetch("/data/alliance_index.json?v=2025-11-30")
-  .then(r => r.json())
-  .then(data => {
-    ALLIANCE_REFERENCE = data;
-    console.log("📘 Alliance reference loaded:", data.length);
-  })
-  .catch(err => {
-    console.warn("Alliance reference failed to load", err);
+document
+  .getElementById("excelAllianceInput")
+  .addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = evt => {
+      const data = new Uint8Array(evt.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      ALLIANCE_REFERENCE = [];
+
+      // skip header
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const warzone = Number(row[0]);
+        const date = row[row.length - 1];
+
+        if (!warzone || !date) continue;
+
+        // columns B → K
+        for (let c = 1; c <= 10; c++) {
+          const tag = row[c];
+          if (!tag || tag === "-") continue;
+
+          ALLIANCE_REFERENCE.push({
+            tag: String(tag).trim(),
+            warzone,
+            date
+          });
+        }
+      }
+
+      console.log(
+        "📘 Excel alliance reference loaded:",
+        ALLIANCE_REFERENCE.length
+      );
+    };
+
+    reader.readAsArrayBuffer(file);
   });
 
-  function previewReferenceSearch(query) {
-  const q = query.trim().toLowerCase();
-  if (q.length < 2) return [];
-
-  const map = new Map();
-
-  ALLIANCE_REFERENCE.forEach(r => {
-    if (r.tag.toLowerCase().includes(q)) {
-      if (!map.has(r.tag)) map.set(r.tag, 0);
-      map.set(r.tag, map.get(r.tag) + 1);
-    }
-  });
-
-  return [...map.keys()];
-}
 
 /* =============================
    PHASE 4 — POWER COMPUTATION
