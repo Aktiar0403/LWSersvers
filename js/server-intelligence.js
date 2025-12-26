@@ -1710,78 +1710,90 @@ warzoneSearchInput.oninput = () => {
 // =============================
 // ALLIANCE → WARZONE PREVIEW
 // =============================
-const alliancePreviewInput =
-  document.getElementById("alliancePreviewInput");
-const alliancePreviewResults =
-  document.getElementById("alliancePreviewResults");
+document.addEventListener("DOMContentLoaded", () => {
 
-alliancePreviewInput.oninput = () => {
-  const q = alliancePreviewInput.value.trim().toLowerCase();
-  alliancePreviewResults.innerHTML = "";
+  const alliancePreviewInput =
+    document.getElementById("alliancePreviewInput");
+  const alliancePreviewResults =
+    document.getElementById("alliancePreviewResults");
 
-  if (q.length < 2) return;
+  // 🛡️ Safety guard
+  if (!alliancePreviewInput || !alliancePreviewResults) {
+    console.warn("Alliance preview elements not found");
+    return;
+  }
 
-  const map = {};
+  alliancePreviewInput.oninput = () => {
+    const q = alliancePreviewInput.value.trim().toLowerCase();
+    alliancePreviewResults.innerHTML = "";
 
-  // 🔴 PRIMARY: CURRENT DATA (UNCHANGED)
-  allPlayers.forEach(p => {
-    if (!p.alliance) return;
-    const name = p.alliance.trim();
+    if (q.length < 2) return;
 
-    if (!name.toLowerCase().includes(q)) return;
+    const map = {};
 
-    map[name] = map[name] || new Set();
-    map[name].add(p.warzone);
-  });
+    // 🔴 PRIMARY: CURRENT DATA
+    allPlayers.forEach(p => {
+      if (!p.alliance) return;
+      const name = p.alliance.trim();
 
-  const entries = Object.entries(map);
+      if (!name.toLowerCase().includes(q)) return;
 
-  // 🟢 FALLBACK: EXCEL REFERENCE (ADD HERE)
-  if (!entries.length) {
-    const refMap = {};
-
-    ALLIANCE_REFERENCE.forEach(r => {
-      if (!r.tag) return;
-      if (!r.tag.toLowerCase().includes(q)) return;
-
-      refMap[r.tag] = refMap[r.tag] || new Set();
-      refMap[r.tag].add(r.warzone);
+      map[name] = map[name] || new Set();
+      map[name].add(p.warzone);
     });
 
-    const refEntries = Object.entries(refMap);
+    const entries = Object.entries(map);
 
-    if (!refEntries.length) {
-      alliancePreviewResults.textContent =
-        "No alliance found in current or reference data";
+    // 🟢 FALLBACK: EXCEL REFERENCE
+    if (!entries.length) {
+      const refMap = {};
+
+      if (Array.isArray(ALLIANCE_REFERENCE)) {
+        ALLIANCE_REFERENCE.forEach(r => {
+          if (!r.tag || r.warzone == null) return;
+          if (!r.tag.toLowerCase().includes(q)) return;
+
+          refMap[r.tag] = refMap[r.tag] || new Set();
+          refMap[r.tag].add(r.warzone);
+        });
+      }
+
+      const refEntries = Object.entries(refMap);
+
+      if (!refEntries.length) {
+        alliancePreviewResults.textContent =
+          "No alliance found in current or reference data";
+        return;
+      }
+
+      refEntries.forEach(([name, zones]) => {
+        const div = document.createElement("div");
+        div.className = "result reference";
+        div.innerHTML = `
+          <strong>${name}</strong><br/>
+          <span class="ref-label">Reference</span>
+          Warzones: ${[...zones].sort((a,b)=>a-b).join(", ")}
+        `;
+        alliancePreviewResults.appendChild(div);
+      });
+
       return;
     }
 
-    // Render reference hint (visually distinct)
-    refEntries.forEach(([name, zones]) => {
+    // 🔴 NORMAL RENDER
+    entries.forEach(([name, zones]) => {
       const div = document.createElement("div");
-      div.className = "result reference";
+      div.className = "result";
       div.innerHTML = `
         <strong>${name}</strong><br/>
-        <span class="ref-label">Reference</span>
         Warzones: ${[...zones].sort((a,b)=>a-b).join(", ")}
       `;
       alliancePreviewResults.appendChild(div);
     });
+  };
 
-    return;
-  }
+});
 
-  // 🔴 NORMAL RENDER (UNCHANGED)
-  entries.forEach(([name, zones]) => {
-    const div = document.createElement("div");
-    div.className = "result";
-    div.innerHTML = `
-      <strong>${name}</strong><br/>
-      Warzones: ${[...zones].sort((a,b)=>a-b).join(", ")}
-    `;
-    alliancePreviewResults.appendChild(div);
-  });
-};
 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { auth } from "./firebase-config.js";
