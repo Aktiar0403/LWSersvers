@@ -1680,50 +1680,6 @@ warzoneSearchInput.oninput = () => {
   buildWarzoneModalList(warzoneSearchInput.value.trim());
 };
 
-// =============================
-// ALLIANCE → WARZONE PREVIEW
-// =============================
-const alliancePreviewInput =
-  document.getElementById("alliancePreviewInput");
-const alliancePreviewResults =
-  document.getElementById("alliancePreviewResults");
-
-alliancePreviewInput.oninput = () => {
-  const q = alliancePreviewInput.value.trim().toLowerCase();
-  alliancePreviewResults.innerHTML = "";
-
-  if (q.length < 2) return;
-
-  const map = {};
-
-  allPlayers.forEach(p => {
-    if (!p.alliance) return;
-    const name = p.alliance.trim();
-
-    if (!name.toLowerCase().includes(q)) return;
-
-    map[name] = map[name] || new Set();
-    map[name].add(p.warzone);
-  });
-
-  const entries = Object.entries(map);
-
-  if (!entries.length) {
-    alliancePreviewResults.textContent =
-      "No alliance found in current data";
-    return;
-  }
-
-  entries.forEach(([name, zones]) => {
-    const div = document.createElement("div");
-    div.className = "result";
-    div.innerHTML = `
-      <strong>${name}</strong><br/>
-      Warzones: ${[...zones].sort((a,b)=>a-b).join(", ")}
-    `;
-    alliancePreviewResults.appendChild(div);
-  });
-};
 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { auth } from "./firebase-config.js";
