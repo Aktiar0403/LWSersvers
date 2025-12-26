@@ -2876,3 +2876,63 @@ body.admin-view .admin-only {
 .segment {
   position: relative;
 }
+.alliance-data-credit {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.75;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ⓘ icon */
+.credit-icon {
+  display: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Desktop text */
+.credit-text {
+  display: inline;
+}
+
+.discord-link {
+  color: #7dd3fc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.discord-link:hover {
+  text-decoration: underline;
+}
+
+/* 📱 Mobile behavior */
+@media (max-width: 640px) {
+  .credit-text {
+    display: none;
+  }
+
+  .credit-icon {
+    display: inline;
+  }
+
+  .alliance-data-credit {
+    opacity: 0.65;
+  }
+}
+.credit-sub {
+  font-size: 11px;
+  opacity: 0.85;
+}
+.result.reference {
+  opacity: 0.75;
+  border-left: 2px solid #7dd3fc;
+  padding-left: 6px;
+}
+
+.ref-label {
+  font-size: 11px;
+  color: #7dd3fc;
+  margin-right: 6px;
+}
