@@ -135,11 +135,24 @@ if (input && resultBox) {
       : "";
 
     resultBox.innerHTML = `
-      <strong>${name}</strong> found in:
-      <br>Warzone${warzones.length > 1 ? "s" : ""} ${warzones.join(", ")}
-      <br><small>Last updated: ${latestUpdate || "—"}</small>
-      ${casingWarning}
-    `;
-    resultBox.className = "al-result";
+  <div class="al-row">
+    <span class="al-main">
+      <strong>${name}</strong> → ${warzones.join(", ")}
+    </span>
+
+    <span
+      class="al-discord"
+      title="Coordinate on Discord"
+      onclick="openAllianceDiscord('${name}')"
+    >
+      <img src="/assets/discord.svg" alt="Discord" />
+    </span>
+  </div>
+
+  <div class="al-date">
+    Updated: ${latestUpdate || "—"}
+  </div>
+`;
+
   });
 }
