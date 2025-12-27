@@ -19,6 +19,24 @@ fetch("/data/alliance_lookup.json")
     console.error("❌ Failed to load alliance lookup JSON", err);
   });
 
+function normalizeDate(value) {
+  // Already a string date → keep it
+  if (typeof value === "string") {
+    return value;
+  }
+
+  // Excel serial number → convert
+  if (typeof value === "number") {
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+    const date = new Date(
+      excelEpoch.getTime() + value * 86400000
+    );
+    return date.toISOString().slice(0, 10);
+  }
+
+  return "—";
+}
+
 /* -----------------------------
    Build fast index
 ----------------------------- */
@@ -36,7 +54,8 @@ function buildAllianceIndex(data) {
 
     ALLIANCE_INDEX.get(key).push({
       warzone: Number(item.warzone),
-      updatedAt: item.updatedAt || "—"
+      updatedAt: normalizeDate(item.updatedAt)
+
     });
   });
 
