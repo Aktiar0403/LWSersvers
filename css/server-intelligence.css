@@ -4048,8 +4048,24 @@ body.admin-view .admin-only {
 .alliance-lookup-card {
   min-height: 132px; /* tune 120–140 if needed */
 }
-@media (max-width: 640px) {
-  .discovery-grid {
-    grid-template-columns: 1fr;
+
+.server-tools-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+.server-dive-card,
+.alliance-lookup-card {
+  min-width: 0;        /* CRITICAL for grid children */
+  overflow: hidden;
+}
+@media (max-width: 420px) {
+  .alliance-lookup-card input {
+    width: 150px;     /* still centered, still usable */
+  }
+
+  .al-helper {
+    font-size: 10px;
   }
 }
