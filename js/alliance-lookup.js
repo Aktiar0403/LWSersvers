@@ -39,38 +39,48 @@ input.addEventListener("input", () => {
   );
 
   // ✅ EXACT MATCH
-  if (exact) {
-    result.innerHTML = `
-      <div class="al-row-compact">
-        <span class="al-status ok">✔</span>
+ if (exact) {
+  result.innerHTML = `
+    <div class="al-row-compact" data-open-modal>
 
-        <span class="al-main">
-          <strong>${exact.alliance}</strong>
-          <span class="al-arrow">→</span>
-          <span class="al-wz">WZ ${exact.warzone}</span>
-        </span>
+      <span class="al-status ok">✔</span>
 
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
-          class="al-discord-icon"
-          title="Coordinates Discord"
-        />
+      <span class="al-main">
+        <strong>${exact.alliance}</strong>
+        <span class="al-arrow">→</span>
+        <span class="al-wz">WZ ${exact.warzone}</span>
+      </span>
 
-        <button
-          class="al-btn"
-          onclick="openModal(${JSON.stringify(exact)})"
-        >
-          Coordinate
-        </button>
-      </div>
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
+        class="al-discord-icon"
+        title="Open coordinates"
+        data-open-modal
+      />
 
-      <div class="al-credit">
-        Data provided by Coordinates List Discord
-      </div>
-    `;
-    result.className = "al-result found";
-    return;
-  }
+      <button
+        class="al-btn"
+        data-open-modal
+      >
+        Coordinate
+      </button>
+
+    </div>
+
+    <div class="al-credit">
+      Data provided by Coordinates List Discord
+    </div>
+  `;
+
+  // attach modal open
+  result.querySelectorAll("[data-open-modal]").forEach(el => {
+    el.addEventListener("click", () => openModal(exact));
+  });
+
+  result.className = "al-result found";
+  return;
+}
+
 
   // ⚠️ CASING WARNING
   if (casing) {
