@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <span class="al-main">
       <strong>${e.alliance}</strong>
       <span class="al-arrow">→</span>
-      <span class="al-wz">WZ ${e.warzone}</span>
+      <span class="al-wz">${e.warzone}</span>
     </span>
 
     <img
