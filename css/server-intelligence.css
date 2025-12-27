@@ -2936,3 +2936,78 @@ body.admin-view .admin-only {
   color: #7dd3fc;
   margin-right: 6px;
 }
+/* =============================
+   Alliance → Warzone Lookup
+   ============================= */
+
+.alliance-lookup-card {
+  background: linear-gradient(
+    180deg,
+    rgba(14, 20, 26, 0.95),
+    rgba(9, 13, 18, 0.95)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-left: 12px;
+  min-width: 280px;
+  max-width: 360px;
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 200, 0.04),
+    0 12px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+.al-header {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #9fffe0;
+  margin-bottom: 8px;
+}
+
+/* Input */
+.alliance-lookup-card input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 200, 0.18);
+  background: rgba(5, 8, 12, 0.9);
+  color: #eafff7;
+  font-size: 13px;
+  outline: none;
+}
+
+.alliance-lookup-card input::placeholder {
+  color: rgba(180, 255, 230, 0.45);
+}
+
+.alliance-lookup-card input:focus {
+  border-color: #4dffd8;
+  box-shadow: 0 0 0 1px rgba(77, 255, 216, 0.35);
+}
+
+/* Result */
+.al-result {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.al-result strong {
+  color: #4dffd8;
+}
+
+.al-result.muted {
+  color: rgba(200, 230, 220, 0.45);
+}
+
+/* Credit */
+.al-credit {
+  margin-top: 10px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
