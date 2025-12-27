@@ -20,30 +20,83 @@ const modalUpdated = document.getElementById("modalUpdated");
 
 input.addEventListener("input", () => {
   const q = input.value.trim();
+
   if (!q) {
-    result.textContent = "Type an alliance name to find its warzone";
+    result.innerHTML = `
+      <div class="al-muted">
+        Alliance reference data provided by
+        <strong>Coordinates List Discord</strong>
+      </div>
+    `;
     result.className = "al-result muted";
     return;
   }
 
   const exact = ALLIANCES.find(a => a.alliance === q);
-  const casingMatch = ALLIANCES.find(
-    a => a.alliance.toLowerCase() === q.toLowerCase() && a.alliance !== q
+  const casing = ALLIANCES.find(
+    a => a.alliance.toLowerCase() === q.toLowerCase() &&
+         a.alliance !== q
   );
 
+  // ✅ EXACT MATCH
   if (exact) {
-    result.innerHTML = `<strong>${exact.alliance}</strong> → WZ ${exact.warzone}`;
+    result.innerHTML = `
+      <div class="al-row-compact">
+        <span class="al-status ok">✔</span>
+
+        <span class="al-main">
+          <strong>${exact.alliance}</strong>
+          <span class="al-arrow">→</span>
+          <span class="al-wz">WZ ${exact.warzone}</span>
+        </span>
+
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
+          class="al-discord-icon"
+          title="Coordinates Discord"
+        />
+
+        <button
+          class="al-btn"
+          onclick="openModal(${JSON.stringify(exact)})"
+        >
+          Coordinate
+        </button>
+      </div>
+
+      <div class="al-credit">
+        Data provided by Coordinates List Discord
+      </div>
+    `;
     result.className = "al-result found";
-    result.onclick = () => openModal(exact);
-  } else if (casingMatch) {
-    result.textContent =
-      `⚠ Found "${casingMatch.alliance}" in WZ ${casingMatch.warzone} (case-sensitive)`;
-    result.className = "al-result warn";
-  } else {
-    result.textContent = "No exact match found";
-    result.className = "al-result muted";
+    return;
   }
+
+  // ⚠️ CASING WARNING
+  if (casing) {
+    result.innerHTML = `
+      <div class="al-row-compact">
+        <span class="al-status warn">⚠</span>
+
+        <span class="al-main">
+          <strong>${casing.alliance}</strong>
+          <span class="al-arrow">→</span>
+          <span class="al-wz">WZ ${casing.warzone}</span>
+        </span>
+
+        <span class="al-warning-text">
+          case-sensitive
+        </span>
+      </div>
+    `;
+    result.className = "al-result warn";
+    return;
+  }
+
+  result.textContent = "No exact alliance found";
+  result.className = "al-result muted";
 });
+
 
 function openModal(entry) {
   modalAlliance.textContent = entry.alliance;
