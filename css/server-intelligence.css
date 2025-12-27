@@ -4571,3 +4571,68 @@ body.admin-view .admin-only {
   background: rgba(56, 189, 248, 0.12);
   border: 1px solid rgba(56, 189, 248, 0.35);
 }
+/* Keep sub content centered and aligned */
+.dive-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+/* Keep sub content centered and aligned */
+.dive-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+#activeWarzoneLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #38bdf8;
+  text-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+}
+/* =============================
+   MOBILE WARZONE HIERARCHY
+============================= */
+@media (max-width: 480px) {
+
+  .dive-sub {
+    display: flex;
+    flex-direction: column-reverse; /* 🔥 key trick */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+  }
+
+  /* Primary — warzone value */
+  #activeWarzoneLabel {
+    font-size: 18px;
+    font-weight: 800;
+    color: #38bdf8;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    margin: 0;
+  }
+
+  /* Secondary — helper text */
+  .dive-sub::before {
+    content: "Currently viewing";
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  /* Hide original inline text */
+  .dive-sub {
+    font-size: 0;
+  }
+}
+@media (max-width: 480px) {
+  #activeWarzoneLabel {
+    cursor: pointer;
+  }
+}
