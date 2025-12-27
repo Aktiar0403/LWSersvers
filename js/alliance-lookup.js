@@ -1,9 +1,10 @@
 /* =====================================================
    Alliance → Warzone Lookup (Standalone)
-   EXACT identity + correct date handling
+   Exact match only + proper date + casing warning
    ===================================================== */
 
-let ALLIANCE_INDEX = new Map();
+let ALLIANCE_INDEX = new Map();          // exact-case index
+let ALLIANCE_CASE_MAP = new Map();       // lowercase → Set of casings
 
 /* -----------------------------
    Load JSON once
@@ -11,7 +12,7 @@ let ALLIANCE_INDEX = new Map();
 fetch("/data/alliance_lookup.json")
   .then(res => res.json())
   .then(data => {
-    buildAllianceIndex(data);
+    buildAllianceIndexes(data);
   })
   .catch(err => {
     console.error("❌ Failed to load alliance lookup JSON", err);
@@ -21,12 +22,8 @@ fetch("/data/alliance_lookup.json")
    Excel date → YYYY-MM-DD
 ----------------------------- */
 function formatDate(value) {
-  // Already formatted
-  if (typeof value === "string") {
-    return value;
-  }
+  if (typeof value === "string") return value;
 
-  // Excel serial number
   if (typeof value === "number") {
     const excelEpoch = new Date(Date.UTC(1899, 11, 30));
     const date = new Date(
@@ -39,35 +36,43 @@ function formatDate(value) {
 }
 
 /* -----------------------------
-   Build index (CASE-SENSITIVE)
+   Build indexes
 ----------------------------- */
-function buildAllianceIndex(data) {
+function buildAllianceIndexes(data) {
   ALLIANCE_INDEX.clear();
+  ALLIANCE_CASE_MAP.clear();
 
   data.forEach(item => {
     if (!item || !item.alliance || !item.warzone) return;
 
-    const allianceName = String(item.alliance).trim(); // 🔥 canonical
-    const key = allianceName; // 🔥 case-sensitive key
+    const allianceName = String(item.alliance).trim();
+    const lower = allianceName.toLowerCase();
 
-    if (!ALLIANCE_INDEX.has(key)) {
-      ALLIANCE_INDEX.set(key, {
+    // 🔹 Exact-case index
+    if (!ALLIANCE_INDEX.has(allianceName)) {
+      ALLIANCE_INDEX.set(allianceName, {
         name: allianceName,
         entries: []
       });
     }
 
-    ALLIANCE_INDEX.get(key).entries.push({
+    ALLIANCE_INDEX.get(allianceName).entries.push({
       warzone: Number(item.warzone),
       updatedAt: formatDate(item.updatedAt)
     });
+
+    // 🔹 Case-variant tracker
+    if (!ALLIANCE_CASE_MAP.has(lower)) {
+      ALLIANCE_CASE_MAP.set(lower, new Set());
+    }
+    ALLIANCE_CASE_MAP.get(lower).add(allianceName);
   });
 
   console.log("✅ Alliance lookup ready:", ALLIANCE_INDEX.size);
 }
 
 /* -----------------------------
-   Exact match ONLY (case-sensitive)
+   Exact match only
 ----------------------------- */
 function findAllianceExact(query) {
   const q = String(query || "").trim();
@@ -108,17 +113,32 @@ if (input && resultBox) {
       ...new Set(entries.map(e => e.warzone))
     ].sort((a, b) => a - b);
 
-    // 🔥 latest formatted date
     const latestUpdate = entries
       .map(e => e.updatedAt)
       .filter(d => d && d !== "—")
       .sort()
       .pop();
 
+    // ⚠️ casing warning
+    const casingVariants =
+      ALLIANCE_CASE_MAP.get(name.toLowerCase()) || new Set();
+
+    const otherCasings = [...casingVariants].filter(
+      v => v !== name
+    );
+
+    const casingWarning = otherCasings.length
+      ? `<br><small style="color:#ffb84d">
+           ⚠️ Similar alliance exists with different casing:
+           ${otherCasings.join(", ")}
+         </small>`
+      : "";
+
     resultBox.innerHTML = `
       <strong>${name}</strong> found in:
       <br>Warzone${warzones.length > 1 ? "s" : ""} ${warzones.join(", ")}
       <br><small>Last updated: ${latestUpdate || "—"}</small>
+      ${casingWarning}
     `;
     resultBox.className = "al-result";
   });
