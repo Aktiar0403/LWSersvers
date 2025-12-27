@@ -1,38 +1,44 @@
-console.log("✅ Alliance lookup loading...");
+console.log("✅ Alliance lookup loading…");
 
-/* =========================
+/* ======================================================
+   CONFIG
+====================================================== */
+const DATA_URL = "/data/alliance_lookup.json";
+
+/* ======================================================
    STATE
-========================= */
+====================================================== */
 let ALLIANCES = [];
 
-/* =========================
-   DOM
-========================= */
+/* ======================================================
+   DOM REFERENCES
+====================================================== */
 const input = document.getElementById("allianceLookupInput");
-const result = document.getElementById("allianceLookupResult");
+const resultBox = document.getElementById("allianceLookupResult");
 
+/* Modal */
 const modal = document.getElementById("allianceDiscordModal");
 const modalAlliance = document.getElementById("modalAllianceName");
 const modalWarzone = document.getElementById("modalWarzone");
 const modalUpdated = document.getElementById("modalUpdated");
-const closeBtn = document.querySelector(".discord-modal-close");
+const modalCloseBtn = document.querySelector(".discord-modal-close");
 
-/* =========================
-   LOAD JSON
-========================= */
-fetch("/data/alliance_lookup.json")
-  .then(r => r.json())
+/* ======================================================
+   LOAD JSON DATA
+====================================================== */
+fetch(DATA_URL)
+  .then(res => res.json())
   .then(data => {
     ALLIANCES = data;
-    console.log("✅ Alliance lookup ready:", data.length);
+    console.log("✅ Alliance lookup ready:", ALLIANCES.length);
   })
   .catch(err => {
     console.error("❌ Failed to load alliance_lookup.json", err);
   });
 
-/* =========================
-   HELPERS
-========================= */
+/* ======================================================
+   DATE FORMATTER (SAFE)
+====================================================== */
 function formatUpdated(entry) {
   const raw =
     entry.updated ||
@@ -52,23 +58,59 @@ function formatUpdated(entry) {
   });
 }
 
+/* ======================================================
+   CORE SEARCH LOGIC (CRITICAL)
+====================================================== */
+function findAlliance(query) {
+  const q = query.trim();
+  if (!q) return { type: "empty" };
+
+  /* 1️⃣ Exact case-sensitive match */
+  const exact = ALLIANCES.find(a => a.alliance === q);
+  if (exact) {
+    return { type: "exact", entry: exact };
+  }
+
+  /* 2️⃣ Same letters, different casing */
+  const casingMatches = ALLIANCES.filter(
+    a => a.alliance.toLowerCase() === q.toLowerCase()
+  );
+
+  if (casingMatches.length > 0) {
+    return {
+      type: "case-warning",
+      matches: casingMatches.map(a => a.alliance)
+    };
+  }
+
+  /* 3️⃣ Nothing found */
+  return { type: "not-found" };
+}
+
+/* ======================================================
+   MODAL CONTROL
+====================================================== */
 function openModal(entry) {
   modalAlliance.textContent = entry.alliance;
   modalWarzone.textContent = entry.warzone;
   modalUpdated.textContent = formatUpdated(entry);
-
   modal.classList.remove("hidden");
 }
 
-/* =========================
-   SEARCH INPUT
-========================= */
-input.addEventListener("input", () => {
-  const q = input.value.trim();
+function closeModal() {
+  modal.classList.add("hidden");
+}
 
-  // 🔹 IDLE STATE
-  if (!q) {
-    result.innerHTML = `
+/* ======================================================
+   INPUT HANDLER
+====================================================== */
+input.addEventListener("input", () => {
+  const query = input.value;
+  const result = findAlliance(query);
+
+  /* ===== EMPTY ===== */
+  if (result.type === "empty") {
+    resultBox.innerHTML = `
       <div class="al-muted">
         Search an alliance name to find its warzone
       </div>
@@ -76,38 +118,29 @@ input.addEventListener("input", () => {
         Data provided by <strong>Coordinates List Discord</strong>
       </div>
     `;
-    result.className = "al-result muted";
+    resultBox.className = "al-result muted";
     return;
   }
 
-  // 🔍 EXACT MATCH (case-sensitive)
-  const exact = ALLIANCES.find(a => a.alliance === q);
+  /* ===== EXACT MATCH ===== */
+  if (result.type === "exact") {
+    const entry = result.entry;
 
-  // ⚠️ CASE-INSENSITIVE MATCH
-  const casing = ALLIANCES.find(
-    a => a.alliance.toLowerCase() === q.toLowerCase() &&
-         a.alliance !== q
-  );
-
-  /* =========================
-     EXACT MATCH FOUND
-  ========================= */
-  if (exact) {
-    result.innerHTML = `
-      <div class="al-row-compact" data-open-modal>
+    resultBox.innerHTML = `
+      <div class="al-row-compact">
 
         <span class="al-status ok">✔</span>
 
         <span class="al-main">
-          <strong>${exact.alliance}</strong>
+          <strong>${entry.alliance}</strong>
           <span class="al-arrow">→</span>
-          <span class="al-wz">WZ ${exact.warzone}</span>
+          <span class="al-wz">WZ ${entry.warzone}</span>
         </span>
 
         <img
           src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
           class="al-discord-icon"
-          title="Open coordinates"
+          title="Coordinate on Discord"
           data-open-modal
         />
 
@@ -122,63 +155,55 @@ input.addEventListener("input", () => {
       </div>
     `;
 
-    // Attach modal open to all clickable elements
-    result.querySelectorAll("[data-open-modal]").forEach(el => {
-      el.addEventListener("click", () => openModal(exact));
-    });
+    resultBox.className = "al-result found";
 
-    result.className = "al-result found";
+    /* Open modal on icon or button */
+    resultBox
+      .querySelectorAll("[data-open-modal]")
+      .forEach(el => {
+        el.addEventListener("click", () => openModal(entry));
+      });
+
     return;
   }
 
-  /* =========================
-     CASING WARNING
-  ========================= */
-  if (casing) {
-    result.innerHTML = `
+  /* ===== CASE-SENSITIVITY WARNING ===== */
+  if (result.type === "case-warning") {
+    resultBox.innerHTML = `
       <div class="al-row-compact">
 
         <span class="al-status warn">⚠</span>
 
         <span class="al-main">
-          <strong>${casing.alliance}</strong>
-          <span class="al-arrow">→</span>
-          <span class="al-wz">WZ ${casing.warzone}</span>
-        </span>
-
-        <span class="al-warning-text">
-          case-sensitive
+          Alliance exists with different casing
         </span>
 
       </div>
+
+      <div class="al-warning-text">
+        Valid names:
+        ${result.matches.map(n => `<strong>${n}</strong>`).join(", ")}
+      </div>
     `;
 
-    result.className = "al-result warn";
+    resultBox.className = "al-result warn";
     return;
   }
 
-  /* =========================
-     NO MATCH
-  ========================= */
-  result.textContent = "No exact alliance found";
-  result.className = "al-result muted";
+  /* ===== NOT FOUND ===== */
+  resultBox.textContent = "No exact alliance found";
+  resultBox.className = "al-result muted";
 });
 
-/* =========================
-   MODAL CLOSE HANDLERS
-========================= */
-closeBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
+/* ======================================================
+   MODAL CLOSE EVENTS
+====================================================== */
+modalCloseBtn.addEventListener("click", closeModal);
+
+modal.addEventListener("click", e => {
+  if (e.target === modal) closeModal();
 });
 
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modal.classList.add("hidden");
-  }
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    modal.classList.add("hidden");
-  }
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
 });
