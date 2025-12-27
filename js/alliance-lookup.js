@@ -111,9 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (result.type === "empty") {
       resultBox.innerHTML = `
-        <div class="al-muted">
-          Search an alliance name to find its warzone
-        </div>
+        
         <div class="al-credit">
           Data provided by <strong>Coordinates List Discord</strong>
         </div>
