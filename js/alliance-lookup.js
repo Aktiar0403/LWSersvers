@@ -122,8 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (result.type === "exact") {
       const e = result.entry;
-
-     resultBox.innerHTML = `
+resultBox.innerHTML = `
   <div class="al-row-compact">
     <span class="al-status ok"></span>
 
@@ -134,11 +133,22 @@ document.addEventListener("DOMContentLoaded", () => {
     </span>
 
        <button class="al-btn" data-open-modal>
-      Coordinate
+      Coordinates
     </button>
   </div>
 `;
 
+
+      resultBox.className = "al-result found";
+
+      resultBox
+        .querySelectorAll("[data-open-modal]")
+        .forEach(el =>
+          el.addEventListener("click", () => openModal(e))
+        );
+
+      return;
+    }
 
       resultBox.className = "al-result found";
 
