@@ -3962,3 +3962,73 @@ body.admin-view .admin-only {
     font-size: 10px;
   }
 }
+/* Match Dive into Server Data card */
+.alliance-lookup-card {
+  background: linear-gradient(180deg, #020617, #020617cc);
+  border: 1px solid #1e293b;
+  border-radius: 16px;              /* match other cards */
+  padding: 14px 14px 12px;
+  min-height: 120px;                /* visual symmetry */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+/* Compact centered input */
+.alliance-lookup-card input {
+  width: 180px;              /* perfect for 3–5 chars */
+  max-width: 100%;
+  margin: 6px auto 0;        /* center horizontally */
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;      /* pill style */
+  background: #020617;
+  border: 1px solid #334155;
+  color: #e5e7eb;
+  font-size: 13px;
+  text-align: center;        /* short text looks better */
+}
+
+.alliance-lookup-card input::placeholder {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.alliance-lookup-card input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf8;
+}
+.al-header {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.al-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+.al-helper {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+}
+
+.al-result {
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: #020617;
+  border: 1px dashed #1e293b;   /* subtle, tool-like */
+  text-align: center;
+}
+
+.al-credit {
+  font-size: 10px;
+  color: #64748b;
+}
+@media (max-width: 420px) {
+  .alliance-lookup-card input {
+    width: 200px;
+  }
+}
