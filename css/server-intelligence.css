@@ -4490,8 +4490,8 @@ body.admin-view .admin-only {
 ============================= */
 .modal-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
 
   overflow-y: auto;
   padding: 4px;
