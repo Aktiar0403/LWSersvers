@@ -3567,3 +3567,9 @@ body.admin-view .admin-only {
 .discord-modal-close:hover {
   color: #fff;
 }
+.discord-modal-banner {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
