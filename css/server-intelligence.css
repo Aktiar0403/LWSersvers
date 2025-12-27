@@ -4650,3 +4650,33 @@ body.admin-view .admin-only {
   font-size: 11px;
   color: #64748b;
 }
+/* Credit container */
+.al-credit {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* MAIN EMPHASIS */
+.al-credit-brand {
+  color: #22f7a6; /* LW neon green */
+  font-weight: 700;
+  margin: 0 2px;
+  text-shadow:
+    0 0 6px rgba(34, 247, 166, 0.65),
+    0 0 14px rgba(34, 247, 166, 0.35);
+}
+
+/* Secondary label */
+.al-credit-muted {
+  color: #8b9bb4;
+  font-weight: 500;
+}
+
+/* Optional micro polish */
+.al-credit-brand:hover {
+  text-shadow:
+    0 0 10px rgba(34, 247, 166, 0.9),
+    0 0 22px rgba(34, 247, 166, 0.6);
+}
