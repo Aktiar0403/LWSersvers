@@ -158,43 +158,37 @@ if (input && resultBox) {
 }
 function openAllianceDiscord(alliance) {
   const modal = document.getElementById("allianceDiscordModal");
-  const nameEl = document.getElementById("discordAllianceName");
-  const linkEl = document.getElementById("discordLink");
+  document.getElementById("discordAllianceName").textContent =
+    `Alliance: ${alliance}`;
 
-  nameEl.textContent = `Alliance: ${alliance}`;
-
-  // 🔧 Replace with real invite later
-  linkEl.href = "https://discord.gg/YOUR_INVITE_CODE";
+  document.getElementById("discordLink").href =
+    "https://discord.gg/YOUR_INVITE_CODE";
 
   modal.classList.remove("hidden");
 }
 
-// Close helpers
 function closeAllianceDiscord() {
   document
     .getElementById("allianceDiscordModal")
     .classList.add("hidden");
 }
 
-// 🔹 Close on outside click
+/* Close on outside click */
 document
   .getElementById("allianceDiscordModal")
-  .addEventListener("click", (e) => {
-    if (e.target.classList.contains("modal-overlay")) {
+  .addEventListener("click", e => {
+    if (e.target.classList.contains("discord-modal-overlay")) {
       closeAllianceDiscord();
     }
   });
 
-// 🔹 Close on ESC
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    closeAllianceDiscord();
-  }
+/* Close on ESC */
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeAllianceDiscord();
 });
 
-// 🔹 Close button
-document.querySelector(".modal-close")?.addEventListener(
-  "click",
-  closeAllianceDiscord
-);
+/* Close button */
+document
+  .querySelector(".discord-modal-close")
+  ?.addEventListener("click", closeAllianceDiscord);
 
