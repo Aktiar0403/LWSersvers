@@ -4027,8 +4027,3 @@ body.admin-view .admin-only {
   font-size: 10px;
   color: #64748b;
 }
-@media (max-width: 420px) {
-  .alliance-lookup-card input {
-    width: 200px;
-  }
-}
