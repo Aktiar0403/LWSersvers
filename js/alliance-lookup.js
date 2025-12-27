@@ -132,23 +132,14 @@ resultBox.innerHTML = `
       <span class="al-wz">${e.warzone}</span>
     </span>
 
-       <button class="al-btn" data-open-modal>
-      Coordinates
-    </button>
+    <div class="al-action">
+      <button class="al-btn" data-open-modal>
+        Coordinates
+      </button>
+    </div>
   </div>
 `;
 
-
-      resultBox.className = "al-result found";
-
-      resultBox
-        .querySelectorAll("[data-open-modal]")
-        .forEach(el =>
-          el.addEventListener("click", () => openModal(e))
-        );
-
-      return;
-    }
 
       resultBox.className = "al-result found";
 
