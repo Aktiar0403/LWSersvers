@@ -4069,3 +4069,88 @@ body.admin-view .admin-only {
     font-size: 10px;
   }
 }
+/* =============================
+   ALIGN ALLIANCE LOOKUP
+   WITH DISCOVERY CARDS
+============================= */
+
+/* Make it behave like discovery-card */
+.alliance-lookup-card {
+  background: linear-gradient(180deg, #020617, #020617cc);
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  padding: 14px;
+  min-height: 130px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+/* Header = same weight as dive-title */
+.alliance-lookup-card .al-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* Helper = same tone as dive-sub */
+.alliance-lookup-card .al-helper {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* Input = primary content line (like activeWarzoneLabel) */
+.alliance-lookup-card input {
+  width: 100%;
+  height: 38px;
+  border-radius: 10px;
+  padding: 0 12px;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #334155;
+  color: #e5e7eb;
+
+  font-size: 14px;
+}
+
+.alliance-lookup-card input::placeholder {
+  color: #64748b;
+}
+
+.alliance-lookup-card input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+/* Result area — subtle like preview text */
+.alliance-lookup-card .al-result {
+  margin-top: 6px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: #94a3b8;
+  border: none;
+  background: transparent;
+}
+
+/* Credit = same visual weight as dive-hint */
+.alliance-lookup-card .al-credit {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Grid behavior — keep side by side always */
+.discovery-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 14px;
+}
+
+.discovery-card,
+.alliance-lookup-card {
+  min-width: 0;
+}
