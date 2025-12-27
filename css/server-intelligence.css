@@ -4548,3 +4548,26 @@ body.admin-view .admin-only {
     gap: 6px;
   }
 }
+/* =============================
+   ACTIVE WARZONE HIGHLIGHT
+============================= */
+#activeWarzoneLabel {
+  display: inline-block;
+
+  font-size: 16px;          /* bigger than surrounding text */
+  font-weight: 700;         /* strong emphasis */
+
+  color: #38bdf8;           /* LWServers accent blue */
+
+  margin-left: 4px;
+
+  /* subtle glow for importance */
+  text-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+}
+#activeWarzoneLabel {
+  padding: 2px 8px;
+  border-radius: 999px;
+
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
