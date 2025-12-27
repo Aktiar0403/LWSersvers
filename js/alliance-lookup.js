@@ -1,6 +1,6 @@
 /* =====================================================
    Alliance → Warzone Lookup (Standalone)
-   Exact match only + proper date formatting
+   EXACT identity + correct date handling
    ===================================================== */
 
 let ALLIANCE_INDEX = new Map();
@@ -18,11 +18,10 @@ fetch("/data/alliance_lookup.json")
   });
 
 /* -----------------------------
-   Date normalization
-   (Excel serial → YYYY-MM-DD)
+   Excel date → YYYY-MM-DD
 ----------------------------- */
 function formatDate(value) {
-  // Already formatted string
+  // Already formatted
   if (typeof value === "string") {
     return value;
   }
@@ -40,7 +39,7 @@ function formatDate(value) {
 }
 
 /* -----------------------------
-   Build index
+   Build index (CASE-SENSITIVE)
 ----------------------------- */
 function buildAllianceIndex(data) {
   ALLIANCE_INDEX.clear();
@@ -48,14 +47,17 @@ function buildAllianceIndex(data) {
   data.forEach(item => {
     if (!item || !item.alliance || !item.warzone) return;
 
-    const key = String(item.alliance).trim();
-
+    const allianceName = String(item.alliance).trim(); // 🔥 canonical
+    const key = allianceName; // 🔥 case-sensitive key
 
     if (!ALLIANCE_INDEX.has(key)) {
-      ALLIANCE_INDEX.set(key, []);
+      ALLIANCE_INDEX.set(key, {
+        name: allianceName,
+        entries: []
+      });
     }
 
-    ALLIANCE_INDEX.get(key).push({
+    ALLIANCE_INDEX.get(key).entries.push({
       warzone: Number(item.warzone),
       updatedAt: formatDate(item.updatedAt)
     });
@@ -65,7 +67,7 @@ function buildAllianceIndex(data) {
 }
 
 /* -----------------------------
-   Exact match search ONLY
+   Exact match ONLY (case-sensitive)
 ----------------------------- */
 function findAllianceExact(query) {
   const q = String(query || "").trim();
@@ -91,20 +93,22 @@ if (input && resultBox) {
       return;
     }
 
-    const entries = findAllianceExact(raw);
+    const result = findAllianceExact(raw);
 
-    if (!entries) {
+    if (!result) {
       resultBox.textContent =
         "No warzone found for this alliance";
       resultBox.className = "al-result muted";
       return;
     }
 
+    const { name, entries } = result;
+
     const warzones = [
       ...new Set(entries.map(e => e.warzone))
     ].sort((a, b) => a - b);
 
-    // latest updatedAt across all warzones
+    // 🔥 latest formatted date
     const latestUpdate = entries
       .map(e => e.updatedAt)
       .filter(d => d && d !== "—")
@@ -112,7 +116,7 @@ if (input && resultBox) {
       .pop();
 
     resultBox.innerHTML = `
-      <strong>${raw.toUpperCase()}</strong> found in:
+      <strong>${name}</strong> found in:
       <br>Warzone${warzones.length > 1 ? "s" : ""} ${warzones.join(", ")}
       <br><small>Last updated: ${latestUpdate || "—"}</small>
     `;
