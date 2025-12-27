@@ -156,11 +156,13 @@ if (input && resultBox) {
 
   });
 }
-function openAllianceDiscord(alliance) {
+function openAllianceDiscord(alliance, warzone) {
   const modal = document.getElementById("allianceDiscordModal");
-  document.getElementById("discordAllianceName").textContent =
-    `Alliance: ${alliance}`;
 
+  document.getElementById("modalAllianceName").textContent = alliance;
+  document.getElementById("modalWarzone").textContent = warzone;
+
+  // 🔧 Replace with real Discord invite
   document.getElementById("discordLink").href =
     "https://discord.gg/YOUR_INVITE_CODE";
 
@@ -176,15 +178,17 @@ function closeAllianceDiscord() {
 /* Close on outside click */
 document
   .getElementById("allianceDiscordModal")
-  .addEventListener("click", e => {
+  .addEventListener("click", (e) => {
     if (e.target.classList.contains("discord-modal-overlay")) {
       closeAllianceDiscord();
     }
   });
 
 /* Close on ESC */
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeAllianceDiscord();
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeAllianceDiscord();
+  }
 });
 
 /* Close button */
