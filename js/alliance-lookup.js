@@ -133,13 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <span class="al-wz">${e.warzone}</span>
     </span>
 
-    <img
-      src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
-      class="al-discord-icon"
-      data-open-modal
-    />
-
-    <button class="al-btn" data-open-modal>
+       <button class="al-btn" data-open-modal>
       Coordinate
     </button>
   </div>
