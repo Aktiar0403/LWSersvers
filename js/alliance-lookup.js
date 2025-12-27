@@ -163,11 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="al-row-compact">
           <span class="al-status warn">⚠</span>
           <span class="al-main">
-            Alliance exists with different casing
+            Valid
           </span>
         </div>
         <div class="al-warning-text">
-          Valid names:
+    
           ${result.matches.map(n => `<strong>${n}</strong>`).join(", ")}
         </div>
       `;
