@@ -4698,3 +4698,19 @@ body.admin-view .admin-only {
 .al-action {
   margin-left: auto;
 }
+@media (max-width: 640px) {
+  .al-row-compact {
+    flex-wrap: wrap;
+  }
+
+  .al-action {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .al-action .al-btn {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+}
