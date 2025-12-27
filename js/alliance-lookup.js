@@ -191,4 +191,3 @@ document.addEventListener("keydown", e => {
 document
   .querySelector(".discord-modal-close")
   ?.addEventListener("click", closeAllianceDiscord);
-
