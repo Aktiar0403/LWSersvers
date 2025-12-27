@@ -221,21 +221,38 @@
       Explore servers, alliances & power trends
     </div>
   </div>
-<!-- Alliance Lookup -->
-<div class="alliance-lookup">
+<!-- Alliance Lookup Card -->
+<div class="alliance-lookup-card">
+
+  <div class="al-header">
+    <div class="al-title">Alliance Warzone Lookup</div>
+    <div class="al-sub">
+      Find the warzone for an alliance using official coordinate data
+    </div>
+  </div>
 
   <input
     id="allianceLookupInput"
     type="text"
-    placeholder="Search alliance name (exact)"
+    placeholder="Enter alliance name (exact match)"
     autocomplete="off"
   />
 
+  <div class="al-helper">
+    Example: <strong>gmm</strong>, <strong>koj</strong>, <strong>UDIE</strong>
+  </div>
+
   <div id="allianceLookupResult" class="al-result muted">
-    Type an alliance name to find its warzone
+    <div class="al-muted">
+      Search an alliance name to find its warzone
+    </div>
+    <div class="al-credit">
+      Data provided by <strong>Coordinates List Discord</strong>
+    </div>
   </div>
 
 </div>
+
 
 <!-- Discord Coordination Modal -->
 <div id="allianceDiscordModal" class="discord-modal-overlay hidden">
