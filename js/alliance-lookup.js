@@ -1,14 +1,18 @@
 /* =====================================================
-   Alliance → Warzone Lookup (Standalone)
-   Exact match only + proper date + casing warning
+   Alliance → Warzone Lookup (FINAL)
    ===================================================== */
 
-let ALLIANCE_INDEX = new Map();          // exact-case index
-let ALLIANCE_CASE_MAP = new Map();       // lowercase → Set of casings
+/* =============================
+   STATE
+============================= */
 
-/* -----------------------------
-   Load JSON once
------------------------------ */
+let ALLIANCE_INDEX = new Map();     // exact-case index
+let ALLIANCE_CASE_MAP = new Map();  // lowercase → Set(casings)
+
+/* =============================
+   LOAD JSON
+============================= */
+
 fetch("/data/alliance_lookup.json")
   .then(res => res.json())
   .then(data => {
@@ -18,12 +22,14 @@ fetch("/data/alliance_lookup.json")
     console.error("❌ Failed to load alliance lookup JSON", err);
   });
 
-/* -----------------------------
-   Excel date → YYYY-MM-DD
------------------------------ */
+/* =============================
+   DATE NORMALIZATION
+============================= */
+
 function formatDate(value) {
   if (typeof value === "string") return value;
 
+  // Excel serial number → date
   if (typeof value === "number") {
     const excelEpoch = new Date(Date.UTC(1899, 11, 30));
     const date = new Date(
@@ -35,9 +41,10 @@ function formatDate(value) {
   return "—";
 }
 
-/* -----------------------------
-   Build indexes
------------------------------ */
+/* =============================
+   BUILD INDEXES
+============================= */
+
 function buildAllianceIndexes(data) {
   ALLIANCE_INDEX.clear();
   ALLIANCE_CASE_MAP.clear();
@@ -45,35 +52,36 @@ function buildAllianceIndexes(data) {
   data.forEach(item => {
     if (!item || !item.alliance || !item.warzone) return;
 
-    const allianceName = String(item.alliance).trim();
-    const lower = allianceName.toLowerCase();
+    const alliance = String(item.alliance).trim();
+    const lower = alliance.toLowerCase();
 
-    // 🔹 Exact-case index
-    if (!ALLIANCE_INDEX.has(allianceName)) {
-      ALLIANCE_INDEX.set(allianceName, {
-        name: allianceName,
+    // Exact-case index
+    if (!ALLIANCE_INDEX.has(alliance)) {
+      ALLIANCE_INDEX.set(alliance, {
+        name: alliance,
         entries: []
       });
     }
 
-    ALLIANCE_INDEX.get(allianceName).entries.push({
+    ALLIANCE_INDEX.get(alliance).entries.push({
       warzone: Number(item.warzone),
       updatedAt: formatDate(item.updatedAt)
     });
 
-    // 🔹 Case-variant tracker
+    // Case collision tracker
     if (!ALLIANCE_CASE_MAP.has(lower)) {
       ALLIANCE_CASE_MAP.set(lower, new Set());
     }
-    ALLIANCE_CASE_MAP.get(lower).add(allianceName);
+    ALLIANCE_CASE_MAP.get(lower).add(alliance);
   });
 
   console.log("✅ Alliance lookup ready:", ALLIANCE_INDEX.size);
 }
 
-/* -----------------------------
-   Exact match only
------------------------------ */
+/* =============================
+   EXACT MATCH ONLY
+============================= */
+
 function findAllianceExact(query) {
   const q = String(query || "").trim();
   if (!q) return null;
@@ -81,9 +89,10 @@ function findAllianceExact(query) {
   return ALLIANCE_INDEX.get(q) || null;
 }
 
-/* -----------------------------
-   UI wiring
------------------------------ */
+/* =============================
+   RESULT UI
+============================= */
+
 const input = document.getElementById("allianceLookupInput");
 const resultBox = document.getElementById("allianceLookupResult");
 
@@ -120,81 +129,101 @@ if (input && resultBox) {
       .pop();
 
     // ⚠️ casing warning
-    const casingVariants =
+    const variants =
       ALLIANCE_CASE_MAP.get(name.toLowerCase()) || new Set();
 
-    const otherCasings = [...casingVariants].filter(
-      v => v !== name
-    );
+    const otherCasings = [...variants].filter(v => v !== name);
 
     const casingWarning = otherCasings.length
-      ? `<br><small style="color:#ffb84d">
+      ? `<div class="al-warning">
            ⚠️ Similar alliance exists with different casing:
            ${otherCasings.join(", ")}
-         </small>`
+         </div>`
       : "";
 
     resultBox.innerHTML = `
-  <div class="al-row">
-    <span class="al-main">
-      <strong>${name}</strong> → ${warzones.join(", ")}
-    </span>
+      <div class="al-row">
+        <span class="al-main">
+          <strong>${name}</strong> → ${warzones.join(", ")}
+        </span>
 
-    <span
-      class="al-discord"
-      title="Coordinate on Discord"
-      onclick="openAllianceDiscord('${name}')"
-    >
-      <img src="/assets/discord.svg" alt="Discord" />
-    </span>
-  </div>
+        <span
+          class="al-discord"
+          title="Request coordinates on Discord"
+          onclick="openAllianceDiscord('${name}', '${warzones.join(", ")}')"
+        >
+          <img src="/assets/discord.svg" alt="Discord" />
+        </span>
+      </div>
 
-  <div class="al-date">
-    Updated: ${latestUpdate || "—"}
-  </div>
-`;
+      <div class="al-date">
+        Updated: ${latestUpdate || "—"}
+      </div>
 
+      ${casingWarning}
+    `;
+    resultBox.className = "al-result";
   });
 }
-function openAllianceDiscord(alliance) {
+
+/* =============================
+   DISCORD MODAL
+============================= */
+
+function openAllianceDiscord(alliance, warzone) {
   const modal = document.getElementById("allianceDiscordModal");
-  const nameEl = document.getElementById("discordAllianceName");
+  if (!modal) return;
+
+  const nameEl = document.getElementById("modalAllianceName");
+  const wzEl = document.getElementById("modalWarzone");
   const linkEl = document.getElementById("discordLink");
 
-  nameEl.textContent = `Alliance: ${alliance}`;
+  if (nameEl) nameEl.textContent = alliance;
+  if (wzEl) wzEl.textContent = warzone;
 
-  // 🔧 Replace with real invite later
-  linkEl.href = "https://discord.gg/YOUR_INVITE_CODE";
+  // 🔧 replace with real invite
+  if (linkEl) {
+    linkEl.href = "https://discord.gg/YOUR_INVITE_CODE";
+  }
 
   modal.classList.remove("hidden");
 }
 
-// Close helpers
 function closeAllianceDiscord() {
-  document
-    .getElementById("allianceDiscordModal")
-    .classList.add("hidden");
+  const modal = document.getElementById("allianceDiscordModal");
+  if (modal) modal.classList.add("hidden");
 }
 
-// 🔹 Close on outside click
-document
-  .getElementById("allianceDiscordModal")
-  .addEventListener("click", (e) => {
-    if (e.target.classList.contains("modal-overlay")) {
-      closeAllianceDiscord();
-    }
-  });
+/* =============================
+   MODAL EVENT HANDLERS
+============================= */
 
-// 🔹 Close on ESC
-document.addEventListener("keydown", (e) => {
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Close button
+  const closeBtn =
+    document.querySelector(".discord-modal-close");
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeAllianceDiscord);
+  }
+
+  // Outside click
+  const overlay =
+    document.getElementById("allianceDiscordModal");
+
+  if (overlay) {
+    overlay.addEventListener("click", e => {
+      if (e.target === overlay) {
+        closeAllianceDiscord();
+      }
+    });
+  }
+});
+
+// ESC key close
+document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeAllianceDiscord();
   }
 });
-
-// 🔹 Close button
-document.querySelector(".modal-close")?.addEventListener(
-  "click",
-  closeAllianceDiscord
-);
-

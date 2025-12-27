@@ -221,53 +221,82 @@
       Explore servers, alliances & power trends
     </div>
   </div>
-<!-- Alliance → Warzone Lookup (Standalone) -->
-<div class="alliance-lookup-card">
-  <div class="al-header">
-    Alliance → Warzone Lookup
-  </div>
+<!-- Alliance Lookup -->
+<div class="alliance-lookup">
 
   <input
     type="text"
     id="allianceLookupInput"
-    placeholder="Search alliance name…"
+    placeholder="Search alliance name"
     autocomplete="off"
   />
 
-  <div id="allianceLookupResult" class="al-result muted">
+  <div
+    id="allianceLookupResult"
+    class="al-result muted"
+  >
     Type an alliance name to find its warzone
   </div>
 
-  <div class="al-credit">
-    Alliance reference data provided by
-    <strong>Princess Wolfy</strong> & team
-  </div>
 </div>
+
 <!-- Alliance Discord Modal -->
 <div id="allianceDiscordModal" class="discord-modal-overlay hidden">
+
   <div class="discord-modal">
+
     <div class="discord-modal-header">
-      Coordinate on Discord
+      Alliance Located
     </div>
 
     <div class="discord-modal-body">
-      <div id="discordAllianceName"></div>
 
+      <!-- Discord Display Picture -->
+      <img
+        src="/assets/discord-dp.png"
+        alt="Official Discord"
+        class="discord-dp"
+      />
+
+      <!-- Alliance Confirmation -->
+      <div class="alliance-confirm">
+        <strong>Alliance:</strong>
+        <span id="modalAllianceName">—</span><br>
+        <strong>Warzone:</strong>
+        <span id="modalWarzone">—</span>
+      </div>
+
+      <!-- Authority / Credit -->
+      <div class="alliance-credit">
+        Coordinates are maintained by the<br>
+        <span>official community Discord</span><br>
+        (Princess Wolfy & team)
+      </div>
+
+      <!-- CTA -->
       <a
         id="discordLink"
         href="#"
         target="_blank"
         class="discord-btn"
       >
-        Open Discord
+        Request Coordinates on Discord
       </a>
+
+      <!-- Rules Reminder -->
+      <div class="discord-note">
+        Please follow server rules and use the correct channel.
+      </div>
+
     </div>
 
     <button class="discord-modal-close">
       Close
     </button>
+
   </div>
 </div>
+
 
 
 
