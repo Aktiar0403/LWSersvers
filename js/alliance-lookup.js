@@ -163,14 +163,38 @@ function openAllianceDiscord(alliance) {
 
   nameEl.textContent = `Alliance: ${alliance}`;
 
-  // 🔧 Replace with your real Discord link logic
+  // 🔧 Replace with real invite later
   linkEl.href = "https://discord.gg/YOUR_INVITE_CODE";
 
   modal.classList.remove("hidden");
 }
 
+// Close helpers
 function closeAllianceDiscord() {
   document
     .getElementById("allianceDiscordModal")
     .classList.add("hidden");
 }
+
+// 🔹 Close on outside click
+document
+  .getElementById("allianceDiscordModal")
+  .addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-overlay")) {
+      closeAllianceDiscord();
+    }
+  });
+
+// 🔹 Close on ESC
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeAllianceDiscord();
+  }
+});
+
+// 🔹 Close button
+document.querySelector(".modal-close")?.addEventListener(
+  "click",
+  closeAllianceDiscord
+);
+
