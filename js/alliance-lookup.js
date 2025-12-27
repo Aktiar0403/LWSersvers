@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       resultBox.innerHTML = `
         
         <div class="al-credit">
-          Data provided by <strong>Coordinates List Discord</strong>
+         Type Alliace Name
         </div>
       `;
       resultBox.className = "al-result muted";
