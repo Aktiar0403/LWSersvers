@@ -1,3 +1,12 @@
+/* ======================================================
+   PUBLIC READ-ONLY FILE
+   ❌ NO playerId
+   ❌ NO identity resolution
+   ❌ NO merges / renames
+====================================================== */
+
+
+
 console.log("✅ Server Intelligence JS loaded");
 import { logout } from "./auth.js";
 import { db } from "./firebase-config.js";
@@ -338,41 +347,7 @@ function estimateFirstSquad(totalPower) {
   // Early
   return "40–43M";
 }
-/* =============================
-   PLAYER ID UTILITY (SAFE)
-============================= */
 
-// Generates a stable random id (browser-safe)
-function generatePlayerId() {
-  return "p_" + crypto.randomUUID();
-}
-
-// Ensures a player has a playerId (non-breaking)
-async function ensurePlayerId(player) {
-  // Already has one → do nothing
-  if (player.playerId) return player.playerId;
-
-  // Generate new id
-  const newPlayerId = generatePlayerId();
-
-  try {
-    // Persist quietly
-    await updateDoc(
-      doc(db, "server_players", player.id),
-      { playerId: newPlayerId }
-    );
-
-    // Sync local cache
-    player.playerId = newPlayerId;
-
-    console.log("🆔 playerId assigned:", player.name, newPlayerId);
-    return newPlayerId;
-
-  } catch (err) {
-    console.error("❌ Failed to assign playerId", err);
-    return null;
-  }
-}
 
 
 /* =============================
@@ -1242,7 +1217,7 @@ if (candidates.length) {
       id: p.id,
       name: p.name,
       power: p.totalPower,
-      hasPlayerId: !!p.playerId
+    
     }))
   });
 
@@ -1508,7 +1483,7 @@ epSaveBtn.onclick = async () => {
 
   if (!editingPlayer) return;
 
-  await ensurePlayerId(editingPlayer);
+
 
 const newName = epNewName.value.trim();
 const newWarzone = Number(epNewWarzone.value);
@@ -1743,3 +1718,4 @@ if (logoutBtn) {
 }
 
 
+console.log("🔒 PUBLIC MODE — identity logic fully removed");
