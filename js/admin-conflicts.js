@@ -1,15 +1,24 @@
 // =============================
 // ADMIN — EXCEL CONFLICTS (READ-ONLY)
 // =============================
+import {
+  getOrCreateIdentity,
+  linkServerPlayer
+} from "./admin-player-identity.js";
 
 import { db, auth } from "./firebase-config.js";
+
 import {
   collection,
   query,
   where,
   orderBy,
-  getDocs
+  getDocs,
+  updateDoc,
+  doc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 
 import {
   onAuthStateChanged
@@ -149,8 +158,7 @@ async function loadConflicts() {
             <span class="name">${p.name}</span>
             <span class="meta">
               ${formatPowerM(p.power)}
-              ${p.hasPlayerId ? "• 🆔 linked" : ""}
-            </span>
+               </span>
           </label>
         `).join("")
         : "<div class='candidate none'>No candidates</div>"
@@ -211,16 +219,37 @@ header.addEventListener("click", () => {
         return;
       }
 
-      console.log("✅ USE EXISTING selected", {
-        conflictId: doc.id,
-        playerId: picked.value,
-        excelName: c.excelName,
-        excelPower: c.excelPower,
-        warzone: c.warzone,
-        alliance: c.alliance
-      });
+     // =============================
+// USE EXISTING — CREATE / LINK IDENTITY
+// =============================
+const chosenServerDocId = picked.value;
 
-      return;
+// 1️⃣ Create identity (explicit, admin-only)
+const { playerId } = await getOrCreateIdentity({
+  canonicalName: c.excelName,
+  warzone: c.warzone
+});
+
+// 2️⃣ Link existing server_players doc
+await linkServerPlayer({
+  playerId,
+  serverDocId: chosenServerDocId,
+  name: c.excelName,
+  source: "excel-conflict"
+});
+
+// 3️⃣ Mark conflict resolved
+await updateDoc(doc.ref, {
+  status: "resolved",
+  resolvedAt: serverTimestamp(),
+  resolution: "use-existing",
+  resolvedPlayer: chosenServerDocId
+});
+
+alert("✅ Conflict resolved & identity linked");
+loadConflicts();
+return;
+
     }
 
     // =============================

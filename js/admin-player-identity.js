@@ -1,0 +1,87 @@
+/* ======================================================
+   ADMIN — PLAYER IDENTITY ENGINE
+   ------------------------------------------------------
+   - Canonical playerId (admin-only)
+   - Name history
+   - Explicit linking
+   - NO automatic merges
+====================================================== */
+
+import { db } from "./firebase-config.js";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+/*
+Firestore structure:
+
+player_identity/{playerId}
+{
+  canonicalName: "Winter",
+  warzone: 412,
+
+  nameHistory: [
+    { name: "Winter+++", seenAt, source: "excel" },
+    { name: "WinterXXX", seenAt, source: "manual" }
+  ],
+
+  linkedDocs: [
+    "server_players/docA",
+    "server_players/docB"
+  ],
+
+  createdAt,
+  updatedAt
+}
+*/
+function generatePlayerId() {
+  return "pid_" + crypto.randomUUID();
+}
+
+
+
+export async function getOrCreateIdentity({
+  canonicalName,
+  warzone
+}) {
+  const playerId = generatePlayerId();
+  const ref = doc(db, "player_identity", playerId);
+
+  await setDoc(ref, {
+    canonicalName,
+    warzone,
+    nameHistory: [],
+    linkedDocs: [],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+
+  return {
+    playerId,
+    ref
+  };
+}
+
+
+export async function linkServerPlayer({
+  playerId,
+  serverDocId,
+  name,
+  source = "manual"
+}) {
+  const ref = doc(db, "player_identity", playerId);
+
+  await updateDoc(ref, {
+    linkedDocs: arrayUnion(`server_players/${serverDocId}`),
+    nameHistory: arrayUnion({
+      name,
+      source,
+      seenAt: serverTimestamp()
+    }),
+    updatedAt: serverTimestamp()
+  });
+}
