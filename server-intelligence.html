@@ -225,78 +225,72 @@
 <div class="alliance-lookup">
 
   <input
-    type="text"
     id="allianceLookupInput"
-    placeholder="Search alliance name"
+    type="text"
+    placeholder="Search alliance name (exact)"
     autocomplete="off"
   />
 
-  <div
-    id="allianceLookupResult"
-    class="al-result muted"
-  >
+  <div id="allianceLookupResult" class="al-result muted">
     Type an alliance name to find its warzone
   </div>
 
 </div>
 
-<!-- Alliance Discord Modal -->
+<!-- Discord Coordination Modal -->
 <div id="allianceDiscordModal" class="discord-modal-overlay hidden">
 
   <div class="discord-modal">
 
-    <div class="discord-modal-header">
-      Alliance Located
-    </div>
+    <!-- Banner -->
+    <img
+      src="/assets/discord-modal-banner.png"
+      alt="Official Coordinates Discord"
+      class="discord-modal-banner"
+    />
 
     <div class="discord-modal-body">
 
-      <!-- Discord Display Picture -->
-      <img
-  src="/assets/discord-modal-banner.png"
-  alt="Official Coordinates Discord"
-  class="discord-modal-banner"
-/>
+      <h3>Alliance Located</h3>
 
-
-      <!-- Alliance Confirmation -->
-      <div class="alliance-confirm">
-        <strong>Alliance:</strong>
-        <span id="modalAllianceName">—</span><br>
-        <strong>Warzone:</strong>
-        <span id="modalWarzone">—</span>
+      <div class="modal-info">
+        <div><strong>Alliance:</strong> <span id="modalAllianceName">—</span></div>
+        <div><strong>Warzone:</strong> <span id="modalWarzone">—</span></div>
+        <div class="modal-updated">
+          Updated: <span id="modalUpdated">—</span>
+        </div>
       </div>
 
-      <!-- Authority / Credit -->
-      <div class="alliance-credit">
-        Coordinates are maintained by the<br>
-        <span>official community Discord</span><br>
+      <div class="modal-credit">
+        Coordinates provided by the official community<br>
+        <strong>Last War Coordinates Discord</strong><br>
         (Princess Wolfy & team)
       </div>
 
-      <!-- CTA -->
       <a
         id="discordLink"
-        href="#"
-        target="_blank"
         class="discord-btn"
+        href="https://discord.gg/"
+        target="_blank"
+        rel="noopener"
       >
-        Request Coordinates on Discord
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
+          alt="Discord"
+        />
+        Open Discord
       </a>
 
-      <!-- Rules Reminder -->
-      <div class="discord-note">
-        Please follow server rules and use the correct channel.
+      <div class="modal-note">
+        Please respect server rules and use the correct channel.
       </div>
 
+      <button class="discord-modal-close">Close</button>
+
     </div>
-
-    <button class="discord-modal-close">
-      Close
-    </button>
-
   </div>
 </div>
+
 
 
 

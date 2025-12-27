@@ -3573,3 +3573,136 @@ body.admin-view .admin-only {
   border-radius: 10px;
   margin-bottom: 10px;
 }
+/* Alliance Lookup */
+.alliance-lookup {
+  margin-top: 12px;
+}
+
+.alliance-lookup input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.al-result {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #020617;
+  font-size: 14px;
+}
+
+.al-result.muted {
+  color: #64748b;
+}
+
+.al-result.found {
+  color: #22c55e;
+  cursor: pointer;
+}
+
+.al-result.warn {
+  color: #facc15;
+}
+
+/* Modal Overlay */
+.discord-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.discord-modal-overlay.hidden {
+  display: none;
+}
+
+/* Modal Box */
+.discord-modal {
+  width: 92%;
+  max-width: 360px;
+  background: #020617;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Banner */
+.discord-modal-banner {
+  width: 100%;
+  height: auto;
+}
+
+/* Body */
+.discord-modal-body {
+  padding: 16px;
+  text-align: center;
+}
+
+.discord-modal-body h3 {
+  margin: 6px 0 10px;
+}
+
+/* Info */
+.modal-info {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.modal-updated {
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Credit */
+.modal-credit {
+  font-size: 12px;
+  color: #cbd5f5;
+  margin-bottom: 12px;
+}
+
+/* Discord Button */
+.discord-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #5865f2;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.discord-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Note */
+.modal-note {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* Close */
+.discord-modal-close {
+  margin-top: 10px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 8px;
+  cursor: pointer;
+}
