@@ -48,7 +48,8 @@ function buildAllianceIndex(data) {
   data.forEach(item => {
     if (!item || !item.alliance || !item.warzone) return;
 
-    const key = String(item.alliance).trim().toLowerCase();
+    const key = String(item.alliance).trim();
+
 
     if (!ALLIANCE_INDEX.has(key)) {
       ALLIANCE_INDEX.set(key, []);
@@ -67,7 +68,7 @@ function buildAllianceIndex(data) {
    Exact match search ONLY
 ----------------------------- */
 function findAllianceExact(query) {
-  const q = String(query || "").trim().toLowerCase();
+  const q = String(query || "").trim();
   if (!q) return null;
 
   return ALLIANCE_INDEX.get(q) || null;
