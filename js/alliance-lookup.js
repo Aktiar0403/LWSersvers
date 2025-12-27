@@ -1,41 +1,39 @@
-console.log("✅ Alliance lookup loading…");
+document.addEventListener("DOMContentLoaded", () => {
 
-/* ======================================================
-   CONFIG
-====================================================== */
-const DATA_URL = "/data/alliance_lookup.json";
+  console.log("✅ Alliance lookup initializing…");
 
-/* ======================================================
-   STATE
-====================================================== */
-let ALLIANCES = [];
+  /* ======================================================
+     CONFIG
+  ====================================================== */
+  const DATA_URL = "/data/alliance_lookup.json";
 
-/* ======================================================
-   DOM (SAFE LOOKUP)
-====================================================== */
-const input = document.getElementById("allianceLookupInput");
-const resultBox = document.getElementById("allianceLookupResult");
+  /* ======================================================
+     STATE
+  ====================================================== */
+  let ALLIANCES = [];
 
-// Modal elements may not exist on all pages → SAFE
-const modal = document.getElementById("allianceDiscordModal");
-const modalAlliance = document.getElementById("modalAllianceName");
-const modalWarzone = document.getElementById("modalWarzone");
-const modalUpdated = document.getElementById("modalUpdated");
-const modalCloseBtn = document.querySelector(".discord-modal-close");
+  /* ======================================================
+     DOM
+  ====================================================== */
+  const input = document.getElementById("allianceLookupInput");
+  const resultBox = document.getElementById("allianceLookupResult");
 
-/* ======================================================
-   HARD GUARD — REQUIRED ELEMENTS
-====================================================== */
-if (!input || !resultBox) {
-  console.warn("⚠ Alliance lookup DOM not present on this page");
-  // Do NOT crash the page
-} else {
+  const modal = document.getElementById("allianceDiscordModal");
+  const modalAlliance = document.getElementById("modalAllianceName");
+  const modalWarzone = document.getElementById("modalWarzone");
+  const modalUpdated = document.getElementById("modalUpdated");
+  const modalCloseBtn = document.querySelector(".discord-modal-close");
+
+  if (!input || !resultBox) {
+    console.warn("⚠ Alliance lookup not present on this page");
+    return;
+  }
 
   /* ======================================================
      LOAD JSON
   ====================================================== */
   fetch(DATA_URL)
-    .then(res => res.json())
+    .then(r => r.json())
     .then(data => {
       ALLIANCES = data;
       console.log("✅ Alliance lookup ready:", ALLIANCES.length);
@@ -45,13 +43,13 @@ if (!input || !resultBox) {
     });
 
   /* ======================================================
-     DATE FORMATTER (SAFE)
+     HELPERS
   ====================================================== */
   function formatUpdated(entry) {
     const raw =
-      entry?.updated ||
-      entry?.updateDate ||
-      entry?.updatedAt ||
+      entry.updated ||
+      entry.updateDate ||
+      entry.updatedAt ||
       null;
 
     if (!raw) return "Unknown";
@@ -66,9 +64,6 @@ if (!input || !resultBox) {
     });
   }
 
-  /* ======================================================
-     SEARCH LOGIC
-  ====================================================== */
   function findAlliance(query) {
     const q = query.trim();
     if (!q) return { type: "empty" };
@@ -91,7 +86,7 @@ if (!input || !resultBox) {
   }
 
   /* ======================================================
-     MODAL CONTROL (SAFE)
+     MODAL
   ====================================================== */
   function openModal(entry) {
     if (!modal) return;
@@ -109,13 +104,11 @@ if (!input || !resultBox) {
   }
 
   /* ======================================================
-     INPUT HANDLER
+     INPUT HANDLER (NOW WORKS)
   ====================================================== */
   input.addEventListener("input", () => {
-    const query = input.value;
-    const result = findAlliance(query);
+    const result = findAlliance(input.value);
 
-    // EMPTY
     if (result.type === "empty") {
       resultBox.innerHTML = `
         <div class="al-muted">
@@ -129,17 +122,16 @@ if (!input || !resultBox) {
       return;
     }
 
-    // EXACT
     if (result.type === "exact") {
-      const entry = result.entry;
+      const e = result.entry;
 
       resultBox.innerHTML = `
         <div class="al-row-compact">
           <span class="al-status ok">✔</span>
           <span class="al-main">
-            <strong>${entry.alliance}</strong>
+            <strong>${e.alliance}</strong>
             <span class="al-arrow">→</span>
-            <span class="al-wz">WZ ${entry.warzone}</span>
+            <span class="al-wz">WZ ${e.warzone}</span>
           </span>
           <img
             src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png"
@@ -157,15 +149,15 @@ if (!input || !resultBox) {
 
       resultBox.className = "al-result found";
 
-      // Attach modal open safely
-      resultBox.querySelectorAll("[data-open-modal]").forEach(el => {
-        el.addEventListener("click", () => openModal(entry));
-      });
+      resultBox
+        .querySelectorAll("[data-open-modal]")
+        .forEach(el =>
+          el.addEventListener("click", () => openModal(e))
+        );
 
       return;
     }
 
-    // CASE WARNING
     if (result.type === "case-warning") {
       resultBox.innerHTML = `
         <div class="al-row-compact">
@@ -183,17 +175,14 @@ if (!input || !resultBox) {
       return;
     }
 
-    // NOT FOUND
     resultBox.textContent = "No exact alliance found";
     resultBox.className = "al-result muted";
   });
 
   /* ======================================================
-     MODAL CLOSE EVENTS (SAFE)
+     MODAL CLOSE
   ====================================================== */
-  if (modalCloseBtn) {
-    modalCloseBtn.addEventListener("click", closeModal);
-  }
+  if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
 
   if (modal) {
     modal.addEventListener("click", e => {
@@ -205,4 +194,4 @@ if (!input || !resultBox) {
     if (e.key === "Escape") closeModal();
   });
 
-}
+});
