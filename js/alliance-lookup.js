@@ -1,5 +1,6 @@
 /* =====================================================
    Alliance → Warzone Lookup (Standalone)
+   FINAL VERSION
    ===================================================== */
 
 let ALLIANCE_LOOKUP = [];
@@ -25,6 +26,8 @@ function buildAllianceIndex(data) {
   ALLIANCE_INDEX.clear();
 
   data.forEach(item => {
+    if (!item || !item.alliance || !item.warzone) return;
+
     const key = normalize(item.alliance);
 
     if (!ALLIANCE_INDEX.has(key)) {
@@ -32,8 +35,8 @@ function buildAllianceIndex(data) {
     }
 
     ALLIANCE_INDEX.get(key).push({
-      warzone: item.warzone,
-      updatedAt: item.updatedAt
+      warzone: Number(item.warzone),
+      updatedAt: item.updatedAt || "—"
     });
   });
 
@@ -55,6 +58,7 @@ function normalize(str) {
 function findAlliance(query) {
   const raw = query.trim();
   const q = normalize(raw);
+
   if (!q) return null;
 
   // 1️⃣ STRICT exact match (full string only)
@@ -87,7 +91,6 @@ function findAlliance(query) {
 
   return null;
 }
-
 
 /* -----------------------------
    UI Wiring
@@ -109,46 +112,55 @@ if (input && resultBox) {
     const res = findAlliance(value);
 
     if (!res) {
-      resultBox.textContent = "No warzone found for this alliance";
+      resultBox.textContent =
+        "No warzone found for this alliance";
       resultBox.className = "al-result muted";
       return;
     }
 
-    function findAlliance(query) {
-  const raw = query.trim();
-  const q = normalize(raw);
-  if (!q) return null;
+    /* =========================
+       EXACT MATCH
+    ========================= */
+    if (res.type === "exact") {
+      const warzones = [
+        ...new Set(res.entries.map(e => e.warzone))
+      ].sort((a, b) => a - b);
 
-  // 1️⃣ STRICT exact match (full string only)
-  if (ALLIANCE_INDEX.has(q) && raw.length === q.length) {
-    return {
-      type: "exact",
-      alliance: q,
-      entries: ALLIANCE_INDEX.get(q)
-    };
-  }
+      // 🔥 latest update date across warzones
+      const latestUpdate = res.entries
+        .map(e => e.updatedAt)
+        .filter(Boolean)
+        .sort()
+        .pop();
 
-  // 2️⃣ Partial match
-  const matches = [];
-
-  for (const [key, entries] of ALLIANCE_INDEX.entries()) {
-    if (key.includes(q)) {
-      matches.push({
-        alliance: key,
-        entries
-      });
+      resultBox.innerHTML = `
+        <strong>${res.alliance.toUpperCase()}</strong> found in:
+        <br>Warzone${warzones.length > 1 ? "s" : ""} ${warzones.join(", ")}
+        <br><small>Last updated: ${latestUpdate || "—"}</small>
+      `;
+      resultBox.className = "al-result";
+      return;
     }
-  }
 
-  if (matches.length) {
-    return {
-      type: "partial",
-      matches
-    };
-  }
+    /* =========================
+       PARTIAL MATCH
+    ========================= */
+    if (res.type === "partial") {
+      const list = res.matches
+        .slice(0, 5)
+        .map(m => {
+          const wzs = [
+            ...new Set(m.entries.map(e => e.warzone))
+          ].join(", ");
+          return `${m.alliance.toUpperCase()} → ${wzs}`;
+        })
+        .join("<br>");
 
-  return null;
-}
-
+      resultBox.innerHTML = `
+        Possible matches:
+        <br>${list}
+      `;
+      resultBox.className = "al-result";
+    }
   });
 }
