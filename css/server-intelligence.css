@@ -4027,3 +4027,29 @@ body.admin-view .admin-only {
   font-size: 10px;
   color: #64748b;
 }
+/* =============================
+   DISCOVERY GRID (FIX)
+============================= */
+.discovery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: stretch; /* 🔥 THIS is mandatory */
+}
+.discovery-card,
+.alliance-lookup-card {
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 🔥 balances top/bottom */
+}
+.discovery-card,
+.alliance-lookup-card {
+  min-height: 132px; /* tune 120–140 if needed */
+}
+@media (max-width: 640px) {
+  .discovery-grid {
+    grid-template-columns: 1fr;
+  }
+}
