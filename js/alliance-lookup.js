@@ -156,3 +156,21 @@ if (input && resultBox) {
 
   });
 }
+function openAllianceDiscord(alliance) {
+  const modal = document.getElementById("allianceDiscordModal");
+  const nameEl = document.getElementById("discordAllianceName");
+  const linkEl = document.getElementById("discordLink");
+
+  nameEl.textContent = `Alliance: ${alliance}`;
+
+  // 🔧 Replace with your real Discord link logic
+  linkEl.href = "https://discord.gg/YOUR_INVITE_CODE";
+
+  modal.classList.remove("hidden");
+}
+
+function closeAllianceDiscord() {
+  document
+    .getElementById("allianceDiscordModal")
+    .classList.add("hidden");
+}

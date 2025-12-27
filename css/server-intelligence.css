@@ -3043,3 +3043,13 @@ body.admin-view .admin-only {
 .al-discord img:hover {
   opacity: 1;
 }
+.discord-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #5865f2;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
