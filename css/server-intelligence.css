@@ -4636,3 +4636,17 @@ body.admin-view .admin-only {
     cursor: pointer;
   }
 }
+/* Neon green brand highlight */
+.al-credit-brand {
+  color: #22f7a6; /* neon green */
+  font-weight: 600;
+  text-shadow:
+    0 0 6px rgba(34, 247, 166, 0.6),
+    0 0 12px rgba(34, 247, 166, 0.35);
+}
+
+/* Keep rest subtle */
+.al-credit {
+  font-size: 11px;
+  color: #64748b;
+}
