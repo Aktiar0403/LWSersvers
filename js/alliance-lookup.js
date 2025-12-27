@@ -53,14 +53,15 @@ function normalize(str) {
    Search Logic
 ----------------------------- */
 function findAlliance(query) {
-  const q = normalize(query);
+  const raw = query.trim();
+  const q = normalize(raw);
   if (!q) return null;
 
-  // 1️⃣ Exact match
-  if (ALLIANCE_INDEX.has(q)) {
+  // 1️⃣ STRICT exact match (full string only)
+  if (ALLIANCE_INDEX.has(q) && raw.length === q.length) {
     return {
       type: "exact",
-      alliance: query,
+      alliance: q,
       entries: ALLIANCE_INDEX.get(q)
     };
   }
@@ -87,6 +88,7 @@ function findAlliance(query) {
   return null;
 }
 
+
 /* -----------------------------
    UI Wiring
 ----------------------------- */
@@ -112,40 +114,41 @@ if (input && resultBox) {
       return;
     }
 
-    // ✅ EXACT MATCH
-    if (res.type === "exact") {
-      const warzones = [
-        ...new Set(res.entries.map(e => e.warzone))
-      ].sort((a, b) => a - b);
+    function findAlliance(query) {
+  const raw = query.trim();
+  const q = normalize(raw);
+  if (!q) return null;
 
-      const updatedAt = res.entries[0].updatedAt;
+  // 1️⃣ STRICT exact match (full string only)
+  if (ALLIANCE_INDEX.has(q) && raw.length === q.length) {
+    return {
+      type: "exact",
+      alliance: q,
+      entries: ALLIANCE_INDEX.get(q)
+    };
+  }
 
-      resultBox.innerHTML = `
-        <strong>${value}</strong> found in:
-        <br>Warzone${warzones.length > 1 ? "s" : ""} ${warzones.join(", ")}
-        <br><small>Updated: ${updatedAt}</small>
-      `;
-      resultBox.className = "al-result";
-      return;
+  // 2️⃣ Partial match
+  const matches = [];
+
+  for (const [key, entries] of ALLIANCE_INDEX.entries()) {
+    if (key.includes(q)) {
+      matches.push({
+        alliance: key,
+        entries
+      });
     }
+  }
 
-    // ⚠️ PARTIAL MATCH
-    if (res.type === "partial") {
-      const list = res.matches
-        .slice(0, 5)
-        .map(m => {
-          const wzs = [
-            ...new Set(m.entries.map(e => e.warzone))
-          ].join(", ");
-          return `${m.alliance.toUpperCase()} → ${wzs}`;
-        })
-        .join("<br>");
+  if (matches.length) {
+    return {
+      type: "partial",
+      matches
+    };
+  }
 
-      resultBox.innerHTML = `
-        Possible matches:
-        <br>${list}
-      `;
-      resultBox.className = "al-result";
-    }
+  return null;
+}
+
   });
 }
