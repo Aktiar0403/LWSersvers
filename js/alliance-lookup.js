@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
      resultBox.innerHTML = `
   <div class="al-row-compact">
-    <span class="al-status ok">✔</span>
+    <span class="al-status ok"></span>
 
     <span class="al-main">
       <strong>${e.alliance}</strong>
