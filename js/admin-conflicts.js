@@ -40,6 +40,10 @@ const uploadInput = document.getElementById("filterUpload");
 // STATE
 // -----------------------------
 let LATEST_UPLOAD_ID = null;
+// -----------------------------
+// GLOBAL PLAYER CACHE (ADMIN)
+// -----------------------------
+let ALL_SERVER_PLAYERS = [];
 
 
 
@@ -141,7 +145,64 @@ function isPowerPlausible({
   // ✅ Plausible match
   return true;
 }
+// Load all players once for manual search
+const snap = await getDocs(collection(db, "server_players"));
+ALL_SERVER_PLAYERS = snap.docs.map(d => ({
+  id: d.id,
+  name: d.data().name || "",
+  power: d.data().totalPower || 0,
+  warzone: d.data().warzone
+}));
 
+const manualSearch = card.querySelector(".manual-search");
+const manualResults = card.querySelector(".manual-results");
+
+// Holds selected player for this conflict
+let manuallySelectedPlayerId = null;
+
+
+manualSearch.addEventListener("input", () => {
+  const q = manualSearch.value.trim().toLowerCase();
+  manualResults.innerHTML = "";
+
+  if (!q || q.length < 2) return;
+
+  const matches = ALL_SERVER_PLAYERS
+    .filter(p =>
+      p.name.toLowerCase().includes(q) &&
+      p.warzone === c.warzone
+    )
+    .slice(0, 10);
+
+  if (!matches.length) {
+    manualResults.innerHTML =
+      "<div class='manual-empty'>No matches</div>";
+    return;
+  }
+
+  matches.forEach(p => {
+    const row = document.createElement("div");
+    row.className = "manual-row";
+    row.innerHTML = `
+      <span class="name">${p.name}</span>
+      <span class="meta">
+        ${formatPowerM(p.power)} • WZ ${p.warzone}
+      </span>
+    `;
+
+    row.onclick = () => {
+      // Clear previous selection
+      manualResults
+        .querySelectorAll(".manual-row")
+        .forEach(r => r.classList.remove("selected"));
+
+      row.classList.add("selected");
+      manuallySelectedPlayerId = p.id;
+    };
+
+    manualResults.appendChild(row);
+  });
+});
 
 // -----------------------------
 // CORE LOADER
