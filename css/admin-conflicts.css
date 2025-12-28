@@ -222,3 +222,44 @@ select {
   background: #0f766e;
   color: #99f6e4;
 }
+.conflict-guide {
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background: #0f1115;
+  color: #e6e6e6;
+}
+
+.guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.guide-header button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.guide-body {
+  margin-top: 10px;
+}
+
+.guide-body ul {
+  padding-left: 18px;
+}
+
+.guide-body li {
+  margin-bottom: 10px;
+}
+
+.guide-tip {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #9bdcff;
+}

@@ -205,15 +205,59 @@ header.addEventListener("click", () => {
     // =============================
     // USE EXISTING PLAYER (LOG ONLY)
     // =============================
-    if (btn.dataset.action === "use-existing") {
-      const picked = card.querySelector(
-        `input[name="pick-${doc.id}"]:checked`
-      );
+   if (btn.dataset.action === "use-existing") {
+  const picked = card.querySelector(
+    `input[name="pick-${conflictDoc.id}"]:checked`
+  );
 
-      if (!picked) {
-        alert("Please select a player first");
-        return;
-      }
+  if (!picked) {
+    alert("Please select a player first");
+    return;
+  }
+
+  // 🔐 CONFIRM ACTION  ← YOU ADD THIS
+  const selectedPlayerName =
+    picked.closest("label")
+      ?.querySelector(".name")
+      ?.textContent || "selected player";
+
+  const ok = confirm(
+    `Use existing player?\n\n` +
+    `Excel name: ${c.excelName}\n` +
+    `Linked to: ${selectedPlayerName}\n\n` +
+    `This will NOT rename or change power.\n` +
+    `This only remembers identity.`
+  );
+
+  if (!ok) return;
+
+  // 🔽 EXISTING CODE (DO NOT MOVE)
+  const chosenServerDocId = picked.value;
+
+  const { playerId } = await getOrCreateIdentity({
+    canonicalName: c.excelName,
+    warzone: c.warzone
+  });
+
+  await linkServerPlayer({
+    playerId,
+    serverDocId: chosenServerDocId,
+    name: c.excelName,
+    source: "excel-conflict"
+  });
+
+  await updateDoc(conflictDoc.ref, {
+    status: "resolved",
+    resolvedAt: serverTimestamp(),
+    resolution: "use-existing",
+    resolvedPlayer: chosenServerDocId
+  });
+
+  alert("✅ Conflict resolved & identity linked");
+  loadConflicts();
+  return;
+}
+
 
      // =============================
 // USE EXISTING — CREATE / LINK IDENTITY
@@ -307,3 +351,16 @@ onAuthStateChanged(auth, async (user) => {
       "<h3>Authorization error</h3>";
   }
 });
+
+const guide = document.getElementById("conflictGuide");
+const toggleBtn = document.getElementById("toggleGuide");
+
+if (guide && toggleBtn) {
+  toggleBtn.addEventListener("click", () => {
+    const body = guide.querySelector(".guide-body");
+    const isHidden = body.style.display === "none";
+
+    body.style.display = isHidden ? "block" : "none";
+    toggleBtn.textContent = isHidden ? "▼" : "▲";
+  });
+}
