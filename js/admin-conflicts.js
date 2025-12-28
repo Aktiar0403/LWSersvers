@@ -268,21 +268,32 @@ async function loadConflicts() {
   ${
     plausibleCandidates.length
       ? plausibleCandidates.map((p, i) => {
-          const deltaPct = Math.round(
-            ((p.power - c.excelPower) / c.excelPower) * 100
-          );
-            let deltaClass = "delta-ok";
-            let deltaLabel = "Within expected growth";
+         // -----------------------------
+// UI-ONLY growth classification
+// -----------------------------
+const now = Date.now();
+const createdAtMs = c.createdAt?.toDate?.().getTime() || now;
+const weeksOld = Math.max(
+  0,
+  Math.floor((now - createdAtMs) / MS_PER_WEEK)
+);
 
-            if (deltaPct > 0.85 * maxGrowthAllowed) {
-              deltaClass = "delta-border";
-              deltaLabel = "High growth — review";
-            }
+const effectiveWeeks = Math.min(weeksOld, MAX_GROWTH_WEEKS);
+const uiMaxGrowthAllowed = effectiveWeeks * MAX_WEEKLY_GROWTH;
 
-            if (deltaPct < 0) {
-              deltaClass = "delta-drop";
-              deltaLabel = "Power drop";
-            }
+let deltaClass = "delta-ok";
+let deltaLabel = "Within expected growth";
+
+if (deltaPct > uiMaxGrowthAllowed * 0.85) {
+  deltaClass = "delta-border";
+  deltaLabel = "High growth — review";
+}
+
+if (deltaPct < 0) {
+  deltaClass = "delta-drop";
+  deltaLabel = "Power drop";
+}
+
 
           return `
             <label class="candidate selectable ${i === 0 ? "best-match" : ""}">
@@ -292,8 +303,9 @@ async function loadConflicts() {
               <span class="meta">
                 ${formatPowerM(p.power)}
                 <span class="delta ${deltaClass}" title="${deltaLabel}">
-                  (${deltaPct > 0 ? "+" : ""}${deltaPct}%)
-                </span>
+  (${deltaPct > 0 ? "+" : ""}${Math.round(deltaPct * 100)}%)
+</span>
+
               </span>
             </label>
           `;
