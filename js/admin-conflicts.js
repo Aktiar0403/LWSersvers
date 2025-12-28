@@ -215,21 +215,23 @@ header.addEventListener("click", () => {
     return;
   }
 
-  // 🔐 CONFIRM ACTION  ← YOU ADD THIS
-  const selectedPlayerName =
-    picked.closest("label")
-      ?.querySelector(".name")
-      ?.textContent || "selected player";
+ // 🔐 CONFIRM ACTION
+const selectedPlayerName =
+  picked
+    .closest("label")
+    ?.querySelector(".name")
+    ?.textContent || "selected player";
 
-  const ok = confirm(
-    `Use existing player?\n\n` +
-    `Excel name: ${c.excelName}\n` +
-    `Linked to: ${selectedPlayerName}\n\n` +
-    `This will NOT rename or change power.\n` +
-    `This only remembers identity.`
-  );
+const ok = confirm(
+  `Use existing player?\n\n` +
+  `Excel name: ${c.excelName}\n` +
+  `Linked to: ${selectedPlayerName}\n\n` +
+  `This will NOT rename or change power.\n` +
+  `This only remembers identity.`
+);
 
-  if (!ok) return;
+if (!ok) return;
+
 
   // 🔽 EXISTING CODE (DO NOT MOVE)
   const chosenServerDocId = picked.value;
@@ -259,38 +261,6 @@ header.addEventListener("click", () => {
 }
 
 
-     // =============================
-// USE EXISTING — CREATE / LINK IDENTITY
-// =============================
-const chosenServerDocId = picked.value;
-
-// 1️⃣ Create identity (explicit, admin-only)
-const { playerId } = await getOrCreateIdentity({
-  canonicalName: c.excelName,
-  warzone: c.warzone
-});
-
-// 2️⃣ Link existing server_players doc
-await linkServerPlayer({
-  playerId,
-  serverDocId: chosenServerDocId,
-  name: c.excelName,
-  source: "excel-conflict"
-});
-
-// 3️⃣ Mark conflict resolved
-await updateDoc(doc.ref, {
-  status: "resolved",
-  resolvedAt: serverTimestamp(),
-  resolution: "use-existing",
-  resolvedPlayer: chosenServerDocId
-});
-
-alert("✅ Conflict resolved & identity linked");
-loadConflicts();
-return;
-
-    }
 
     // =============================
     // OTHER ACTIONS (PLACEHOLDER)
