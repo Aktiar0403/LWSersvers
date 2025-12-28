@@ -59,6 +59,16 @@ function formatPowerM(p) {
   return Math.round(p / 1e6) + "M";
 }
 
+function formatDateTime(ts) {
+  if (!ts?.toDate) return "—";
+  const d = ts.toDate();
+  return d.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+
 // -----------------------------
 // CORE LOADER
 // -----------------------------
@@ -139,9 +149,15 @@ async function loadConflicts() {
         <span class="badge reason ${c.reason}">
           ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
         </span>
-        <span class="badge upload">
-      ${c.uploadId || "legacy"}
-    </span>
+     <div class="upload-meta">
+  <span class="badge upload">
+    ${c.uploadId || "legacy"}
+  </span>
+  <span class="upload-time">
+    ${formatDateTime(c.createdAt)}
+  </span>
+</div>
+
 <div class="conflict-meta">
   <div class="excel-row">
     <strong>Excel:</strong>
