@@ -277,6 +277,7 @@ async function loadConflicts() {
 
       <div class="conflict-body hidden">
        <div class="conflict-candidates">
+       
 
   ${
     plausibleCandidates.length
@@ -362,12 +363,65 @@ if (deltaPct < 0) {
 // -----------------------------
 // MANUAL SEARCH TOGGLE
 // -----------------------------
+// -----------------------------
+// MANUAL SEARCH (PER CONFLICT)
+// -----------------------------
 const manualToggle = card.querySelector(".manual-toggle");
 const manualPanel = card.querySelector(".manual-panel");
+const manualSearch = card.querySelector(".manual-search");
+const manualResults = card.querySelector(".manual-results");
 
+// Holds selected player for this conflict
+let manuallySelectedPlayerId = null;
+
+// Toggle open / close
 manualToggle.addEventListener("click", () => {
   manualPanel.classList.toggle("hidden");
 });
+
+// Search input
+manualSearch.addEventListener("input", () => {
+  const q = manualSearch.value.trim().toLowerCase();
+  manualResults.innerHTML = "";
+
+  if (q.length < 2) return;
+
+  const matches = ALL_SERVER_PLAYERS
+    .filter(p =>
+      p.name.toLowerCase().includes(q) &&
+      p.warzone === c.warzone
+    )
+    .slice(0, 10);
+
+  if (!matches.length) {
+    manualResults.innerHTML =
+      "<div class='manual-empty'>No matches</div>";
+    return;
+  }
+
+  matches.forEach(p => {
+    const row = document.createElement("div");
+    row.className = "manual-row";
+    row.innerHTML = `
+      <span class="name">${p.name}</span>
+      <span class="meta">
+        ${formatPowerM(p.power)} • WZ ${p.warzone}
+      </span>
+    `;
+
+    row.onclick = () => {
+      manualResults
+        .querySelectorAll(".manual-row")
+        .forEach(r => r.classList.remove("selected"));
+
+      row.classList.add("selected");
+      manuallySelectedPlayerId = p.id;
+    };
+
+    manualResults.appendChild(row);
+  });
+});
+
 
 
 
@@ -503,8 +557,20 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    // ✅ Admin confirmed
-    loadConflicts();
+  
+// ✅ Admin confirmed
+
+// Load all players ONCE for manual search
+const snap = await getDocs(collection(db, "server_players"));
+ALL_SERVER_PLAYERS = snap.docs.map(d => ({
+  id: d.id,
+  name: d.data().name || "",
+  power: d.data().totalPower || 0,
+  warzone: d.data().warzone
+}));
+
+// Now load conflicts
+loadConflicts();
 
   } catch (err) {
     console.error("Auth check failed:", err);
