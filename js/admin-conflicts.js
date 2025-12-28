@@ -122,48 +122,49 @@ async function loadConflicts() {
 
     listEl.innerHTML = "";
     let conflictIndex = 0;
-   snap.forEach(doc => {
+   snap.forEach(conflictDoc => {
     conflictIndex++;
 
-  const c = doc.data();
-  const uploadId = c.uploadId || "legacy";
+      const c = conflictDoc.data()
 
-  const card = document.createElement("div");
-  card.className = "conflict-card";
+      const uploadId = c.uploadId || "legacy";
 
-  card.innerHTML = `
-  <div class="conflict-header" data-toggle>
-    <span class="conflict-number">${conflictIndex}</span>
+      const card = document.createElement("div");
+      card.className = "conflict-card";
 
-    <span class="badge reason ${c.reason}">
-      ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
+      card.innerHTML = `
+      <div class="conflict-header" data-toggle>
+        <span class="conflict-number">${conflictIndex}</span>
+
+        <span class="badge reason ${c.reason}">
+          ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
+        </span>
+        <span class="badge upload">
+      ${c.uploadId || "legacy"}
     </span>
-    <span class="badge upload">
-  ${c.uploadId || "legacy"}
-</span>
 
     <span class="meta">
       WZ ${c.warzone} • ${c.alliance || "—"}
     </span>
 
     <span class="chevron">▸</span>
-  </div>
+      </div>
 
-  <div class="conflict-body hidden">
-    <div class="conflict-candidates">
-      ${c.candidates && c.candidates.length
-        ? c.candidates.map(p => `
-          <label class="candidate selectable">
-            <input type="radio" name="pick-${doc.id}" value="${p.id}" />
-            <span class="name">${p.name}</span>
-            <span class="meta">
-              ${formatPowerM(p.power)}
-               </span>
-          </label>
-        `).join("")
-        : "<div class='candidate none'>No candidates</div>"
-      }
-    </div>
+      <div class="conflict-body hidden">
+        <div class="conflict-candidates">
+          ${c.candidates && c.candidates.length
+            ? c.candidates.map(p => `
+              <label class="candidate selectable">
+                <input type="radio" name="pick-${conflictDoc.id}" value="${p.id}" />
+                <span class="name">${p.name}</span>
+                <span class="meta">
+                  ${formatPowerM(p.power)}
+                  </span>
+              </label>
+            `).join("")
+            : "<div class='candidate none'>No candidates</div>"
+          }
+        </div>
 
     <div class="conflict-actions">
       <button data-action="use-existing">Use Existing</button>
@@ -171,29 +172,29 @@ async function loadConflicts() {
       <button data-action="create-new">Create New</button>
       <button data-action="ignore">Ignore</button>
     </div>
-  </div>
+    </div>
     `;
 
-const header = card.querySelector("[data-toggle]");
-const body = card.querySelector(".conflict-body");
-const chevron = card.querySelector(".chevron");
+        const header = card.querySelector("[data-toggle]");
+        const body = card.querySelector(".conflict-body");
+        const chevron = card.querySelector(".chevron");
 
 
 
-header.addEventListener("click", () => {
-  // close all others
-  document.querySelectorAll(".conflict-body").forEach(b => {
-    if (b !== body) b.classList.add("hidden");
-  });
+        header.addEventListener("click", () => {
+          // close all others
+          document.querySelectorAll(".conflict-body").forEach(b => {
+            if (b !== body) b.classList.add("hidden");
+          });
 
-  document.querySelectorAll(".chevron").forEach(c => {
-    if (c !== chevron) c.textContent = "▸";
-  });
+          document.querySelectorAll(".chevron").forEach(c => {
+            if (c !== chevron) c.textContent = "▸";
+          });
 
-  // toggle this one
-  const isOpen = !body.classList.contains("hidden");
-  body.classList.toggle("hidden");
-  chevron.textContent = isOpen ? "▸" : "▾";
+          // toggle this one
+          const isOpen = !body.classList.contains("hidden");
+          body.classList.toggle("hidden");
+          chevron.textContent = isOpen ? "▸" : "▾";
 });
 
 
