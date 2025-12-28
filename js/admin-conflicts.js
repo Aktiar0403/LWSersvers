@@ -142,10 +142,19 @@ async function loadConflicts() {
         <span class="badge upload">
       ${c.uploadId || "legacy"}
     </span>
+<div class="conflict-meta">
+  <div class="excel-row">
+    <strong>Excel:</strong>
+    <span class="excel-name">${c.excelName}</span>
+    •
+    <span class="excel-power">${formatPowerM(c.excelPower)}</span>
+  </div>
 
-    <span class="meta">
-      WZ ${c.warzone} • ${c.alliance || "—"}
-    </span>
+  <div class="context-row">
+    WZ ${c.warzone} • ${c.alliance || "—"}
+  </div>
+</div>
+
 
     <span class="chevron">▸</span>
       </div>
