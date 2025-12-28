@@ -318,18 +318,44 @@ if (deltaPct < 0) {
 </div>
 
 
-    <div class="conflict-actions">
-      <button data-action="use-existing">Use Existing</button>
-      <button data-action="rename-existing">Rename Existing</button>
-      <button data-action="create-new">Create New</button>
-      <button data-action="ignore">Ignore</button>
+    <!-- 🔍 MANUAL SEARCH SELECT -->
+  <div class="manual-select">
+    <button class="manual-toggle">
+      🔍 Search existing players
+    </button>
+
+    <div class="manual-panel hidden">
+      <input
+        type="text"
+        class="manual-search"
+        placeholder="Type player name…"
+        autocomplete="off"
+      />
+      <div class="manual-results"></div>
     </div>
-    </div>
+  </div>
+
+  <div class="conflict-actions">
+    <button data-action="use-existing">Use Existing</button>
+    <button data-action="rename-existing">Rename Existing</button>
+    <button data-action="create-new">Create New</button>
+    <button data-action="ignore">Ignore</button>
+  </div>
+</div>
     `;
 
         const header = card.querySelector("[data-toggle]");
         const body = card.querySelector(".conflict-body");
         const chevron = card.querySelector(".chevron");
+// -----------------------------
+// MANUAL SEARCH TOGGLE
+// -----------------------------
+const manualToggle = card.querySelector(".manual-toggle");
+const manualPanel = card.querySelector(".manual-panel");
+
+manualToggle.addEventListener("click", () => {
+  manualPanel.classList.toggle("hidden");
+});
 
 
 

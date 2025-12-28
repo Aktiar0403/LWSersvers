@@ -316,3 +316,34 @@ select {
   border: 1px solid #22c55e;
   background: rgba(34, 197, 94, 0.06);
 }
+.manual-select {
+  margin: 8px 0;
+}
+
+.manual-toggle {
+  font-size: 12px;
+  opacity: 0.85;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #93c5fd;
+}
+
+.manual-panel {
+  margin-top: 6px;
+}
+
+.manual-search {
+  width: 100%;
+  padding: 6px;
+  font-size: 12px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  color: #e5e7eb;
+}
+
+.manual-results {
+  margin-top: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+}
