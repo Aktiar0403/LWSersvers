@@ -67,16 +67,40 @@ function formatDateTime(ts) {
     timeStyle: "short"
   });
 }
+// -----------------------------
+// POWER PLAUSIBILITY CHECK
+// -----------------------------
+// Rules:
+// - Growth allowed: up to MAX_WEEKLY_GROWTH per week
+// - Growth window capped (prevents absurd old data assumptions)
+// - Large sudden drops are rejected
+// - Time-aware using excel upload timestamp
+// -----------------------------
+
+const MS_PER_WEEK = 1000 * 60 * 60 * 24 * 7;
+
+// Tunables (safe defaults)
+const MAX_WEEKLY_GROWTH = 0.07;   // 7% per week
+const MAX_ALLOWED_DROP = 0.25;    // 25% sudden drop
+const MAX_GROWTH_WEEKS = 12;      // cap growth window (≈3 months)
 
 function isPowerPlausible({
   excelPower,
   candidatePower,
   excelCreatedAt
 }) {
-  if (!excelPower || !candidatePower || !excelCreatedAt?.toDate) {
+  // ❌ Missing or invalid data
+  if (
+    !excelPower ||
+    !candidatePower ||
+    !excelCreatedAt?.toDate
+  ) {
     return false;
   }
 
+  // -----------------------------
+  // TIME DELTA
+  // -----------------------------
   const now = Date.now();
   const createdAtMs = excelCreatedAt.toDate().getTime();
 
@@ -85,12 +109,26 @@ function isPowerPlausible({
     Math.floor((now - createdAtMs) / MS_PER_WEEK)
   );
 
-  const maxGrowthAllowed = weeksOld * MAX_WEEKLY_GROWTH;
+  // Cap growth window to avoid unrealistic long-term assumptions
+  const effectiveWeeks = Math.min(
+    weeksOld,
+    MAX_GROWTH_WEEKS
+  );
+
+  // -----------------------------
+  // GROWTH CALCULATION
+  // -----------------------------
+  const maxGrowthAllowed =
+    effectiveWeeks * MAX_WEEKLY_GROWTH;
 
   const deltaPct =
     (candidatePower - excelPower) / excelPower;
 
-  // ❌ Unrealistic power loss (big drop)
+  // -----------------------------
+  // HARD REJECTIONS
+  // -----------------------------
+
+  // ❌ Unrealistic sudden power loss
   if (deltaPct < -MAX_ALLOWED_DROP) {
     return false;
   }
@@ -100,8 +138,10 @@ function isPowerPlausible({
     return false;
   }
 
-  return true; // ✅ plausible
+  // ✅ Plausible match
+  return true;
 }
+
 
 // -----------------------------
 // CORE LOADER
