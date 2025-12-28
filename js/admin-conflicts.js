@@ -178,11 +178,6 @@ const header = card.querySelector("[data-toggle]");
 const body = card.querySelector(".conflict-body");
 const chevron = card.querySelector(".chevron");
 
-header.addEventListener("click", () => {
-  body.classList.toggle("hidden");
-  header.querySelector(".chevron").textContent =
-    body.classList.contains("hidden") ? "▸" : "▾";
-});
 
 
 header.addEventListener("click", () => {
