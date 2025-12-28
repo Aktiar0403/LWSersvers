@@ -68,6 +68,40 @@ function formatDateTime(ts) {
   });
 }
 
+function isPowerPlausible({
+  excelPower,
+  candidatePower,
+  excelCreatedAt
+}) {
+  if (!excelPower || !candidatePower || !excelCreatedAt?.toDate) {
+    return false;
+  }
+
+  const now = Date.now();
+  const createdAtMs = excelCreatedAt.toDate().getTime();
+
+  const weeksOld = Math.max(
+    0,
+    Math.floor((now - createdAtMs) / MS_PER_WEEK)
+  );
+
+  const maxGrowthAllowed = weeksOld * MAX_WEEKLY_GROWTH;
+
+  const deltaPct =
+    (candidatePower - excelPower) / excelPower;
+
+  // ❌ Unrealistic power loss (big drop)
+  if (deltaPct < -MAX_ALLOWED_DROP) {
+    return false;
+  }
+
+  // ❌ Unrealistic power growth
+  if (deltaPct > maxGrowthAllowed) {
+    return false;
+  }
+
+  return true; // ✅ plausible
+}
 
 // -----------------------------
 // CORE LOADER
@@ -141,6 +175,20 @@ async function loadConflicts() {
 
       const card = document.createElement("div");
       card.className = "conflict-card";
+      const plausibleCandidates = (c.candidates || [])
+  .filter(p =>
+    isPowerPlausible({
+      excelPower: c.excelPower,
+      candidatePower: p.power,
+      excelCreatedAt: c.createdAt
+    })
+  )
+  .sort((a, b) => {
+    const da = Math.abs(a.power - c.excelPower);
+    const db = Math.abs(b.power - c.excelPower);
+    return da - db;
+  });
+
 
       card.innerHTML = `
       <div class="conflict-header" data-toggle>
@@ -156,9 +204,9 @@ async function loadConflicts() {
   <span class="upload-time">
     ${formatDateTime(c.createdAt)}
   </span>
-</div>
+  </div>
 
-<div class="conflict-meta">
+  <div class="conflict-meta">
   <div class="excel-row">
     <strong>Excel:</strong>
     <span class="excel-name">${c.excelName}</span>
@@ -169,27 +217,38 @@ async function loadConflicts() {
   <div class="context-row">
     WZ ${c.warzone} • ${c.alliance || "—"}
   </div>
-</div>
+  </div>
 
 
     <span class="chevron">▸</span>
       </div>
 
       <div class="conflict-body hidden">
-        <div class="conflict-candidates">
-          ${c.candidates && c.candidates.length
-            ? c.candidates.map(p => `
-              <label class="candidate selectable">
-                <input type="radio" name="pick-${conflictDoc.id}" value="${p.id}" />
-                <span class="name">${p.name}</span>
-                <span class="meta">
-                  ${formatPowerM(p.power)}
-                  </span>
-              </label>
-            `).join("")
-            : "<div class='candidate none'>No candidates</div>"
-          }
-        </div>
+       <div class="conflict-candidates">
+  ${
+    plausibleCandidates.length
+      ? plausibleCandidates.map(p => {
+          const deltaPct = Math.round(
+            ((p.power - c.excelPower) / c.excelPower) * 100
+          );
+
+          return `
+            <label class="candidate selectable">
+              <input type="radio" name="pick-${conflictDoc.id}" value="${p.id}" />
+              <span class="name">${p.name}</span>
+              <span class="meta">
+                ${formatPowerM(p.power)}
+                <span class="delta">
+                  (${deltaPct > 0 ? "+" : ""}${deltaPct}%)
+                </span>
+              </span>
+            </label>
+          `;
+        }).join("")
+      : "<div class='candidate none'>No plausible matches (power mismatch)</div>"
+  }
+</div>
+
 
     <div class="conflict-actions">
       <button data-action="use-existing">Use Existing</button>
