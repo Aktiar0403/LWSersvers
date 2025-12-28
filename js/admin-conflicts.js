@@ -265,12 +265,12 @@ async function loadConflicts() {
 
       <div class="conflict-body hidden">
        <div class="conflict-candidates">
+
   ${
     plausibleCandidates.length
       ? plausibleCandidates.map((p, i) => {
-         // -----------------------------
-// UI-ONLY growth classification
-// -----------------------------
+  const deltaPct =
+    (p.power - c.excelPower) / c.excelPower;
 const now = Date.now();
 const createdAtMs = c.createdAt?.toDate?.().getTime() || now;
 const weeksOld = Math.max(
@@ -302,15 +302,18 @@ if (deltaPct < 0) {
               <span class="name">${p.name}</span>
               <span class="meta">
                 ${formatPowerM(p.power)}
-                <span class="delta ${deltaClass}" title="${deltaLabel}">
-  (${deltaPct > 0 ? "+" : ""}${Math.round(deltaPct * 100)}%)
-</span>
+                <span 
+                class="delta ${deltaClass}"
+                 title="${deltaLabel}"
+                 >
+            (${deltaPct > 0 ? "+" : ""}${Math.round(deltaPct * 100)}%)
+            </span>
 
               </span>
             </label>
-          `;
+            `;
         }).join("")
-      : "<div class='candidate none'>No plausible matches (power mismatch)</div>"
+      :      "<div class='candidate none'>No plausible matches (power mismatch)</div>"
   }
 </div>
 
