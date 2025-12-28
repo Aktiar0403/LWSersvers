@@ -267,18 +267,31 @@ async function loadConflicts() {
        <div class="conflict-candidates">
   ${
     plausibleCandidates.length
-      ? plausibleCandidates.map(p => {
+      ? plausibleCandidates.map((p, i) => {
           const deltaPct = Math.round(
             ((p.power - c.excelPower) / c.excelPower) * 100
           );
+            let deltaClass = "delta-ok";
+            let deltaLabel = "Within expected growth";
+
+            if (deltaPct > 0.85 * maxGrowthAllowed) {
+              deltaClass = "delta-border";
+              deltaLabel = "High growth — review";
+            }
+
+            if (deltaPct < 0) {
+              deltaClass = "delta-drop";
+              deltaLabel = "Power drop";
+            }
 
           return `
-            <label class="candidate selectable">
+            <label class="candidate selectable ${i === 0 ? "best-match" : ""}">
+
               <input type="radio" name="pick-${conflictDoc.id}" value="${p.id}" />
               <span class="name">${p.name}</span>
               <span class="meta">
                 ${formatPowerM(p.power)}
-                <span class="delta">
+                <span class="delta ${deltaClass}" title="${deltaLabel}">
                   (${deltaPct > 0 ? "+" : ""}${deltaPct}%)
                 </span>
               </span>
