@@ -204,7 +204,8 @@ header.addEventListener("click", () => {
 
   // ✅ ACTION PLACEHOLDERS (LOG ONLY)
     card.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", async () => {
+
 
     // =============================
     // USE EXISTING PLAYER (LOG ONLY)
