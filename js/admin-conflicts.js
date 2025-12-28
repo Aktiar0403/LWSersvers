@@ -154,55 +154,10 @@ ALL_SERVER_PLAYERS = snap.docs.map(d => ({
   warzone: d.data().warzone
 }));
 
-const manualSearch = card.querySelector(".manual-search");
-const manualResults = card.querySelector(".manual-results");
 
 // Holds selected player for this conflict
 let manuallySelectedPlayerId = null;
 
-
-manualSearch.addEventListener("input", () => {
-  const q = manualSearch.value.trim().toLowerCase();
-  manualResults.innerHTML = "";
-
-  if (!q || q.length < 2) return;
-
-  const matches = ALL_SERVER_PLAYERS
-    .filter(p =>
-      p.name.toLowerCase().includes(q) &&
-      p.warzone === c.warzone
-    )
-    .slice(0, 10);
-
-  if (!matches.length) {
-    manualResults.innerHTML =
-      "<div class='manual-empty'>No matches</div>";
-    return;
-  }
-
-  matches.forEach(p => {
-    const row = document.createElement("div");
-    row.className = "manual-row";
-    row.innerHTML = `
-      <span class="name">${p.name}</span>
-      <span class="meta">
-        ${formatPowerM(p.power)} • WZ ${p.warzone}
-      </span>
-    `;
-
-    row.onclick = () => {
-      // Clear previous selection
-      manualResults
-        .querySelectorAll(".manual-row")
-        .forEach(r => r.classList.remove("selected"));
-
-      row.classList.add("selected");
-      manuallySelectedPlayerId = p.id;
-    };
-
-    manualResults.appendChild(row);
-  });
-});
 
 // -----------------------------
 // CORE LOADER
@@ -298,30 +253,30 @@ async function loadConflicts() {
         <span class="badge reason ${c.reason}">
           ${c.reason === "NAME_MISMATCH" ? "Name mismatch" : "Ambiguous"}
         </span>
-     <div class="upload-meta">
-  <span class="badge upload">
-    ${c.uploadId || "legacy"}
-  </span>
-  <span class="upload-time">
-    ${formatDateTime(c.createdAt)}
-  </span>
-  </div>
+          <div class="upload-meta">
+        <span class="badge upload">
+          ${c.uploadId || "legacy"}
+        </span>
+        <span class="upload-time">
+          ${formatDateTime(c.createdAt)}
+        </span>
+        </div>
 
-  <div class="conflict-meta">
-  <div class="excel-row">
-    <strong>Excel:</strong>
-    <span class="excel-name">${c.excelName}</span>
-    •
-    <span class="excel-power">${formatPowerM(c.excelPower)}</span>
-  </div>
+        <div class="conflict-meta">
+        <div class="excel-row">
+          <strong>Excel:</strong>
+          <span class="excel-name">${c.excelName}</span>
+          •
+          <span class="excel-power">${formatPowerM(c.excelPower)}</span>
+        </div>
 
-  <div class="context-row">
-    WZ ${c.warzone} • ${c.alliance || "—"}
-  </div>
-  </div>
+        <div class="context-row">
+          WZ ${c.warzone} • ${c.alliance || "—"}
+        </div>
+        </div>
 
 
-    <span class="chevron">▸</span>
+        <span class="chevron">▸</span>
       </div>
 
       <div class="conflict-body hidden">
@@ -413,6 +368,51 @@ if (deltaPct < 0) {
 // -----------------------------
 const manualToggle = card.querySelector(".manual-toggle");
 const manualPanel = card.querySelector(".manual-panel");
+// Holds selected player for this conflict
+let manuallySelectedPlayerId = null;
+
+manualSearch.addEventListener("input", () => {
+  const q = manualSearch.value.trim().toLowerCase();
+  manualResults.innerHTML = "";
+
+  if (!q || q.length < 2) return;
+
+  const matches = ALL_SERVER_PLAYERS
+    .filter(p =>
+      p.name.toLowerCase().includes(q) &&
+      p.warzone === c.warzone
+    )
+    .slice(0, 10);
+
+  if (!matches.length) {
+    manualResults.innerHTML =
+      "<div class='manual-empty'>No matches</div>";
+    return;
+  }
+
+  matches.forEach(p => {
+    const row = document.createElement("div");
+    row.className = "manual-row";
+    row.innerHTML = `
+      <span class="name">${p.name}</span>
+      <span class="meta">
+        ${formatPowerM(p.power)} • WZ ${p.warzone}
+      </span>
+    `;
+
+    row.onclick = () => {
+      // Clear previous selection
+      manualResults
+        .querySelectorAll(".manual-row")
+        .forEach(r => r.classList.remove("selected"));
+
+      row.classList.add("selected");
+      manuallySelectedPlayerId = p.id;
+    };
+
+    manualResults.appendChild(row);
+  });
+});
 
 manualToggle.addEventListener("click", () => {
   manualPanel.classList.toggle("hidden");
