@@ -3,7 +3,7 @@ console.log("🧨 Buster UI loaded");
 /* =============================
    FIREBASE IMPORTS
 ============================= */
-import { db } from "../firebase-config.js";
+import { dbPublic as db } from "../firebase-public.js";
 import {
   collection,
   getDocs
