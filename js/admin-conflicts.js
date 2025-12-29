@@ -486,7 +486,7 @@ card
   });
 
 
-  // ✅ ACTION PLACEHOLDERS (LOG ONLY)
+  // ✅ ACTION PLACEHOLDERS
     card.querySelectorAll("button").forEach(btn => {
    btn.addEventListener("click", async () => {
 
@@ -512,64 +512,50 @@ if (btn.dataset.action === "ignore") {
   loadConflicts();
   return;
 }
-
-    // =============================
-    // USE EXISTING PLAYER (LOG ONLY)
-    // =============================
-   if (btn.dataset.action === "use-existing") {
-    const picked = card.querySelector(
-    `input[name="pick-${conflictDoc.id}"]:checked`
-     );
-
-    if (!picked) {
-    alert("Please select a player first");
+// =============================
+// USE EXISTING (IDENTITY ONLY)
+// =============================
+if (btn.dataset.action === "use-existing") {
+  if (!selectedServerDocId) {
+    alert("Please select a player (radio or search) first");
     return;
-    }
+  }
 
-    // 🔐 CONFIRM ACTION
-   const selectedPlayerName =
-   picked
-    .closest("label")
-    ?.querySelector(".name")
-    ?.textContent || "selected player";
+  const ok = confirm(
+    "Use existing player?\n\n" +
+    "• Identity will be linked\n" +
+    "• Name will NOT change\n" +
+    "• Power will NOT change"
+  );
 
-      const ok = confirm(
-      `Use existing player?\n\n` +
-      `Excel name: ${c.excelName}\n` +
-      `Linked to: ${selectedPlayerName}\n\n` +
-      `This will NOT rename or change power.\n` +
-      `This only remembers identity.`
-      );
+  if (!ok) return;
 
-    if (!ok) return;
+  // 1️⃣ Create or fetch identity
+  const { playerId } = await getOrCreateIdentity({
+    canonicalName: c.excelName,
+    warzone: c.warzone
+  });
 
+  // 2️⃣ Link selected server_players doc
+  await linkServerPlayer({
+    playerId,
+    serverDocId: selectedServerDocId,
+    source: "excel-conflict"
+  });
 
-        // 🔽 EXISTING CODE (DO NOT MOVE)
-        const chosenServerDocId = picked.value;
+  // 3️⃣ Mark conflict resolved
+  await updateDoc(conflictDoc.ref, {
+    status: "resolved",
+    resolution: "use-existing",
+    resolvedPlayer: selectedServerDocId,
+    resolvedAt: serverTimestamp()
+  });
 
-        const { playerId } = await getOrCreateIdentity({
-          canonicalName: c.excelName,
-          warzone: c.warzone
-        });
+  alert("Identity linked successfully");
+  loadConflicts();
+  return;
+}
 
-        await linkServerPlayer({
-          playerId,
-          serverDocId: chosenServerDocId,
-          name: c.excelName,
-          source: "excel-conflict"
-        });
-
-        await updateDoc(conflictDoc.ref, {
-          status: "resolved",
-          resolvedAt: serverTimestamp(),
-          resolution: "use-existing",
-          resolvedPlayer: chosenServerDocId
-        });
-
-        alert("✅ Conflict resolved & identity linked");
-        loadConflicts();
-        return;
-      }
 
 
 
