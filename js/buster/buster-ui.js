@@ -34,7 +34,12 @@ const canHandleEl = document.getElementById("canHandleCount");
 const canStallEl = document.getElementById("canStallCount");
 const avoidEl = document.getElementById("avoidCount");
 
+<<<<<<< HEAD
+
+
+=======
 const targetList = document.getElementById("targetList");
+>>>>>>> 322b915e9880ab81e0d7b512e9f7b8ed3d9226b6
 const confidenceBadge = document.getElementById("confidenceBadge");
 
 const advancedToggle = document.getElementById("advancedToggle");
@@ -265,6 +270,11 @@ function renderRow(p, myFSP) {
     </div>
   `;
 }
+
+
+
+
+
 
 /* =============================
    CONFIDENCE
