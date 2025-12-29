@@ -76,7 +76,7 @@ const MANUAL_FSP_CAP = 1.25;
 /* =============================
    BUSTER LOADER CONTROL
 ============================= */
-let busterLoader;
+let busterLoader = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   busterLoader = document.getElementById("busterLoader");
@@ -101,7 +101,6 @@ init();
 
 async function init() {
   const snap = await getDocs(collection(db, "server_players"));
-  showLoader(); 
 
  ALL_PLAYERS = snap.docs.map(d => {
   const x = d.data();
@@ -128,7 +127,6 @@ async function init() {
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
 
- hideLoader();    
 
 }
 
@@ -484,3 +482,7 @@ function renderConfidence() {
     confidenceBadge.className = "buster-badge badge-red";
   }
 }
+setTimeout(() => {
+  showLoader();
+  setTimeout(hideLoader, 2000);
+}, 500);
