@@ -37,6 +37,10 @@ const matchupModal = document.getElementById("matchupModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalBody = document.getElementById("modalBody");
 const closeModalBtn = document.getElementById("closeModal");
+const threatTop1El = document.getElementById("threatTop1");
+const threatTop2El = document.getElementById("threatTop2");
+const threatTop3El = document.getElementById("threatTop3");
+const threatBaseEl = document.getElementById("threatBase");
 
 
 
@@ -211,6 +215,23 @@ document
   }
   return player.fsp;
 }
+function computeWarzoneThreats(players) {
+  if (!players.length) {
+    return { top: [], baseFsp: 0 };
+  }
+
+  // sort by FSP descending
+  const sorted = [...players]
+    .sort((a, b) => b.fsp - a.fsp);
+
+  // top 3 real players
+  const top = sorted.slice(0, 3).map(p => p.fsp);
+
+  // base warzone FSP (synthetic assumption)
+  const baseFsp = estimateFirstSquadPower(WARZONE_BASE_POWER);
+
+  return { top, baseFsp };
+}
 
 /* =============================
    RENDER (FINAL)
@@ -252,6 +273,21 @@ function render() {
   });
 
   const allOpponents = [...opponentPlayers, ...synthetic];
+  /* ---- Warzone Threats (FSP) ---- */
+const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
+
+threatTop1El.textContent =
+  top[0] ? `${Math.round(top[0] / 1e6)}M` : "–";
+
+threatTop2El.textContent =
+  top[1] ? `${Math.round(top[1] / 1e6)}M` : "–";
+
+threatTop3El.textContent =
+  top[2] ? `${Math.round(top[2] / 1e6)}M` : "–";
+
+threatBaseEl.textContent =
+  `${Math.round(baseFsp / 1e6)}M`;
+
 
   /* ---- Bucketing (LOCKED RULES) ---- */
   const canBeat = [];
