@@ -479,3 +479,47 @@ html, body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* =============================
+   HEADER — CENTERED NEON THEME
+============================= */
+
+.buster-header {
+  text-align: center;
+  padding: 28px 16px 34px;
+  margin-bottom: 18px;
+
+  background: radial-gradient(
+    circle at top center,
+    rgba(52,245,197,0.15),
+    rgba(2,6,23,0.95) 60%
+  );
+
+  border-radius: 22px;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(52,245,197,0.18),
+    0 0 40px rgba(52,245,197,0.18);
+}
+
+.buster-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+
+  color: #eafff5;
+
+  text-shadow:
+    0 0 12px rgba(52,245,197,0.55),
+    0 0 28px rgba(52,245,197,0.35);
+}
+
+.buster-header .buster-sub {
+  margin-top: 10px;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  color: #9af5d0;
+
+  text-shadow:
+    0 0 8px rgba(52,245,197,0.35);
+}
