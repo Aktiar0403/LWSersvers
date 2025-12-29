@@ -246,6 +246,7 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
      TOP 3 THREATS (by FSP)
   ------------------------------ */
   const sortedAlliance = [...opponentAlliancePlayers]
+    .filter(p => p.fsp > 0)
     .sort((a, b) => b.fsp - a.fsp);
 
   const top = sortedAlliance.slice(0, 3).map(p => ({
@@ -257,11 +258,12 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
   /* -----------------------------
      BASE FSP (WARZONE 200th)
   ------------------------------ */
-  const warzone = opponentAlliancePlayers[0].warzone;
+  const warzone = opponentAlliancePlayers.find(
+    p => Number.isFinite(p.warzone)
+  )?.warzone;
 
-  // 🚨 HARD GUARD
-  if (!warzone && warzone !== 0) {
-    console.warn("⚠️ Warzone missing for opponent players");
+  if (!Number.isFinite(warzone)) {
+    console.warn("⚠️ Invalid warzone value:", warzone);
     return { top, baseFsp: 0 };
   }
 
@@ -279,13 +281,10 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
     ? 199
     : warzonePlayers.length - 1;
 
-  const basePlayer = warzonePlayers[baseIndex];
-
-  const baseFsp = basePlayer?.fsp ?? 0;
+  const baseFsp = warzonePlayers[baseIndex].fsp;
 
   return { top, baseFsp };
 }
-
 
 
 /* =============================
@@ -331,7 +330,7 @@ function render() {
 
 
 /* ---- Warzone Threats ---- */
-
+const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
 
 if (top[0]) {
   threatTop1NameEl && (threatTop1NameEl.textContent = top[0].name);
@@ -360,15 +359,6 @@ if (threatBaseEl) {
     `${Math.round(baseFsp / 1e6)}M`;
 }
 
-const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
-
-console.log("🧪 Warzone Base FSP debug:", {
-  opponentWarzone: opponentPlayers[0]?.warzone,
-  baseFsp,
-  warzonePlayerCount: ALL_PLAYERS.filter(
-    p => p.warzone === opponentPlayers[0]?.warzone
-  ).length
-});
 
   /* ---- Bucketing (LOCKED RULES) ---- */
   const canBeat = [];
