@@ -273,20 +273,30 @@ function render() {
   });
 
   const allOpponents = [...opponentPlayers, ...synthetic];
-  /* ---- Warzone Threats (FSP) ---- */
+
+
+/* ---- Warzone Threats (FSP) ---- */
 const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
 
-threatTop1El.textContent =
-  top[0] ? `${Math.round(top[0] / 1e6)}M` : "–";
+if (threatTop1El) {
+  threatTop1El.textContent =
+    top[0] ? `${Math.round(top[0] / 1e6)}M` : "–";
+}
 
-threatTop2El.textContent =
-  top[1] ? `${Math.round(top[1] / 1e6)}M` : "–";
+if (threatTop2El) {
+  threatTop2El.textContent =
+    top[1] ? `${Math.round(top[1] / 1e6)}M` : "–";
+}
 
-threatTop3El.textContent =
-  top[2] ? `${Math.round(top[2] / 1e6)}M` : "–";
+if (threatTop3El) {
+  threatTop3El.textContent =
+    top[2] ? `${Math.round(top[2] / 1e6)}M` : "–";
+}
 
-threatBaseEl.textContent =
-  `${Math.round(baseFsp / 1e6)}M`;
+if (threatBaseEl) {
+  threatBaseEl.textContent =
+    `${Math.round(baseFsp / 1e6)}M`;
+}
 
 
   /* ---- Bucketing (LOCKED RULES) ---- */
