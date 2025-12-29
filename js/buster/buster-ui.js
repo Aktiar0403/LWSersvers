@@ -97,6 +97,7 @@ init();
 
 async function init() {
   const snap = await getDocs(collection(db, "server_players"));
+  showLoader(); 
 
  ALL_PLAYERS = snap.docs.map(d => {
   const x = d.data();
@@ -123,6 +124,7 @@ async function init() {
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
 
+ hideLoader();    
 
 }
 
