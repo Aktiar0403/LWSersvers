@@ -425,6 +425,9 @@ manualSearch.addEventListener("input", () => {
 
   // 🔗 Unified selection
   selectedServerDocId = p.id;
+
+  console.log("Selected (manual):", selectedServerDocId);
+
 };
 
 
@@ -452,6 +455,10 @@ card
 
       // 🔗 Unified selection
       selectedServerDocId = radio.value;
+
+      console.log("Selected (radio):", selectedServerDocId);
+
+
     });
 
 
