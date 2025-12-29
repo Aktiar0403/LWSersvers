@@ -488,78 +488,100 @@ card
 
   // ✅ ACTION PLACEHOLDERS (LOG ONLY)
     card.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("click", async () => {
+   btn.addEventListener("click", async () => {
 
+    // =============================
+// IGNORE CONFLICT
+// =============================
+if (btn.dataset.action === "ignore") {
+  const ok = confirm(
+    "Ignore this conflict?\n\n" +
+    "• No player will be changed\n" +
+    "• Conflict will be marked resolved"
+  );
+
+  if (!ok) return;
+
+  await updateDoc(conflictDoc.ref, {
+    status: "resolved",
+    resolution: "ignored",
+    resolvedAt: serverTimestamp()
+  });
+
+  alert("Conflict ignored");
+  loadConflicts();
+  return;
+}
 
     // =============================
     // USE EXISTING PLAYER (LOG ONLY)
     // =============================
    if (btn.dataset.action === "use-existing") {
-  const picked = card.querySelector(
+    const picked = card.querySelector(
     `input[name="pick-${conflictDoc.id}"]:checked`
-  );
+     );
 
-  if (!picked) {
+    if (!picked) {
     alert("Please select a player first");
     return;
-  }
+    }
 
- // 🔐 CONFIRM ACTION
-  const selectedPlayerName =
-  picked
+    // 🔐 CONFIRM ACTION
+   const selectedPlayerName =
+   picked
     .closest("label")
     ?.querySelector(".name")
     ?.textContent || "selected player";
 
-  const ok = confirm(
-  `Use existing player?\n\n` +
-  `Excel name: ${c.excelName}\n` +
-  `Linked to: ${selectedPlayerName}\n\n` +
-  `This will NOT rename or change power.\n` +
-  `This only remembers identity.`
-);
+      const ok = confirm(
+      `Use existing player?\n\n` +
+      `Excel name: ${c.excelName}\n` +
+      `Linked to: ${selectedPlayerName}\n\n` +
+      `This will NOT rename or change power.\n` +
+      `This only remembers identity.`
+      );
 
-if (!ok) return;
-
-
-  // 🔽 EXISTING CODE (DO NOT MOVE)
-  const chosenServerDocId = picked.value;
-
-  const { playerId } = await getOrCreateIdentity({
-    canonicalName: c.excelName,
-    warzone: c.warzone
-  });
-
-  await linkServerPlayer({
-    playerId,
-    serverDocId: chosenServerDocId,
-    name: c.excelName,
-    source: "excel-conflict"
-  });
-
-  await updateDoc(conflictDoc.ref, {
-    status: "resolved",
-    resolvedAt: serverTimestamp(),
-    resolution: "use-existing",
-    resolvedPlayer: chosenServerDocId
-  });
-
-  alert("✅ Conflict resolved & identity linked");
-  loadConflicts();
-  return;
-}
+    if (!ok) return;
 
 
+        // 🔽 EXISTING CODE (DO NOT MOVE)
+        const chosenServerDocId = picked.value;
 
-    // =============================
-    // OTHER ACTIONS (PLACEHOLDER)
-    // =============================
-    console.log("🧠 Admin action clicked", {
-      conflictId: doc.id,
-      action: btn.dataset.action
-    });
-  });
-});
+        const { playerId } = await getOrCreateIdentity({
+          canonicalName: c.excelName,
+          warzone: c.warzone
+        });
+
+        await linkServerPlayer({
+          playerId,
+          serverDocId: chosenServerDocId,
+          name: c.excelName,
+          source: "excel-conflict"
+        });
+
+        await updateDoc(conflictDoc.ref, {
+          status: "resolved",
+          resolvedAt: serverTimestamp(),
+          resolution: "use-existing",
+          resolvedPlayer: chosenServerDocId
+        });
+
+        alert("✅ Conflict resolved & identity linked");
+        loadConflicts();
+        return;
+      }
+
+
+
+          // =============================
+          // OTHER ACTIONS (PLACEHOLDER)
+          // =============================
+          console.log("🧠 Admin action clicked", {
+            conflictId: doc.id,
+            action: btn.dataset.action
+          });
+        });
+      });
 
 
   listEl.appendChild(card);
