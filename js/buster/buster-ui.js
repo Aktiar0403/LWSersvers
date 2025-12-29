@@ -1,26 +1,35 @@
 console.log("🧨 Buster UI loaded");
 
+/* =============================
+   FIREBASE IMPORTS
+============================= */
+import { db } from "../firebase-config.js";
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import { estimateFirstSquadPower } from "../acis/acis-engine.js";
 import { calculatePTI } from "./pti-engine.js";
 import { buildSyntheticCommanders } from "./synthetic-engine.js";
-import { loadAlliancePlayers } from "./buster-data.js";
 
-// ---- CONFIG (session only) ----
-const MANUAL_FSP_CAP = 1.25; // 125%
-const STALL_BUFFER = 2;      // show 2 as stall
-const WARZONE_BASE_POWER = window.WARZONE_BASE_POWER || 130e6;
+/* =============================
+   DOM ELEMENTS
+============================= */
+const myAllianceInput = document.getElementById("myAllianceSearch");
+const myAllianceResults = document.getElementById("myAllianceResults");
 
-// ---- STATE ----
-let myAlliancePlayers = [];
-let opponentPlayers = [];
-let missingIds = new Set();
+const oppAllianceInput = document.getElementById("oppAllianceSearch");
+const oppAllianceResults = document.getElementById("oppAllianceResults");
 
-// ---- DOM ----
-const select = document.getElementById("myPlayerSelect");
-const card = document.getElementById("playerCard");
-const computedFspEl = document.getElementById("computedFspValue");
+const myPlayerSelect = document.getElementById("myPlayerSelect");
+
+const playerCard = document.getElementById("playerCard");
+const computedFspValue = document.getElementById("computedFspValue");
+
 const manualToggle = document.getElementById("manualFspToggle");
 const manualInput = document.getElementById("manualFspInput");
-const fspNote = document.getElementById("fspSourceNote");
+const fspSourceNote = document.getElementById("fspSourceNote");
 
 const canHandleEl = document.getElementById("canHandleCount");
 const canStallEl = document.getElementById("canStallCount");
@@ -29,211 +38,170 @@ const avoidEl = document.getElementById("avoidCount");
 const targetList = document.getElementById("targetList");
 const missingList = document.getElementById("missingPlayerList");
 const confidenceBadge = document.getElementById("confidenceBadge");
-const myAllianceSelect = document.getElementById("myAllianceSelect");
-const oppAllianceSelect = document.getElementById("oppAllianceSelect");
 
-import { db } from "../firebase-config.js";
-import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+/* =============================
+   STATE
+============================= */
+let ALL_PLAYERS = [];
+let ALL_ALLIANCES = [];
 
-// TEMP: load all alliances (will be optimized later)
-async function loadAlliancesFromServerPlayers() {
+let myAlliancePlayers = [];
+let opponentPlayers = [];
+
+let missingIds = new Set();
+
+/* =============================
+   CONFIG
+============================= */
+const WARZONE_BASE_POWER = 130e6;
+const MANUAL_FSP_CAP = 1.25;
+
+/* =============================
+   INIT – LOAD ALL DATA ONCE
+============================= */
+init();
+
+async function init() {
   const snap = await getDocs(collection(db, "server_players"));
 
-  const set = new Set();
-  snap.docs.forEach(doc => {
-    const a = doc.data().alliance;
-    if (a) set.add(a);
+  ALL_PLAYERS = snap.docs.map(d => {
+    const x = d.data();
+    const effectivePower = Number(x.basePower ?? x.totalPower ?? 0);
+
+    return {
+      id: d.id,
+      name: x.name || "Unknown",
+      alliance: x.alliance,
+      effectivePower,
+      fsp: estimateFirstSquadPower(effectivePower),
+      tier: inferTier(effectivePower)
+    };
   });
 
-  return [...set].sort();
+  ALL_ALLIANCES = [...new Set(ALL_PLAYERS.map(p => p.alliance))].sort();
+
+  setupAllianceSearch(
+    myAllianceInput,
+    myAllianceResults,
+    onMyAllianceSelected
+  );
+
+  setupAllianceSearch(
+    oppAllianceInput,
+    oppAllianceResults,
+    onOppAllianceSelected
+  );
+
+  console.log("✅ Loaded players:", ALL_PLAYERS.length);
+  console.log("✅ Alliances:", ALL_ALLIANCES.length);
 }
 
-async function populateAllianceSelectors() {
-  const alliances = await loadAlliancesFromServerPlayers();
+/* =============================
+   SEARCHABLE ALLIANCE INPUT
+============================= */
+function setupAllianceSearch(input, resultBox, onSelect) {
+  input.addEventListener("input", () => {
+    const q = input.value.toLowerCase().trim();
+    resultBox.innerHTML = "";
 
-  myAllianceSelect.innerHTML =
-    `<option value="">Select My Alliance</option>`;
-  oppAllianceSelect.innerHTML =
-    `<option value="">Select Opponent Alliance</option>`;
+    if (!q) {
+      resultBox.style.display = "none";
+      return;
+    }
 
-  alliances.forEach(a => {
-    const opt1 = document.createElement("option");
-    opt1.value = a;
-    opt1.textContent = a;
-    myAllianceSelect.appendChild(opt1);
+    const matches = ALL_ALLIANCES
+      .filter(a => a.toLowerCase().includes(q))
+      .slice(0, 20);
 
-    const opt2 = document.createElement("option");
-    opt2.value = a;
-    opt2.textContent = a;
-    oppAllianceSelect.appendChild(opt2);
+    if (!matches.length) {
+      resultBox.innerHTML =
+        `<div class="buster-search-item">No results</div>`;
+      resultBox.style.display = "block";
+      return;
+    }
+
+    matches.forEach(a => {
+      const div = document.createElement("div");
+      div.className = "buster-search-item";
+      div.textContent = a;
+      div.onclick = () => {
+        input.value = a;
+        resultBox.style.display = "none";
+        onSelect(a);
+      };
+      resultBox.appendChild(div);
+    });
+
+    resultBox.style.display = "block";
   });
 
-  console.log("✅ Alliances loaded:", alliances.length);
+  document.addEventListener("click", e => {
+    if (!resultBox.contains(e.target) && e.target !== input) {
+      resultBox.style.display = "none";
+    }
+  });
 }
 
+/* =============================
+   ALLIANCE SELECTION
+============================= */
+function onMyAllianceSelected(alliance) {
+  myAlliancePlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
 
-// ---- INIT (expects globals set by your app/router) ----
-// =============================
-// ALLIANCE SELECTION FLOW
-// =============================
+  myPlayerSelect.innerHTML =
+    `<option value="">Select yourself</option>`;
 
-// My alliance selected
-myAllianceSelect.addEventListener("change", async () => {
-  const alliance = myAllianceSelect.value;
-  if (!alliance) return;
+  myAlliancePlayers.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = `${p.name} (${Math.round(p.fsp / 1e6)}M FSP)`;
+    myPlayerSelect.appendChild(opt);
+  });
 
-  // Reset dependent state
-  myAlliancePlayers = [];
-  select.innerHTML = `<option value="">Select a player</option>`;
-  card.style.display = "none";
+  playerCard.style.display = "none";
+}
 
-  // Load ONLY my alliance
-  myAlliancePlayers = await loadAlliancePlayers(alliance);
-
-  populateMyPlayers();
-});
-
-// Opponent alliance selected
-oppAllianceSelect.addEventListener("change", async () => {
-  const alliance = oppAllianceSelect.value;
-  if (!alliance) return;
-
-  // Reset missing selections
+function onOppAllianceSelected(alliance) {
+  opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
   missingIds.clear();
-
-  // Load ONLY opponent alliance
-  opponentPlayers = await loadAlliancePlayers(alliance);
-
   renderMissingList();
-  render(); // re-run PTI if player already selected
-});
+  render();
+}
 
-
-// ---- UI WIRING ----
-select.addEventListener("change", render);
+/* =============================
+   PLAYER SELECTION
+============================= */
+myPlayerSelect.addEventListener("change", render);
 manualToggle.addEventListener("change", render);
 manualInput.addEventListener("input", render);
 document.querySelectorAll("input[name=targetBand]")
   .forEach(r => r.addEventListener("change", render));
 
-
-
-
-// ---- HELPERS ----
-function populateMyPlayers() {
-  select.innerHTML = `<option value="">Select a player</option>`;
-  myAlliancePlayers.forEach(p => {
-    const opt = document.createElement("option");
-    opt.value = p.id;
-    opt.textContent = `${p.name} (${Math.round(p.fsp / 1e6)}M FSP)`;
-    select.appendChild(opt);
-  });
-}
-
-function getSelectedPlayer() {
-  return myAlliancePlayers.find(p => p.id === select.value);
-}
-
-function getEffectiveFSP(player) {
-  if (!manualToggle.checked) return player.fsp;
-  const v = Number(manualInput.value || 0);
-  if (v > 0 && v <= player.fsp * MANUAL_FSP_CAP) return v;
-  return player.fsp;
-}
-
-// ---- BEWARE META ----
-function getBewareMeta(myFSP, t) {
-  const diff = t.fsp - myFSP;
-
-  if (t.isSynthetic) return { label: "ASSUMED", cls: "badge-muted" };
-  if (t.tier === "whale" || t.tier === "mega")
-    return { label: "WHALE", cls: "badge-red" };
-
-  if (diff <= 0) return { label: "SAFE", cls: "badge-green" };
-  if (diff <= 1_000_000) return { label: "EVEN", cls: "badge-yellow" };
-  if (diff <= 3_000_000) return { label: "RISK", cls: "badge-yellow" };
-  return { label: "AVOID", cls: "badge-red" };
-}
-
-function renderTargetRow(t, myFSP) {
-  const meta = getBewareMeta(myFSP, t);
-  return `
-    <div class="buster-target">
-      <div>
-        <div class="buster-target-name">${t.name}</div>
-        <div class="buster-target-meta">
-          FSP: ${Math.round(t.fsp / 1e6)}M
-        </div>
-      </div>
-      <span class="buster-badge ${meta.cls}">${meta.label}</span>
-    </div>
-  `;
-}
-
-// ---- MISSING PLAYERS ----
-function renderMissingList() {
-  if (!opponentPlayers.length) {
-    missingList.textContent = "No opponent loaded";
-    return;
-  }
-
-  missingList.innerHTML = opponentPlayers.map(p => `
-    <label style="display:block; font-size:13px;">
-      <input type="checkbox" data-id="${p.id}"
-        ${missingIds.has(p.id) ? "checked" : ""} />
-      ${p.name} (${Math.round(p.fsp / 1e6)}M)
-    </label>
-  `).join("");
-
-  missingList.querySelectorAll("input[type=checkbox]").forEach(cb => {
-    cb.addEventListener("change", () => {
-      const id = cb.dataset.id;
-      cb.checked ? missingIds.add(id) : missingIds.delete(id);
-      render();
-    });
-  });
-}
-
-// ---- CONFIDENCE ----
-function getConfidence() {
-  let score = 100;
-  if (manualToggle.checked) score -= 20;
-  score -= missingIds.size * 5;
-
-  if (score >= 80) return { t: "HIGH", c: "badge-green" };
-  if (score >= 60) return { t: "MEDIUM", c: "badge-yellow" };
-  return { t: "LOW", c: "badge-red" };
-}
-
-// ---- RENDER ----
+/* =============================
+   RENDER
+============================= */
 function render() {
-  const player = getSelectedPlayer();
-  if (!player) {
-    card.style.display = "none";
-    targetList.innerHTML = `<div class="buster-target badge-muted">
-      Select a player to view targets
-    </div>`;
-    return;
-  }
+  const player = myAlliancePlayers.find(p => p.id === myPlayerSelect.value);
+  if (!player || !opponentPlayers.length) return;
 
-  card.style.display = "block";
-  computedFspEl.textContent = `${Math.round(player.fsp / 1e6)}M`;
+  playerCard.style.display = "block";
+  computedFspValue.textContent =
+    `${Math.round(player.fsp / 1e6)}M`;
 
-  // Manual FSP
+  let myFSP = player.fsp;
   if (manualToggle.checked) {
     manualInput.disabled = false;
-    fspNote.textContent = "⚠ Manual FSP override active (session-only)";
+    const v = Number(manualInput.value);
+    if (v > 0 && v <= player.fsp * MANUAL_FSP_CAP) {
+      myFSP = v;
+      fspSourceNote.textContent =
+        "⚠ Manual FSP override (session only)";
+    }
   } else {
     manualInput.disabled = true;
-    fspNote.textContent = "";
+    fspSourceNote.textContent = "";
   }
 
-  const myFSP = getEffectiveFSP(player);
-
-  // Build opponents (+ synthetic), then remove missing
   const synthetic = buildSyntheticCommanders({
     listedPlayers: opponentPlayers,
     referencePower: WARZONE_BASE_POWER
@@ -242,7 +210,8 @@ function render() {
   const allOpponents = [...opponentPlayers, ...synthetic]
     .filter(p => !missingIds.has(p.id));
 
-  const band = document.querySelector("input[name=targetBand]:checked").value;
+  const band =
+    document.querySelector("input[name=targetBand]:checked").value;
 
   const result = calculatePTI({
     myPlayer: { ...player, effectiveFSP: myFSP },
@@ -250,34 +219,59 @@ function render() {
     band
   });
 
-  // Summary
   canHandleEl.textContent = result.canHandle.length;
   canStallEl.textContent = result.canStall.length;
   avoidEl.textContent = result.avoid.length;
 
-  // Confidence
-  const conf = getConfidence();
-  confidenceBadge.className = `buster-badge ${conf.c}`;
-  confidenceBadge.textContent = conf.t;
+  renderTargets(result, myFSP);
+  renderConfidence();
+}
 
-  // Targets (group synthetic)
-  const real = result.canHandle
+/* =============================
+   TARGETS
+============================= */
+function renderTargets(result, myFSP) {
+  const real = [...result.canHandle, ...result.canStall, ...result.avoid]
+    .filter(p => !p.isSynthetic);
+
+  const synthetic = result.canHandle
     .concat(result.canStall, result.avoid)
-    .filter(t => !t.isSynthetic);
+    .filter(p => p.isSynthetic);
 
-  const syntheticGroup = allOpponents.filter(t => t.isSynthetic);
+  let html = real.map(p => {
+    const diff = p.fsp - myFSP;
+    let cls = "badge-green", label = "SAFE";
 
-  let html = real.map(t => renderTargetRow(t, myFSP)).join("");
+    if (p.tier === "whale" || p.tier === "mega") {
+      cls = "badge-red"; label = "WHALE";
+    } else if (diff > 3e6) {
+      cls = "badge-red"; label = "AVOID";
+    } else if (diff > 1e6) {
+      cls = "badge-yellow"; label = "RISK";
+    }
 
-  if (syntheticGroup.length) {
+    return `
+      <div class="buster-target">
+        <div>
+          <div class="buster-target-name">${p.name}</div>
+          <div class="buster-target-meta">
+            FSP ${Math.round(p.fsp / 1e6)}M
+          </div>
+        </div>
+        <span class="buster-badge ${cls}">${label}</span>
+      </div>
+    `;
+  }).join("");
+
+  if (synthetic.length) {
     html += `
       <div class="buster-target">
         <div>
           <div class="buster-target-name">
-            Unlisted Commanders (×${syntheticGroup.length})
+            Unlisted Commanders (×${synthetic.length})
           </div>
           <div class="buster-target-meta">
-            Estimated FSP: ${Math.round(syntheticGroup[0].fsp / 1e6)}M
+            Est FSP ${Math.round(synthetic[0].fsp / 1e6)}M
           </div>
         </div>
         <span class="buster-badge badge-muted">ASSUMED</span>
@@ -285,12 +279,57 @@ function render() {
     `;
   }
 
-  if (!html) {
-    html = `<div class="buster-target badge-muted">
-      No eligible targets in this band
-    </div>`;
-  }
-
-  targetList.innerHTML = html;
+  targetList.innerHTML = html || `
+    <div class="buster-target badge-muted">No targets</div>
+  `;
 }
-populateAllianceSelectors();
+
+/* =============================
+   MISSING PLAYERS
+============================= */
+function renderMissingList() {
+  missingList.innerHTML = opponentPlayers.map(p => `
+    <label style="display:block;font-size:13px;">
+      <input type="checkbox" data-id="${p.id}" />
+      ${p.name}
+    </label>
+  `).join("");
+
+  missingList.querySelectorAll("input").forEach(cb => {
+    cb.onchange = () => {
+      cb.checked ? missingIds.add(cb.dataset.id)
+                 : missingIds.delete(cb.dataset.id);
+      render();
+    };
+  });
+}
+
+/* =============================
+   CONFIDENCE
+============================= */
+function renderConfidence() {
+  let score = 100;
+  if (manualToggle.checked) score -= 20;
+  score -= missingIds.size * 5;
+
+  if (score >= 80) {
+    confidenceBadge.textContent = "HIGH";
+    confidenceBadge.className = "buster-badge badge-green";
+  } else if (score >= 60) {
+    confidenceBadge.textContent = "MEDIUM";
+    confidenceBadge.className = "buster-badge badge-yellow";
+  } else {
+    confidenceBadge.textContent = "LOW";
+    confidenceBadge.className = "buster-badge badge-red";
+  }
+}
+
+/* =============================
+   UTILS
+============================= */
+function inferTier(power) {
+  if (power >= 300e6) return "whale";
+  if (power >= 200e6) return "mega";
+  if (power >= 120e6) return "frontline";
+  return "depth";
+}

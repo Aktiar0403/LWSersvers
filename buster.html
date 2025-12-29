@@ -15,13 +15,35 @@
     <div class="buster-subtitle">
       First Squad Power (FSP) based • Session-only • No data writes
     </div>
-<select id="myAllianceSelect" class="buster-select">
-  <option value="">Select My Alliance</option>
-</select>
+<!-- MY ALLIANCE -->
+<div class="buster-card">
+  <h3>My Alliance</h3>
 
-<select id="oppAllianceSelect" class="buster-select">
-  <option value="">Select Opponent Alliance</option>
-</select>
+  <input
+    type="text"
+    id="myAllianceSearch"
+    class="buster-input"
+    placeholder="Search my alliance..."
+    autocomplete="off"
+  />
+
+  <div id="myAllianceResults" class="buster-search-results"></div>
+</div>
+
+<!-- OPPONENT ALLIANCE -->
+<div class="buster-card">
+  <h3>Opponent Alliance</h3>
+
+  <input
+    type="text"
+    id="oppAllianceSearch"
+    class="buster-input"
+    placeholder="Search opponent alliance..."
+    autocomplete="off"
+  />
+
+  <div id="oppAllianceResults" class="buster-search-results"></div>
+</div>
 
 
     <!-- PLAYER SELECT -->

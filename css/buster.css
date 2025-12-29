@@ -189,3 +189,31 @@
     flex-direction: column;
   }
 }
+/* =============================
+   SEARCHABLE ALLIANCE DROPDOWN
+============================= */
+
+.buster-search-results {
+  background: #0f172a;
+  border: 1px solid var(--buster-border);
+  border-radius: 8px;
+  margin-top: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  display: none;
+}
+
+.buster-search-item {
+  padding: 8px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--buster-border);
+}
+
+.buster-search-item:last-child {
+  border-bottom: none;
+}
+
+.buster-search-item:hover {
+  background: rgba(148,163,184,0.1);
+}
