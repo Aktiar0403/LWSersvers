@@ -99,9 +99,10 @@ async function init() {
 
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
-  warzone: Number(x.warzone),
+
 
 }
+warzone: Number(x.warzone),
 
 /* =============================
    SEARCHABLE ALLIANCE INPUT
