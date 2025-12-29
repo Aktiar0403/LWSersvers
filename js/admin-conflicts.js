@@ -540,6 +540,7 @@ if (btn.dataset.action === "use-existing") {
   await linkServerPlayer({
     playerId,
     serverDocId: selectedServerDocId,
+    name: c.excelName,
     source: "excel-conflict"
   });
 

@@ -16,28 +16,7 @@ import {
   arrayUnion,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-/*
-Firestore structure:
 
-player_identity/{playerId}
-{
-  canonicalName: "Winter",
-  warzone: 412,
-
-  nameHistory: [
-    { name: "Winter+++", seenAt, source: "excel" },
-    { name: "WinterXXX", seenAt, source: "manual" }
-  ],
-
-  linkedDocs: [
-    "server_players/docA",
-    "server_players/docB"
-  ],
-
-  createdAt,
-  updatedAt
-}
-*/
 function generatePlayerId() {
   return "pid_" + crypto.randomUUID();
 }
