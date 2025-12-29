@@ -5,7 +5,7 @@
   <title>Buster Day – Individual Impact</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- KOBRA / LWServers base -->
+  <!-- Base styles -->
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/buster.css" />
 
@@ -17,44 +17,71 @@
 </head>
 
 <body>
+
 <div class="buster-page">
 
   <!-- =============================
-       HEADER
+       HEADER / CONTEXT
   ============================== -->
   <header class="buster-header">
     <div>
-      <h1>🎯 Buster Day – Individual Impact</h1>
+      <h1>
+        <i class="fa-solid fa-crosshairs"></i>
+        Buster Day – Individual Impact
+      </h1>
       <p class="buster-sub">
-        First Squad Power (FSP) based • Session-only • No data writes
+        First Squad Power (FSP) based • Session only • No data writes
       </p>
     </div>
   </header>
 
   <!-- =============================
-       ALLIANCE CONTEXT
+       ALLIANCE SELECTION
   ============================== -->
   <section class="buster-grid two">
+
     <div class="buster-card">
-      <h3><i class="fa-solid fa-flag"></i> My Alliance</h3>
-      <input id="myAllianceSearch" class="buster-input" placeholder="Search your alliance…" />
+      <h3>
+        <i class="fa-solid fa-flag"></i>
+        My Alliance
+      </h3>
+
+      <input
+        id="myAllianceSearch"
+        class="buster-input"
+        placeholder="Search your alliance…"
+      />
       <div id="myAllianceResults" class="buster-search-results"></div>
     </div>
 
     <div class="buster-card">
-      <h3><i class="fa-solid fa-skull-crossbones"></i> Opponent Alliance</h3>
-      <input id="oppAllianceSearch" class="buster-input" placeholder="Search opponent alliance…" />
+      <h3>
+        <i class="fa-solid fa-skull-crossbones"></i>
+        Opponent Alliance
+      </h3>
+
+      <input
+        id="oppAllianceSearch"
+        class="buster-input"
+        placeholder="Search opponent alliance…"
+      />
       <div id="oppAllianceResults" class="buster-search-results"></div>
     </div>
+
   </section>
 
   <!-- =============================
-       PLAYER CONTEXT
+       PLAYER CONTEXT (NO playerCard ID NEEDED)
   ============================== -->
   <section class="buster-card wide">
-    <h3><i class="fa-solid fa-user-ninja"></i> Your Player</h3>
+
+    <h3>
+      <i class="fa-solid fa-user-ninja"></i>
+      Your Player
+    </h3>
 
     <div class="buster-row">
+
       <select id="myPlayerSelect" class="buster-input">
         <option value="">Select yourself</option>
       </select>
@@ -66,7 +93,7 @@
 
       <label class="buster-checkbox">
         <input type="checkbox" id="manualFspToggle" />
-        Use Manual FSP (Buster only)
+        Use Manual FSP
       </label>
 
       <input
@@ -76,15 +103,18 @@
         placeholder="Manual FSP"
         disabled
       />
+
     </div>
 
     <div id="fspSourceNote" class="buster-note"></div>
+
   </section>
 
   <!-- =============================
-       IMPACT SUMMARY
+       IMPACT SUMMARY (ANALYTICS HERO)
   ============================== -->
   <section class="buster-summary">
+
     <div class="buster-summary-item can">
       <strong id="canHandleCount">0</strong>
       <span>Can Beat</span>
@@ -99,33 +129,41 @@
       <strong id="avoidCount">0</strong>
       <span>Cannot Beat</span>
     </div>
+
   </section>
 
   <!-- =============================
        ADVANCED MATCHUPS
   ============================== -->
   <section class="buster-card wide">
+
     <div class="buster-collapse-header" id="advancedToggle">
-      <span>Advanced Matchups</span>
+      <span>
+        <i class="fa-solid fa-layer-group"></i>
+        Advanced Matchups
+      </span>
       <span id="advancedArrow">▶</span>
     </div>
 
     <div id="advancedPanel">
-      <div>
+
+      <div class="advanced-group">
         <h4 class="buster-subtitle">🟢 You Can Beat</h4>
         <div id="canBeatList"></div>
       </div>
 
-      <div>
+      <div class="advanced-group">
         <h4 class="buster-subtitle">🟡 May / May Not Beat</h4>
         <div id="mayBeatList"></div>
       </div>
 
-      <div>
+      <div class="advanced-group">
         <h4 class="buster-subtitle">🔴 Cannot Beat</h4>
         <div id="cannotBeatList"></div>
       </div>
+
     </div>
+
   </section>
 
 </div>

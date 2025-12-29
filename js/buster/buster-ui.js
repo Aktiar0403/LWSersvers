@@ -23,7 +23,7 @@ const oppAllianceResults = document.getElementById("oppAllianceResults");
 
 const myPlayerSelect = document.getElementById("myPlayerSelect");
 
-const playerCard = document.getElementById("playerCard");
+
 const computedFspValue = document.getElementById("computedFspValue");
 
 const manualToggle = document.getElementById("manualFspToggle");
@@ -147,7 +147,7 @@ function onMyAllianceSelected(alliance) {
     myPlayerSelect.appendChild(opt);
   });
 
-  playerCard.style.display = "none";
+
 }
 
 function onOppAllianceSelected(alliance) {
@@ -181,7 +181,7 @@ function render() {
   );
   if (!player || !opponentPlayers.length) return;
 
-  playerCard.style.display = "block";
+
   computedFspValue.textContent =
     `${Math.round(player.fsp / 1e6)}M`;
 
