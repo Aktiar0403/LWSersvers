@@ -100,35 +100,54 @@ function hideLoader() {
 init();
 
 async function init() {
-  const snap = await getDocs(collection(db, "server_players"));
+  showLoader(); // 👈 START loader immediately
 
- ALL_PLAYERS = snap.docs.map(d => {
-  const x = d.data();
+  try {
+    const snap = await getDocs(collection(db, "server_players"));
 
-  const effectivePower = Number(
-    x.basePower ?? x.totalPower ?? 0
-  );
+    ALL_PLAYERS = snap.docs.map(d => {
+      const x = d.data();
 
-  return {
-    id: d.id,
-    name: x.name || "Unknown",
-    alliance: x.alliance || "",
-    warzone: Number(x.warzone),
-    rawPower: Number(x.totalPower ?? x.basePower ?? 0),
-    fsp: estimateFirstSquadPower(effectivePower)
-  };
-});
+      const effectivePower = Number(
+        x.basePower ?? x.totalPower ?? 0
+      );
 
-  ALL_ALLIANCES = [...new Set(ALL_PLAYERS.map(p => p.alliance))].sort();
+      return {
+        id: d.id,
+        name: x.name || "Unknown",
+        alliance: x.alliance || "",
+        warzone: Number(x.warzone),
+        rawPower: Number(x.totalPower ?? x.basePower ?? 0),
+        fsp: estimateFirstSquadPower(effectivePower)
+      };
+    });
 
-  setupAllianceSearch(myAllianceInput, myAllianceResults, onMyAllianceSelected);
-  setupAllianceSearch(oppAllianceInput, oppAllianceResults, onOppAllianceSelected);
+    ALL_ALLIANCES = [...new Set(
+      ALL_PLAYERS.map(p => p.alliance)
+    )].sort();
 
-  console.log("✅ Players loaded:", ALL_PLAYERS.length);
-  console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
+    setupAllianceSearch(
+      myAllianceInput,
+      myAllianceResults,
+      onMyAllianceSelected
+    );
 
+    setupAllianceSearch(
+      oppAllianceInput,
+      oppAllianceResults,
+      onOppAllianceSelected
+    );
 
+    console.log("✅ Players loaded:", ALL_PLAYERS.length);
+    console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
+
+  } catch (err) {
+    console.error("❌ Buster init failed", err);
+  } finally {
+    hideLoader(); // 👈 ALWAYS hide, success or fail
+  }
 }
+
 
 
 /* =============================
@@ -482,7 +501,3 @@ function renderConfidence() {
     confidenceBadge.className = "buster-badge badge-red";
   }
 }
-setTimeout(() => {
-  showLoader();
-  setTimeout(hideLoader, 2000);
-}, 500);
