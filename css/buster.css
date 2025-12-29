@@ -410,3 +410,67 @@ html, body {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+/* =============================
+   THREATS OVERVIEW
+============================= */
+
+.buster-threats {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* desktop */
+  gap: 18px;
+}
+
+/* --- Individual threat card --- */
+.buster-threat-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+
+  background: linear-gradient(
+    160deg,
+    rgba(15,23,42,0.95),
+    rgba(2,6,23,0.95)
+  );
+
+  border-radius: 18px;
+  padding: 16px 18px;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(239,68,68,0.15),
+    0 18px 36px rgba(0,0,0,0.6);
+}
+
+/* --- Primary danger (Warzone Top) --- */
+.buster-threat-card.primary {
+  box-shadow:
+    inset 0 0 0 1px rgba(239,68,68,0.35),
+    0 0 18px rgba(239,68,68,0.45),
+    0 22px 44px rgba(0,0,0,0.7);
+}
+
+/* --- Icon --- */
+.threat-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* --- Text --- */
+.threat-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fecaca;
+}
+
+.threat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ef4444;
+  margin-top: 2px;
+}
+
+.threat-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
