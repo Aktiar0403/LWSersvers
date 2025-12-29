@@ -221,6 +221,9 @@ async function loadConflicts() {
     let conflictIndex = 0;
    snap.forEach(conflictDoc => {
     conflictIndex++;
+    const conflictId = conflictDoc.id;
+    const conflictRef = conflictDoc.ref;
+
 
       const c = conflictDoc.data()
 
@@ -503,7 +506,7 @@ card
 
           if (!ok) return;
 
-          await updateDoc(conflictDoc.ref, {
+          await updateDoc(conflictRef, {
             status: "resolved",
             resolution: "ignored",
             resolvedAt: serverTimestamp()
@@ -546,7 +549,7 @@ card
           });
 
           // 3️⃣ Mark conflict resolved
-          await updateDoc(conflictDoc.ref, {
+          await updateDoc(conflictRef, {
             status: "resolved",
             resolution: "use-existing",
             resolvedPlayer: selectedServerDocId,
@@ -607,7 +610,7 @@ if (btn.dataset.action === "rename-existing") {
   }
 
   // 3️⃣ Resolve conflict
-  await updateDoc(conflictDoc.ref, {
+  await updateDoc(conflictRef, {
     status: "resolved",
     resolution: "rename-update",
     resolvedPlayer: selectedServerDocId,
@@ -664,7 +667,7 @@ if (btn.dataset.action === "create-new") {
   });
 
   // 4️⃣ Resolve conflict
-  await updateDoc(doc.ref, {
+  await updateDoc(conflictRef, {
     status: "resolved",
     resolvedAt: serverTimestamp(),
     resolution: "create-new",
