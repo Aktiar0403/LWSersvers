@@ -33,6 +33,10 @@ const fspSourceNote = document.getElementById("fspSourceNote");
 const canHandleEl = document.getElementById("canHandleCount");
 const canStallEl = document.getElementById("canStallCount");
 const avoidEl = document.getElementById("avoidCount");
+const matchupModal = document.getElementById("matchupModal");
+const modalTitle = document.getElementById("modalTitle");
+const modalBody = document.getElementById("modalBody");
+const closeModalBtn = document.getElementById("closeModal");
 
 
 
@@ -161,6 +165,23 @@ function onOppAllianceSelected(alliance) {
 myPlayerSelect.addEventListener("change", render);
 manualToggle.addEventListener("change", render);
 manualInput.addEventListener("input", render);
+document
+  .querySelector(".buster-summary-item.can")
+  .addEventListener("click", () =>
+    openMatchupModal("Can Beat", window._lastBuckets?.canBeat || [])
+  );
+
+document
+  .querySelector(".buster-summary-item.maybe")
+  .addEventListener("click", () =>
+    openMatchupModal("May / May Not Beat", window._lastBuckets?.mayBeat || [])
+  );
+
+document
+  .querySelector(".buster-summary-item.cannot")
+  .addEventListener("click", () =>
+    openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [])
+  );
 
 /* =============================
    ADVANCED PANEL TOGGLE
@@ -171,6 +192,36 @@ advancedToggle.onclick = () => {
   advancedToggle.textContent =
     (open ? "▶" : "▼") + " Advanced Matchups";
 };
+
+function openMatchupModal(title, list) {
+  modalTitle.textContent = title;
+  modalBody.innerHTML = renderAdvancedGroup(list, getCurrentFSP());
+  matchupModal.classList.remove("hidden");
+}
+
+closeModalBtn.onclick = () => {
+  matchupModal.classList.add("hidden");
+};
+
+document
+  .querySelector(".buster-modal-backdrop")
+  .onclick = closeModalBtn.onclick;
+
+
+
+
+  function getCurrentFSP() {
+  const player = myAlliancePlayers.find(
+    p => p.id === myPlayerSelect.value
+  );
+  if (!player) return 0;
+
+  if (manualToggle.checked) {
+    const v = Number(manualInput.value);
+    if (v > 0 && v <= player.fsp * MANUAL_FSP_CAP) return v;
+  }
+  return player.fsp;
+}
 
 /* =============================
    RENDER (FINAL)
@@ -225,6 +276,11 @@ function render() {
     else if (diff <= 5_000_000) mayBeat.push(p);
     else cannotBeat.push(p);
   });
+window._lastBuckets = {
+  canBeat,
+  mayBeat,
+  cannotBeat
+};
 
   /* ---- Impact Summary (COUNTS ONLY) ---- */
   canHandleEl.textContent = canBeat.length;
