@@ -372,7 +372,8 @@ const manualSearch = card.querySelector(".manual-search");
 const manualResults = card.querySelector(".manual-results");
 
 // Holds selected player for this conflict
-let manuallySelectedPlayerId = null;
+let selectedServerDocId = null; // unified selection
+
 
 // Toggle open / close
 manualToggle.addEventListener("click", () => {
@@ -409,18 +410,54 @@ manualSearch.addEventListener("input", () => {
       </span>
     `;
 
-    row.onclick = () => {
-      manualResults
-        .querySelectorAll(".manual-row")
-        .forEach(r => r.classList.remove("selected"));
+ row.onclick = () => {
+  // Clear manual highlights
+  manualResults
+    .querySelectorAll(".manual-row")
+    .forEach(r => r.classList.remove("selected"));
 
-      row.classList.add("selected");
-      manuallySelectedPlayerId = p.id;
-    };
+  // Clear radio selection (if any)
+  card
+    .querySelectorAll(".conflict-candidates input[type=radio]")
+    .forEach(r => (r.checked = false));
+
+  row.classList.add("selected");
+
+  // 🔗 Unified selection
+  selectedServerDocId = p.id;
+};
+
 
     manualResults.appendChild(row);
   });
 });
+
+
+// -----------------------------
+// RADIO → UNIFIED SELECTION
+// -----------------------------
+card
+  .querySelectorAll(".conflict-candidates input[type=radio]")
+  .forEach(radio => {
+    radio.addEventListener("change", () => {
+      if (!radio.checked) return;
+
+      // Clear manual search highlights
+      manualResults
+        .querySelectorAll(".manual-row")
+        .forEach(r => r.classList.remove("selected"));
+
+      // Close manual panel (UX clean)
+      manualPanel.classList.add("hidden");
+
+      // 🔗 Unified selection
+      selectedServerDocId = radio.value;
+    });
+
+
+
+    });
+
 
 
 
@@ -439,7 +476,7 @@ manualSearch.addEventListener("input", () => {
           const isOpen = !body.classList.contains("hidden");
           body.classList.toggle("hidden");
           chevron.textContent = isOpen ? "▸" : "▾";
-});
+  });
 
 
   // ✅ ACTION PLACEHOLDERS (LOG ONLY)
@@ -461,13 +498,13 @@ manualSearch.addEventListener("input", () => {
   }
 
  // 🔐 CONFIRM ACTION
-const selectedPlayerName =
+  const selectedPlayerName =
   picked
     .closest("label")
     ?.querySelector(".name")
     ?.textContent || "selected player";
 
-const ok = confirm(
+  const ok = confirm(
   `Use existing player?\n\n` +
   `Excel name: ${c.excelName}\n` +
   `Linked to: ${selectedPlayerName}\n\n` +
