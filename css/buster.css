@@ -382,9 +382,31 @@ html, body {
   color: #e5e7eb;
 }
 
+/* =============================
+   MODAL GRID — RESPONSIVE
+============================= */
+
 .buster-modal-body {
   margin-top: 18px;
+
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* desktop default */
   gap: 16px;
+
+  max-height: 70vh;          /* modal scroll, not page */
+  overflow-y: auto;
+  padding-right: 6px;        /* space for scrollbar */
+}
+
+@media (max-width: 768px) {
+  .buster-modal-body {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: 65vh;
+  }
+}
+
+@media (min-width: 1400px) {
+  .buster-modal-body {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
