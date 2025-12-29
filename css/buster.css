@@ -618,3 +618,42 @@ html, body {
   font-size: 14px;
   letter-spacing: 0.4px;
 }
+.site-footer {
+  background: rgba(10, 16, 24, 0.95);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 10px;
+  margin-top: 40px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #9fb0b5;
+}
+
+.footer-inner nav {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-inner a {
+  color: #00ffae;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-inner a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
