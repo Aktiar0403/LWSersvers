@@ -56,6 +56,19 @@ let missingIds = new Set();
 const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
+
+
+const advancedToggle = document.getElementById("advancedToggle");
+const advancedPanel = document.getElementById("advancedPanel");
+
+advancedToggle.onclick = () => {
+  const open = advancedPanel.style.display === "block";
+  advancedPanel.style.display = open ? "none" : "block";
+  advancedToggle.textContent =
+    (open ? "▶" : "▼") + " Advanced Matchups (tap to " +
+    (open ? "expand)" : "collapse)");
+};
+
 /* =============================
    INIT – LOAD ALL DATA ONCE
 ============================= */
@@ -181,27 +194,45 @@ document.querySelectorAll("input[name=targetBand]")
    RENDER
 ============================= */
 function render() {
-  const player = myAlliancePlayers.find(p => p.id === myPlayerSelect.value);
+  const player = myAlliancePlayers.find(
+    p => p.id === myPlayerSelect.value
+  );
+
   if (!player || !opponentPlayers.length) return;
 
+  /* =============================
+     SHOW PLAYER CARD
+  ============================== */
   playerCard.style.display = "block";
   computedFspValue.textContent =
     `${Math.round(player.fsp / 1e6)}M`;
 
+  /* =============================
+     EFFECTIVE FSP (MANUAL OVERRIDE)
+  ============================== */
   let myFSP = player.fsp;
+
   if (manualToggle.checked) {
     manualInput.disabled = false;
     const v = Number(manualInput.value);
+
     if (v > 0 && v <= player.fsp * MANUAL_FSP_CAP) {
       myFSP = v;
       fspSourceNote.textContent =
         "⚠ Manual FSP override (session only)";
+    } else {
+      fspSourceNote.textContent =
+        "⚠ Invalid manual FSP (using computed)";
     }
   } else {
     manualInput.disabled = true;
     fspSourceNote.textContent = "";
   }
 
+  /* =============================
+     BUILD OPPONENT LIST
+     (REAL + SYNTHETIC – MISSING)
+  ============================== */
   const synthetic = buildSyntheticCommanders({
     listedPlayers: opponentPlayers,
     referencePower: WARZONE_BASE_POWER
@@ -210,22 +241,76 @@ function render() {
   const allOpponents = [...opponentPlayers, ...synthetic]
     .filter(p => !missingIds.has(p.id));
 
-  const band =
-    document.querySelector("input[name=targetBand]:checked").value;
+  /* =============================
+     CLASSIFICATION (LOCKED RULES)
+     ΔFSP = oppFSP − myFSP
+  ============================== */
+  const canBeat = [];
+  const mayBeat = [];
+  const cannotBeat = [];
 
-  const result = calculatePTI({
-    myPlayer: { ...player, effectiveFSP: myFSP },
-    opponents: allOpponents,
-    band
+  allOpponents.forEach(p => {
+    const diff = p.fsp - myFSP;
+
+    if (diff <= 0) {
+      canBeat.push(p);
+    } else if (diff <= 5_000_000) {
+      mayBeat.push(p);
+    } else {
+      cannotBeat.push(p);
+    }
   });
 
-  canHandleEl.textContent = result.canHandle.length;
-  canStallEl.textContent = result.canStall.length;
-  avoidEl.textContent = result.avoid.length;
+  /* =============================
+     IMPACT SUMMARY (COUNTS ONLY)
+  ============================== */
+  canHandleEl.textContent = canBeat.length;
+  canStallEl.textContent = mayBeat.length;
+  avoidEl.textContent = cannotBeat.length;
 
-  renderTargets(result, myFSP);
+  /* =============================
+     ADVANCED MATCHUPS LISTS
+  ============================== */
+  const canBeatList = document.getElementById("canBeatList");
+  const mayBeatList = document.getElementById("mayBeatList");
+  const cannotBeatList = document.getElementById("cannotBeatList");
+
+  canBeatList.innerHTML =
+    canBeat.map(p => renderAdvancedRow(p, myFSP)).join("") ||
+    `<div class="buster-target badge-muted">None</div>`;
+
+  mayBeatList.innerHTML =
+    mayBeat.map(p => renderAdvancedRow(p, myFSP)).join("") ||
+    `<div class="buster-target badge-muted">None</div>`;
+
+  cannotBeatList.innerHTML =
+    cannotBeat.map(p => renderAdvancedRow(p, myFSP)).join("") ||
+    `<div class="buster-target badge-muted">None</div>`;
+
+  /* =============================
+     CONFIDENCE INDICATOR
+  ============================== */
   renderConfidence();
 }
+
+function renderAdvancedRow(p, myFSP) {
+  const diff = p.fsp - myFSP;
+  const diffText =
+    diff > 0 ? ` (+${Math.round(diff / 1e6)}M)` : "";
+
+  return `
+    <div class="buster-target">
+      <div>
+        <div class="buster-target-name">${p.name}</div>
+        <div class="buster-target-meta">
+          FSP ${Math.round(p.fsp / 1e6)}M${diffText}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
 
 /* =============================
    TARGETS
