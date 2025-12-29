@@ -14,7 +14,8 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  serverTimestamp
+  serverTimestamp,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 function generatePlayerId() {
@@ -56,11 +57,12 @@ export async function linkServerPlayer({
 
   await updateDoc(ref, {
     linkedDocs: arrayUnion(`server_players/${serverDocId}`),
-    nameHistory: arrayUnion({
-      name,
-      source,
-      seenAt: serverTimestamp()
-    }),
+nameHistory: arrayUnion({
+  name,
+  source,
+  seenAt: Timestamp.now()
+}),
+
     updatedAt: serverTimestamp()
   });
 }
