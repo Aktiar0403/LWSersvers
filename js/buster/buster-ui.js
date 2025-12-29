@@ -73,6 +73,20 @@ const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
 
+/* =============================
+   BUSTER LOADER CONTROL
+============================= */
+const busterLoader = document.getElementById("busterLoader");
+
+function showLoader() {
+  if (!busterLoader) return;
+  busterLoader.classList.remove("hidden");
+}
+
+function hideLoader() {
+  if (!busterLoader) return;
+  busterLoader.classList.add("hidden");
+}
 
 
 
