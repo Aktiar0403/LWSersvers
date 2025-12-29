@@ -1,7 +1,7 @@
 console.log("🧨 Buster UI loaded");
 
 /* =============================
-   FIREBASE IMPORTS
+   FIREBASE
 ============================= */
 import { dbPublic as db } from "../firebase-public.js";
 import {
@@ -10,7 +10,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import { estimateFirstSquadPower } from "../acis/acis-engine.js";
-import { calculatePTI } from "./pti-engine.js";
 import { buildSyntheticCommanders } from "./synthetic-engine.js";
 
 /* =============================
@@ -36,8 +35,10 @@ const canStallEl = document.getElementById("canStallCount");
 const avoidEl = document.getElementById("avoidCount");
 
 const targetList = document.getElementById("targetList");
-
 const confidenceBadge = document.getElementById("confidenceBadge");
+
+const advancedToggle = document.getElementById("advancedToggle");
+const advancedPanel = document.getElementById("advancedPanel");
 
 /* =============================
    STATE
@@ -48,29 +49,14 @@ let ALL_ALLIANCES = [];
 let myAlliancePlayers = [];
 let opponentPlayers = [];
 
-
-
 /* =============================
    CONFIG
 ============================= */
 const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
-
-
-const advancedToggle = document.getElementById("advancedToggle");
-const advancedPanel = document.getElementById("advancedPanel");
-
-advancedToggle.onclick = () => {
-  const open = advancedPanel.style.display === "block";
-  advancedPanel.style.display = open ? "none" : "block";
-  advancedToggle.textContent =
-    (open ? "▶" : "▼") + " Advanced Matchups (tap to " +
-    (open ? "expand)" : "collapse)");
-};
-
 /* =============================
-   INIT – LOAD ALL DATA ONCE
+   INIT
 ============================= */
 init();
 
@@ -85,28 +71,17 @@ async function init() {
       id: d.id,
       name: x.name || "Unknown",
       alliance: x.alliance,
-      effectivePower,
-      fsp: estimateFirstSquadPower(effectivePower),
-      tier: inferTierFromFSP(effectivePower)
+      fsp: estimateFirstSquadPower(effectivePower)
     };
   });
 
   ALL_ALLIANCES = [...new Set(ALL_PLAYERS.map(p => p.alliance))].sort();
 
-  setupAllianceSearch(
-    myAllianceInput,
-    myAllianceResults,
-    onMyAllianceSelected
-  );
+  setupAllianceSearch(myAllianceInput, myAllianceResults, onMyAllianceSelected);
+  setupAllianceSearch(oppAllianceInput, oppAllianceResults, onOppAllianceSelected);
 
-  setupAllianceSearch(
-    oppAllianceInput,
-    oppAllianceResults,
-    onOppAllianceSelected
-  );
-
-  console.log("✅ Loaded players:", ALL_PLAYERS.length);
-  console.log("✅ Alliances:", ALL_ALLIANCES.length);
+  console.log("✅ Players loaded:", ALL_PLAYERS.length);
+  console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
 }
 
 /* =============================
@@ -176,40 +151,40 @@ function onMyAllianceSelected(alliance) {
 
 function onOppAllianceSelected(alliance) {
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
-  missingIds.clear();
-
   render();
 }
 
 /* =============================
-   PLAYER SELECTION
+   EVENTS
 ============================= */
 myPlayerSelect.addEventListener("change", render);
 manualToggle.addEventListener("change", render);
 manualInput.addEventListener("input", render);
-document.querySelectorAll("input[name=targetBand]")
-  .forEach(r => r.addEventListener("change", render));
 
 /* =============================
-   RENDER
+   ADVANCED PANEL TOGGLE
+============================= */
+advancedToggle.onclick = () => {
+  const open = advancedPanel.style.display === "block";
+  advancedPanel.style.display = open ? "none" : "block";
+  advancedToggle.textContent =
+    (open ? "▶" : "▼") + " Advanced Matchups";
+};
+
+/* =============================
+   RENDER (FINAL)
 ============================= */
 function render() {
   const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
   );
-
   if (!player || !opponentPlayers.length) return;
 
-  /* =============================
-     SHOW PLAYER CARD
-  ============================== */
   playerCard.style.display = "block";
   computedFspValue.textContent =
     `${Math.round(player.fsp / 1e6)}M`;
 
-  /* =============================
-     EFFECTIVE FSP (MANUAL OVERRIDE)
-  ============================== */
+  /* ---- Effective FSP ---- */
   let myFSP = player.fsp;
 
   if (manualToggle.checked) {
@@ -229,21 +204,15 @@ function render() {
     fspSourceNote.textContent = "";
   }
 
-  /* =============================
-     BUILD OPPONENT LIST
-     (REAL + SYNTHETIC – MISSING)
-  ============================== */
+  /* ---- Opponents (Real + Synthetic) ---- */
   const synthetic = buildSyntheticCommanders({
     listedPlayers: opponentPlayers,
     referencePower: WARZONE_BASE_POWER
   });
 
-const missingList = document.getElementById("missingPlayerList");
+  const allOpponents = [...opponentPlayers, ...synthetic];
 
-  /* =============================
-     CLASSIFICATION (LOCKED RULES)
-     ΔFSP = oppFSP − myFSP
-  ============================== */
+  /* ---- Bucketing (LOCKED RULES) ---- */
   const canBeat = [];
   const mayBeat = [];
   const cannotBeat = [];
@@ -251,50 +220,38 @@ const missingList = document.getElementById("missingPlayerList");
   allOpponents.forEach(p => {
     const diff = p.fsp - myFSP;
 
-    if (diff <= 0) {
-      canBeat.push(p);
-    } else if (diff <= 5_000_000) {
-      mayBeat.push(p);
-    } else {
-      cannotBeat.push(p);
-    }
+    if (diff <= 0) canBeat.push(p);
+    else if (diff <= 5_000_000) mayBeat.push(p);
+    else cannotBeat.push(p);
   });
 
-  /* =============================
-     IMPACT SUMMARY (COUNTS ONLY)
-  ============================== */
+  /* ---- Impact Summary (COUNTS ONLY) ---- */
   canHandleEl.textContent = canBeat.length;
   canStallEl.textContent = mayBeat.length;
   avoidEl.textContent = cannotBeat.length;
 
-  /* =============================
-     ADVANCED MATCHUPS LISTS
-  ============================== */
-  const canBeatList = document.getElementById("canBeatList");
-  const mayBeatList = document.getElementById("mayBeatList");
-  const cannotBeatList = document.getElementById("cannotBeatList");
-
-  canBeatList.innerHTML =
-    canBeat.map(p => renderAdvancedRow(p, myFSP)).join("") ||
+  /* ---- Advanced Lists ---- */
+  document.getElementById("canBeatList").innerHTML =
+    canBeat.map(p => renderRow(p, myFSP)).join("") ||
     `<div class="buster-target badge-muted">None</div>`;
 
-  mayBeatList.innerHTML =
-    mayBeat.map(p => renderAdvancedRow(p, myFSP)).join("") ||
+  document.getElementById("mayBeatList").innerHTML =
+    mayBeat.map(p => renderRow(p, myFSP)).join("") ||
     `<div class="buster-target badge-muted">None</div>`;
 
-  cannotBeatList.innerHTML =
-    cannotBeat.map(p => renderAdvancedRow(p, myFSP)).join("") ||
+  document.getElementById("cannotBeatList").innerHTML =
+    cannotBeat.map(p => renderRow(p, myFSP)).join("") ||
     `<div class="buster-target badge-muted">None</div>`;
 
-  /* =============================
-     CONFIDENCE INDICATOR
-  ============================== */
   renderConfidence();
 }
 
-function renderAdvancedRow(p, myFSP) {
+/* =============================
+   ROW RENDER
+============================= */
+function renderRow(p, myFSP) {
   const diff = p.fsp - myFSP;
-  const diffText =
+  const diffTxt =
     diff > 0 ? ` (+${Math.round(diff / 1e6)}M)` : "";
 
   return `
@@ -302,72 +259,12 @@ function renderAdvancedRow(p, myFSP) {
       <div>
         <div class="buster-target-name">${p.name}</div>
         <div class="buster-target-meta">
-          FSP ${Math.round(p.fsp / 1e6)}M${diffText}
+          FSP ${Math.round(p.fsp / 1e6)}M${diffTxt}
         </div>
       </div>
     </div>
   `;
 }
-
-
-
-/* =============================
-   TARGETS
-============================= */
-function renderTargets(result, myFSP) {
-  const real = [...result.canHandle, ...result.canStall, ...result.avoid]
-    .filter(p => !p.isSynthetic);
-
-  const synthetic = result.canHandle
-    .concat(result.canStall, result.avoid)
-    .filter(p => p.isSynthetic);
-
-  let html = real.map(p => {
-    const diff = p.fsp - myFSP;
-    let cls = "badge-green", label = "SAFE";
-
-    if (p.tier === "whale" || p.tier === "mega") {
-      cls = "badge-red"; label = "WHALE";
-    } else if (diff > 3e6) {
-      cls = "badge-red"; label = "AVOID";
-    } else if (diff > 1e6) {
-      cls = "badge-yellow"; label = "RISK";
-    }
-
-    return `
-      <div class="buster-target">
-        <div>
-          <div class="buster-target-name">${p.name}</div>
-          <div class="buster-target-meta">
-            FSP ${Math.round(p.fsp / 1e6)}M
-          </div>
-        </div>
-        <span class="buster-badge ${cls}">${label}</span>
-      </div>
-    `;
-  }).join("");
-
-  if (synthetic.length) {
-    html += `
-      <div class="buster-target">
-        <div>
-          <div class="buster-target-name">
-            Unlisted Commanders (×${synthetic.length})
-          </div>
-          <div class="buster-target-meta">
-            Est FSP ${Math.round(synthetic[0].fsp / 1e6)}M
-          </div>
-        </div>
-        <span class="buster-badge badge-muted">ASSUMED</span>
-      </div>
-    `;
-  }
-
-  targetList.innerHTML = html || `
-    <div class="buster-target badge-muted">No targets</div>
-  `;
-}
-
 
 /* =============================
    CONFIDENCE
@@ -375,7 +272,6 @@ function renderTargets(result, myFSP) {
 function renderConfidence() {
   let score = 100;
   if (manualToggle.checked) score -= 20;
-
 
   if (score >= 80) {
     confidenceBadge.textContent = "HIGH";
@@ -387,14 +283,4 @@ function renderConfidence() {
     confidenceBadge.textContent = "LOW";
     confidenceBadge.className = "buster-badge badge-red";
   }
-}
-
-/* =============================
-   UTILS
-============================= */
-function inferTierFromFSP(fsp) {
-  if (fsp >= 62e6) return "whale";
-  if (fsp >= 54e6) return "Shark";
-  if (fsp >= 49e6) return "pirhana";
-  return "shrimps";
 }
