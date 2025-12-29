@@ -234,35 +234,58 @@ document
   }
   return player.fsp;
 }
-function computeWarzoneThreats(players) {
-  if (!players.length) {
+
+
+
+function computeWarzoneThreats(opponentAlliancePlayers) {
+  if (!opponentAlliancePlayers.length) {
     return { top: [], baseFsp: 0 };
   }
 
-  // Sort by FSP descending
-  const sorted = [...players].sort((a, b) => b.fsp - a.fsp);
+  /* -----------------------------
+     TOP 3 THREATS (by FSP)
+  ------------------------------ */
+  const sortedAlliance = [...opponentAlliancePlayers]
+    .sort((a, b) => b.fsp - a.fsp);
 
-  // Top 3 real players
-  const top = sorted.slice(0, 3).map(p => ({
+  const top = sortedAlliance.slice(0, 3).map(p => ({
     name: p.name,
     alliance: p.alliance,
     fsp: p.fsp
   }));
 
-  /* ---- Warzone Base (200th / last player of that warzone) ---- */
-  const warzone = players[0].warzone;
+  /* -----------------------------
+     BASE FSP (WARZONE 200th)
+  ------------------------------ */
+  const warzone = opponentAlliancePlayers[0].warzone;
+
+  // 🚨 HARD GUARD
+  if (!warzone && warzone !== 0) {
+    console.warn("⚠️ Warzone missing for opponent players");
+    return { top, baseFsp: 0 };
+  }
 
   const warzonePlayers = ALL_PLAYERS
-    .filter(p => p.warzone === warzone)
-    .sort((a, b) => b.fsp - a.fsp);
+    .filter(p => p.warzone === warzone && p.fsp > 0);
 
-  const basePlayer =
-    warzonePlayers[199] || warzonePlayers[warzonePlayers.length - 1];
+  if (!warzonePlayers.length) {
+    console.warn("⚠️ No players found for warzone", warzone);
+    return { top, baseFsp: 0 };
+  }
 
-  const baseFsp = basePlayer ? basePlayer.fsp : 0;
+  warzonePlayers.sort((a, b) => b.fsp - a.fsp);
+
+  const baseIndex = warzonePlayers.length >= 200
+    ? 199
+    : warzonePlayers.length - 1;
+
+  const basePlayer = warzonePlayers[baseIndex];
+
+  const baseFsp = basePlayer?.fsp ?? 0;
 
   return { top, baseFsp };
 }
+
 
 
 /* =============================
@@ -337,6 +360,15 @@ if (threatBaseEl) {
     `${Math.round(baseFsp / 1e6)}M`;
 }
 
+const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
+
+console.log("🧪 Warzone Base FSP debug:", {
+  opponentWarzone: opponentPlayers[0]?.warzone,
+  baseFsp,
+  warzonePlayerCount: ALL_PLAYERS.filter(
+    p => p.warzone === opponentPlayers[0]?.warzone
+  ).length
+});
 
   /* ---- Bucketing (LOCKED RULES) ---- */
   const canBeat = [];
