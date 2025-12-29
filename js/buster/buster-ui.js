@@ -72,6 +72,19 @@ let opponentPlayers = [];
 const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
+
+
+const loaderEl = document.getElementById("busterLoader");
+
+function showLoader() {
+  loaderEl.classList.remove("hidden");
+}
+
+function hideLoader() {
+  loaderEl.classList.add("hidden");
+}
+
+
 /* =============================
    INIT
 ============================= */
