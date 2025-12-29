@@ -29,26 +29,46 @@ const avoidEl = document.getElementById("avoidCount");
 const targetList = document.getElementById("targetList");
 const missingList = document.getElementById("missingPlayerList");
 const confidenceBadge = document.getElementById("confidenceBadge");
+const myAllianceSelect = document.getElementById("myAllianceSelect");
+const oppAllianceSelect = document.getElementById("oppAllianceSelect");
+
 
 // ---- INIT (expects globals set by your app/router) ----
-(async function init() {
-  // Expect your app to set these (same pattern as showdown)
-  const myAlliance = window.SELECTED_MY_ALLIANCE;
-  const oppAlliance = window.SELECTED_OPP_ALLIANCE;
+// =============================
+// ALLIANCE SELECTION FLOW
+// =============================
 
-  if (!myAlliance || !oppAlliance) {
-    targetList.innerHTML = `<div class="buster-target badge-muted">
-      Select alliances to begin
-    </div>`;
-    return;
-  }
+// My alliance selected
+myAllianceSelect.addEventListener("change", async () => {
+  const alliance = myAllianceSelect.value;
+  if (!alliance) return;
 
-  myAlliancePlayers = await loadAlliancePlayers(myAlliance);
-  opponentPlayers = await loadAlliancePlayers(oppAlliance);
+  // Reset dependent state
+  myAlliancePlayers = [];
+  select.innerHTML = `<option value="">Select a player</option>`;
+  card.style.display = "none";
+
+  // Load ONLY my alliance
+  myAlliancePlayers = await loadAlliancePlayers(alliance);
 
   populateMyPlayers();
+});
+
+// Opponent alliance selected
+oppAllianceSelect.addEventListener("change", async () => {
+  const alliance = oppAllianceSelect.value;
+  if (!alliance) return;
+
+  // Reset missing selections
+  missingIds.clear();
+
+  // Load ONLY opponent alliance
+  opponentPlayers = await loadAlliancePlayers(alliance);
+
   renderMissingList();
-})();
+  render(); // re-run PTI if player already selected
+});
+
 
 // ---- UI WIRING ----
 select.addEventListener("change", render);
@@ -56,6 +76,9 @@ manualToggle.addEventListener("change", render);
 manualInput.addEventListener("input", render);
 document.querySelectorAll("input[name=targetBand]")
   .forEach(r => r.addEventListener("change", render));
+
+
+
 
 // ---- HELPERS ----
 function populateMyPlayers() {
