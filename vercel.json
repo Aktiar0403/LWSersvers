@@ -14,7 +14,17 @@
       "source": "/alliance-showdown.html",
       "destination": "/alliance-showdown",
       "permanent": true
+    },
+       {
+      "source": "/buster.html",
+      "destination": "/buster",
+      "permanent": true
     }
+
+
+
+
+
   ],
 
   "rewrites": [
@@ -29,6 +39,12 @@
     {
       "source": "/alliance-showdown",
       "destination": "/alliance-showdown.html"
+    },
+     {
+      "source": "/buster",
+      "destination": "/buster.html"
     }
+
+
   ]
 }
