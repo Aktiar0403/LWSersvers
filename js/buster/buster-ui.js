@@ -107,7 +107,7 @@ async function init() {
 
 
 }
-warzone: Number(x.warzone),
+
 
 /* =============================
    SEARCHABLE ALLIANCE INPUT
