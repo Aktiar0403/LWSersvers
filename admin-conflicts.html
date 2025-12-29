@@ -7,52 +7,65 @@
 <body>
 
 <h2>⚠️ Pending Excel Conflicts</h2>
-<!-- =============================
-     GLOBAL CONFLICT GUIDE
-============================= -->
-<div class="conflict-guide" id="conflictGuide">
-  <div class="guide-header">
-    <strong>How to resolve Excel conflicts</strong>
-    <button id="toggleGuide" aria-label="Toggle guide">▼</button>
-  </div>
+<div class="guide-body">
+  <p>
+    Conflicts appear when the system cannot safely determine whether an Excel row
+    belongs to an existing player or represents a new one.
+    <br />
+    <strong>No automatic assumptions are made.</strong>
+  </p>
 
-  <div class="guide-body">
-    <p>
-      Conflicts appear when the system cannot safely decide whether an Excel row
-      belongs to an existing player or a new one.
-    </p>
+  <ul>
+    <li>
+      <strong>🟢 Use Existing</strong> — The Excel row refers to an existing player,
+      but you do <u>not</u> trust the name or power in this upload.
+      <br />
+      <em>
+        Identity is linked only.  
+        Name and power remain unchanged.
+      </em>
+    </li>
 
-    <ul>
-      <li>
-        <strong>🟢 Use Existing</strong> — Excel name refers to an existing player.
-        <br />
-        <em>No rename. No power change. Identity only.</em>
-      </li>
+    <li>
+      <strong>🟡 Rename Existing</strong> — Same player, and you trust the Excel data.
+      <br />
+      <em>
+        Player name will be updated and power will be overwritten.
+        Identity remains the same.
+      </em>
+    </li>
 
-      <li>
-        <strong>🟡 Rename Existing</strong> — Same player, but name has permanently changed.
-        <br />
-        <em>Public name will be updated.</em>
-      </li>
+    <li>
+      <strong>🔵 Create New</strong> — The Excel row represents a different player.
+      <br />
+      <em>
+        A new player and a new identity will be created.
+        Existing players are untouched.
+      </em>
+    </li>
 
-      <li>
-        <strong>🔵 Create New</strong> — Excel row is a different person.
-        <br />
-        <em>A new player will be created.</em>
-      </li>
+    <li>
+      <strong>⚫ Ignore</strong> — You are not confident enough to act.
+      <br />
+      <em>
+        No data changes. Conflict is marked resolved for now.
+      </em>
+    </li>
+  </ul>
 
-      <li>
-        <strong>⚫ Ignore</strong> — You are not sure yet.
-        <br />
-        <em>No changes will be made.</em>
-      </li>
-    </ul>
+  <p class="guide-tip">
+    <strong>Important:</strong>  
+    Always select a player (radio or search) before using any action
+    except <em>Ignore</em>.
+  </p>
 
-    <p class="guide-tip">
-      Tip: If unsure, <strong>Ignore</strong> is always the safest option.
-    </p>
-  </div>
+  <p class="guide-tip">
+    <strong>Power sanity:</strong>  
+    Candidates are filtered using realistic growth over time
+    to prevent accidental mismatches.
+  </p>
 </div>
+
 
 <div class="filter-bar">
 <div id="conflictFilters">
