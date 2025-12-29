@@ -42,8 +42,6 @@ const closeModalBtn = document.getElementById("closeModal");
 
 const confidenceBadge = document.getElementById("confidenceBadge");
 
-const advancedToggle = document.getElementById("advancedToggle");
-const advancedPanel = document.getElementById("advancedPanel");
 
 /* =============================
    STATE
@@ -183,15 +181,6 @@ document
     openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [])
   );
 
-/* =============================
-   ADVANCED PANEL TOGGLE
-============================= */
-advancedToggle.onclick = () => {
-  const open = advancedPanel.style.display === "block";
-  advancedPanel.style.display = open ? "none" : "block";
-  advancedToggle.textContent =
-    (open ? "▶" : "▼") + " Advanced Matchups";
-};
 
 function openMatchupModal(title, list) {
   modalTitle.textContent = title;
@@ -287,15 +276,7 @@ window._lastBuckets = {
   canStallEl.textContent = mayBeat.length;
   avoidEl.textContent = cannotBeat.length;
 
- /* ---- Advanced Lists (REAL + ASSUMED) ---- */
-document.getElementById("canBeatList").innerHTML =
-  renderAdvancedGroup(canBeat, myFSP);
 
-document.getElementById("mayBeatList").innerHTML =
-  renderAdvancedGroup(mayBeat, myFSP);
-
-document.getElementById("cannotBeatList").innerHTML =
-  renderAdvancedGroup(cannotBeat, myFSP);
 
 
   renderConfidence();
