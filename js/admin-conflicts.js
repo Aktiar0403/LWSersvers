@@ -490,124 +490,126 @@ card
     card.querySelectorAll("button").forEach(btn => {
    btn.addEventListener("click", async () => {
 
-    // =============================
-// IGNORE CONFLICT
-// =============================
-if (btn.dataset.action === "ignore") {
-  const ok = confirm(
-    "Ignore this conflict?\n\n" +
-    "• No player will be changed\n" +
-    "• Conflict will be marked resolved"
-  );
+            // =============================
+        // IGNORE CONFLICT
+        // =============================
+        if (btn.dataset.action === "ignore") {
+          const ok = confirm(
+            "Ignore this conflict?\n\n" +
+            "• No player will be changed\n" +
+            "• Conflict will be marked resolved"
+          );
 
-  if (!ok) return;
+          if (!ok) return;
 
-  await updateDoc(conflictDoc.ref, {
-    status: "resolved",
-    resolution: "ignored",
-    resolvedAt: serverTimestamp()
-  });
-
-  alert("Conflict ignored");
-  loadConflicts();
-  return;
-}
-// =============================
-// USE EXISTING (IDENTITY ONLY)
-// =============================
-if (btn.dataset.action === "use-existing") {
-  if (!selectedServerDocId) {
-    alert("Please select a player (radio or search) first");
-    return;
-  }
-
-  const ok = confirm(
-    "Use existing player?\n\n" +
-    "• Identity will be linked\n" +
-    "• Name will NOT change\n" +
-    "• Power will NOT change"
-  );
-
-  if (!ok) return;
-
-  // 1️⃣ Create or fetch identity
-  const { playerId } = await getOrCreateIdentity({
-    canonicalName: c.excelName,
-    warzone: c.warzone
-  });
-
-  // 2️⃣ Link selected server_players doc
-  await linkServerPlayer({
-    playerId,
-    serverDocId: selectedServerDocId,
-    name: c.excelName,
-    source: "excel-conflict"
-  });
-
-  // 3️⃣ Mark conflict resolved
-  await updateDoc(conflictDoc.ref, {
-    status: "resolved",
-    resolution: "use-existing",
-    resolvedPlayer: selectedServerDocId,
-    resolvedAt: serverTimestamp()
-  });
-
-  alert("Identity linked successfully");
-  loadConflicts();
-  return;
-}
-
-
-
-
-          // =============================
-          // OTHER ACTIONS (PLACEHOLDER)
-          // =============================
-          console.log("🧠 Admin action clicked", {
-            conflictId: doc.id,
-            action: btn.dataset.action
+          await updateDoc(conflictDoc.ref, {
+            status: "resolved",
+            resolution: "ignored",
+            resolvedAt: serverTimestamp()
           });
-        });
+
+          alert("Conflict ignored");
+          loadConflicts();
+          return;
+        }
+        // =============================
+        // USE EXISTING (IDENTITY ONLY)
+        // =============================
+        if (btn.dataset.action === "use-existing") {
+          if (!selectedServerDocId) {
+            alert("Please select a player (radio or search) first");
+            return;
+          }
+
+          const ok = confirm(
+            "Use existing player?\n\n" +
+            "• Identity will be linked\n" +
+            "• Name will NOT change\n" +
+            "• Power will NOT change"
+          );
+
+          if (!ok) return;
+
+          // 1️⃣ Create or fetch identity
+          const { playerId } = await getOrCreateIdentity({
+            canonicalName: c.excelName,
+            warzone: c.warzone
+          });
+
+          // 2️⃣ Link selected server_players doc
+          await linkServerPlayer({
+            playerId,
+            serverDocId: selectedServerDocId,
+            name: c.excelName,
+            source: "excel-conflict"
+          });
+
+          // 3️⃣ Mark conflict resolved
+          await updateDoc(conflictDoc.ref, {
+            status: "resolved",
+            resolution: "use-existing",
+            resolvedPlayer: selectedServerDocId,
+            resolvedAt: serverTimestamp()
+          });
+
+          alert("Identity linked successfully");
+          loadConflicts();
+          return;
+        }
+
+        
+
+
+
+
+                  // =============================
+                  // OTHER ACTIONS (PLACEHOLDER)
+                  // =============================
+                  console.log("🧠 Admin action clicked", {
+                    conflictId: doc.id,
+                    action: btn.dataset.action
+                  });
+                });
+              });
+
+
+          listEl.appendChild(card);
       });
 
-
-  listEl.appendChild(card);
-});
-
-   } catch (err) {
+     } catch (err) {
     console.error("Failed to load conflicts:", err);
     listEl.innerHTML = "<p>Failed to load conflicts</p>";
-  }
-}
+    }
+    }
 
-// -----------------------------
-// FILTER EVENTS
-// -----------------------------
-[wzInput, alInput].forEach(inp => {
-  if (!inp) return;
-  inp.addEventListener("input", debounce(loadConflicts, 300));
-});
-    uploadInput.addEventListener(
-  "change",
-  debounce(loadConflicts, 200)
-);
+      // -----------------------------
+      // FILTER EVENTS
+      // -----------------------------
+      [wzInput, alInput].forEach(inp => {
+        if (!inp) return;
+        inp.addEventListener("input", debounce(loadConflicts, 300));
+      });
+          uploadInput.addEventListener(
+        "change",
+        debounce(loadConflicts, 200)
+        );
 
-// -----------------------------
-// AUTH GUARD
-// -----------------------------
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    document.body.innerHTML =
-      "<h3>Unauthorized</h3><p>Please login as admin.</p>";
-    return;
-  }
+        // -----------------------------
+        // AUTH GUARD
+        // -----------------------------
+        onAuthStateChanged(auth, async (user) => {
+          if (!user) {
+            document.body.innerHTML =
+              "<h3>Unauthorized</h3><p>Please login as admin.</p>";
+            return;
+          }
 
-  try {
-    const token = await user.getIdTokenResult(true);
-    if (!token.claims.admin) {
-      document.body.innerHTML =
-        "<h3>Admin access only</h3>";
-      return;
+          try {
+            const token = await user.getIdTokenResult(true);
+            if (!token.claims.admin) {
+              document.body.innerHTML =
+                "<h3>Admin access only</h3>";
+              return;
     }
 
   
