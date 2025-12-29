@@ -359,6 +359,10 @@ if (threatBaseEl) {
     `${Math.round(baseFsp / 1e6)}M`;
 }
 
+console.log("🧪 BASE FSP CHECK", {
+  warzone: opponentPlayers.find(p => Number.isFinite(p.warzone))?.warzone,
+  baseFsp
+});
 
   /* ---- Bucketing (LOCKED RULES) ---- */
   const canBeat = [];
