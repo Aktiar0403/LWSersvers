@@ -254,3 +254,4 @@ const eff = computeCombatPower(p, cls);
     tierCounts
   };
 }
+export { estimateFirstSquadPower };
