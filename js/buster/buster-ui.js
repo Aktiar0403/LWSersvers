@@ -37,9 +37,18 @@ const matchupModal = document.getElementById("matchupModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalBody = document.getElementById("modalBody");
 const closeModalBtn = document.getElementById("closeModal");
-const threatTop1El = document.getElementById("threatTop1");
-const threatTop2El = document.getElementById("threatTop2");
-const threatTop3El = document.getElementById("threatTop3");
+const threatTop1FspEl = document.getElementById("threatTop1Fsp");
+const threatTop1AllianceEl = document.getElementById("threatTop1Alliance");
+const threatTop1RawEl = document.getElementById("threatTop1Raw");
+
+const threatTop2FspEl = document.getElementById("threatTop2Fsp");
+const threatTop2AllianceEl = document.getElementById("threatTop2Alliance");
+const threatTop2RawEl = document.getElementById("threatTop2Raw");
+
+const threatTop3FspEl = document.getElementById("threatTop3Fsp");
+const threatTop3AllianceEl = document.getElementById("threatTop3Alliance");
+const threatTop3RawEl = document.getElementById("threatTop3Raw");
+
 const threatBaseEl = document.getElementById("threatBase");
 
 
@@ -217,17 +226,20 @@ document
 }
 function computeWarzoneThreats(players) {
   if (!players.length) {
-    return { top: [], baseFsp: 0 };
+    return {
+      top: [],
+      baseFsp: estimateFirstSquadPower(WARZONE_BASE_POWER)
+    };
   }
 
-  // sort by FSP descending
-  const sorted = [...players]
-    .sort((a, b) => b.fsp - a.fsp);
+  const sorted = [...players].sort((a, b) => b.fsp - a.fsp);
 
-  // top 3 real players
-  const top = sorted.slice(0, 3).map(p => p.fsp);
+  const top = sorted.slice(0, 3).map(p => ({
+    fsp: p.fsp,
+    alliance: p.alliance,
+    rawPower: p.rawPower
+  }));
 
-  // base warzone FSP (synthetic assumption)
   const baseFsp = estimateFirstSquadPower(WARZONE_BASE_POWER);
 
   return { top, baseFsp };
@@ -275,24 +287,37 @@ function render() {
   const allOpponents = [...opponentPlayers, ...synthetic];
 
 
-/* ---- Warzone Threats (FSP) ---- */
+/* ---- Warzone Threats ---- */
 const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
 
-if (threatTop1El) {
-  threatTop1El.textContent =
-    top[0] ? `${Math.round(top[0] / 1e6)}M` : "–";
+if (top[0]) {
+  threatTop1FspEl && (threatTop1FspEl.textContent =
+    `${Math.round(top[0].fsp / 1e6)}M`);
+  threatTop1AllianceEl && (threatTop1AllianceEl.textContent =
+    top[0].alliance);
+  threatTop1RawEl && (threatTop1RawEl.textContent =
+    `Raw Power ${Math.round(top[0].rawPower / 1e6)}M`);
 }
 
-if (threatTop2El) {
-  threatTop2El.textContent =
-    top[1] ? `${Math.round(top[1] / 1e6)}M` : "–";
+if (top[1]) {
+  threatTop2FspEl && (threatTop2FspEl.textContent =
+    `${Math.round(top[1].fsp / 1e6)}M`);
+  threatTop2AllianceEl && (threatTop2AllianceEl.textContent =
+    top[1].alliance);
+  threatTop2RawEl && (threatTop2RawEl.textContent =
+    `Raw Power ${Math.round(top[1].rawPower / 1e6)}M`);
 }
 
-if (threatTop3El) {
-  threatTop3El.textContent =
-    top[2] ? `${Math.round(top[2] / 1e6)}M` : "–";
+if (top[2]) {
+  threatTop3FspEl && (threatTop3FspEl.textContent =
+    `${Math.round(top[2].fsp / 1e6)}M`);
+  threatTop3AllianceEl && (threatTop3AllianceEl.textContent =
+    top[2].alliance);
+  threatTop3RawEl && (threatTop3RawEl.textContent =
+    `Raw Power ${Math.round(top[2].rawPower / 1e6)}M`);
 }
 
+/* ---- Warzone Base (200th Player FSP) ---- */
 if (threatBaseEl) {
   threatBaseEl.textContent =
     `${Math.round(baseFsp / 1e6)}M`;
