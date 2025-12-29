@@ -392,9 +392,9 @@ function renderConfidence() {
 /* =============================
    UTILS
 ============================= */
-function inferTier(power) {
-  if (power >= 300e6) return "whale";
-  if (power >= 200e6) return "mega";
-  if (power >= 120e6) return "frontline";
-  return "depth";
+function inferTier(fsp) {
+  if (fsp >= 62e6) return "whale";
+  if (fsp >= 54e6) return "Shark";
+  if (fsp >= 49e6) return "pirhana";
+  return "shrimps";
 }
