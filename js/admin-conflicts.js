@@ -562,13 +562,6 @@ card
 
 
 
-                  // =============================
-                  // OTHER ACTIONS (PLACEHOLDER)
-                  // =============================
-                  console.log("🧠 Admin action clicked", {
-                    conflictId: doc.id,
-                    action: btn.dataset.action
-                  });
                 });
               });
 
