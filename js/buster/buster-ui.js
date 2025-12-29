@@ -80,17 +80,22 @@ init();
 async function init() {
   const snap = await getDocs(collection(db, "server_players"));
 
-  ALL_PLAYERS = snap.docs.map(d => {
-    const x = d.data();
-    const effectivePower = Number(x.basePower ?? x.totalPower ?? 0);
+ ALL_PLAYERS = snap.docs.map(d => {
+  const x = d.data();
 
-    return {
-      id: d.id,
-      name: x.name || "Unknown",
-      alliance: x.alliance,
-      fsp: estimateFirstSquadPower(effectivePower)
-    };
-  });
+  const effectivePower = Number(
+    x.basePower ?? x.totalPower ?? 0
+  );
+
+  return {
+    id: d.id,
+    name: x.name || "Unknown",
+    alliance: x.alliance || "",
+    warzone: Number(x.warzone),
+    rawPower: Number(x.totalPower ?? x.basePower ?? 0),
+    fsp: estimateFirstSquadPower(effectivePower)
+  };
+});
 
   ALL_ALLIANCES = [...new Set(ALL_PLAYERS.map(p => p.alliance))].sort();
 
@@ -149,6 +154,7 @@ function setupAllianceSearch(input, resultBox, onSelect) {
     }
   });
 }
+
 
 /* =============================
    ALLIANCE SELECTION
