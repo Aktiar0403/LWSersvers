@@ -87,7 +87,7 @@ async function init() {
       alliance: x.alliance,
       effectivePower,
       fsp: estimateFirstSquadPower(effectivePower),
-      tier: inferTier(effectivePower)
+      tier: inferTierFromFSP(effectivePower)
     };
   });
 
@@ -392,7 +392,7 @@ function renderConfidence() {
 /* =============================
    UTILS
 ============================= */
-function inferTier(fsp) {
+function inferTierFromFSP(fsp) {
   if (fsp >= 62e6) return "whale";
   if (fsp >= 54e6) return "Shark";
   if (fsp >= 49e6) return "pirhana";
