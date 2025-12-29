@@ -1,0 +1,191 @@
+/* ======================================================
+   BUSTER DAY — SHARED STYLES
+   Aligned with LWServers UI
+====================================================== */
+
+:root {
+  --buster-bg: #0b0f1a;
+  --buster-card: #131a2b;
+  --buster-border: #1f2a44;
+
+  --buster-green: #22c55e;
+  --buster-yellow: #facc15;
+  --buster-red: #ef4444;
+  --buster-muted: #94a3b8;
+
+  --buster-text: #e5e7eb;
+  --buster-sub: #9ca3af;
+}
+
+/* =============================
+   PAGE WRAPPER
+============================= */
+
+.buster-page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 16px;
+  color: var(--buster-text);
+}
+
+.buster-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.buster-subtitle {
+  font-size: 13px;
+  color: var(--buster-sub);
+  margin-bottom: 18px;
+}
+
+/* =============================
+   CARD
+============================= */
+
+.buster-card {
+  background: var(--buster-card);
+  border: 1px solid var(--buster-border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.buster-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* =============================
+   ROWS & LAYOUT
+============================= */
+
+.buster-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.buster-col {
+  flex: 1;
+  min-width: 260px;
+}
+
+/* =============================
+   INPUTS
+============================= */
+
+.buster-select,
+.buster-input {
+  width: 100%;
+  background: #0f172a;
+  border: 1px solid var(--buster-border);
+  color: var(--buster-text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.buster-input:disabled {
+  opacity: 0.6;
+}
+
+/* =============================
+   TOGGLES / RADIOS
+============================= */
+
+.buster-radio-group label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+/* =============================
+   STATUS BADGES
+============================= */
+
+.buster-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-green { background: rgba(34,197,94,.15); color: var(--buster-green); }
+.badge-yellow { background: rgba(250,204,21,.15); color: var(--buster-yellow); }
+.badge-red { background: rgba(239,68,68,.15); color: var(--buster-red); }
+.badge-muted { background: rgba(148,163,184,.15); color: var(--buster-muted); }
+
+/* =============================
+   TARGET LIST
+============================= */
+
+.buster-target {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--buster-border);
+  font-size: 13px;
+}
+
+.buster-target:last-child {
+  border-bottom: none;
+}
+
+.buster-target-name {
+  font-weight: 500;
+}
+
+.buster-target-meta {
+  font-size: 12px;
+  color: var(--buster-sub);
+}
+
+/* =============================
+   SUMMARY
+============================= */
+
+.buster-summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.buster-summary-item {
+  flex: 1;
+  min-width: 140px;
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.buster-summary-item strong {
+  display: block;
+  font-size: 18px;
+}
+
+/* =============================
+   WARNINGS
+============================= */
+
+.buster-warning {
+  font-size: 12px;
+  color: var(--buster-yellow);
+  margin-top: 6px;
+}
+
+/* =============================
+   MOBILE
+============================= */
+
+@media (max-width: 768px) {
+  .buster-row {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Buster Day Simulator | LWServers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/buster.css" />
+</head>
+
+<body>
+  <main class="buster-page">
+
+    <div class="buster-title">🎯 Individual Player Impact (Buster)</div>
+    <div class="buster-subtitle">
+      First Squad Power (FSP) based • Session-only • No data writes
+    </div>
+
+    <!-- PLAYER SELECT -->
+    <div class="buster-card">
+      <h3>Your Player</h3>
+      <select id="myPlayerSelect" class="buster-select">
+        <option value="">Select a player</option>
+      </select>
+    </div>
+
+    <!-- PLAYER CARD -->
+    <div class="buster-card" id="playerCard" style="display:none;">
+      <h3>Selected Player</h3>
+
+      <div class="buster-row">
+        <div class="buster-col">
+          <p><strong>Computed FSP:</strong> <span id="computedFspValue">—</span></p>
+        </div>
+
+        <div class="buster-col">
+          <label>
+            <input type="checkbox" id="manualFspToggle" />
+            Use Manual FSP (Buster only)
+          </label>
+
+          <input
+            type="number"
+            id="manualFspInput"
+            class="buster-input"
+            placeholder="Enter manual FSP"
+            disabled
+          />
+
+          <div id="fspSourceNote" class="buster-warning"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARGET BAND -->
+    <div class="buster-card">
+      <h3>Target Band (FSP)</h3>
+      <div class="buster-radio-group">
+        <label><input type="radio" name="targetBand" value="below" checked /> Below</label>
+        <label><input type="radio" name="targetBand" value="similar" /> Similar (±1M)</label>
+        <label><input type="radio" name="targetBand" value="above" /> Moderately Above (+1M → +3M)</label>
+      </div>
+    </div>
+
+    <!-- MISSING PLAYERS -->
+    <div class="buster-card">
+      <h3>Advanced: Mark Opponent Missing</h3>
+      <div id="missingPlayerList" class="buster-subtitle">
+        Load an opponent to mark missing players.
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="buster-card">
+      <h3>Impact Summary</h3>
+      <div class="buster-summary">
+        <div class="buster-summary-item"><strong id="canHandleCount">—</strong>Can Handle</div>
+        <div class="buster-summary-item"><strong id="canStallCount">—</strong>Can Stall</div>
+        <div class="buster-summary-item"><strong id="avoidCount">—</strong>High Risk</div>
+      </div>
+    </div>
+
+    <!-- CONFIDENCE -->
+    <div class="buster-card">
+      <h3>Simulation Confidence</h3>
+      <span id="confidenceBadge" class="buster-badge badge-muted">—</span>
+    </div>
+
+    <!-- TARGET LIST -->
+    <div class="buster-card">
+      <h3>Opponent Frontline Targets (FSP)</h3>
+      <div id="targetList">
+        <div class="buster-target badge-muted">Select a player to view targets</div>
+      </div>
+    </div>
+
+    <!-- ASSUMPTIONS -->
+    <div class="buster-card">
+      <h3>Assumptions</h3>
+      <ul class="buster-subtitle">
+        <li>All whales & top tiers assumed present unless manually marked</li>
+        <li>Frontline = First Squad Power (FSP)</li>
+        <li>Unlisted commanders are estimated from warzone base power</li>
+        <li>No data is saved or modified</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <script type="module" src="./js/buster/buster-ui.js"></script>
+</body>
+</html>
