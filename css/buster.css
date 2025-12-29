@@ -217,3 +217,80 @@
 .buster-search-item:hover {
   background: rgba(148,163,184,0.1);
 }
+/* =========================================
+   LWServers — Unified Premium Look (Buster)
+========================================= */
+
+.buster-page {
+  background: radial-gradient(
+    1200px 600px at 50% -200px,
+    rgba(34,197,94,0.12),
+    transparent 70%
+  );
+}
+
+/* --- Card refinement --- */
+.buster-card {
+  background: linear-gradient(
+    180deg,
+    rgba(15,23,42,0.95),
+    rgba(2,6,23,0.95)
+  );
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(34,197,94,0.05),
+    0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* --- Section titles --- */
+.buster-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #c7f9cc;
+}
+
+/* --- Impact summary tiles --- */
+.buster-summary-item {
+  background: linear-gradient(
+    145deg,
+    rgba(2,6,23,0.9),
+    rgba(15,23,42,0.9)
+  );
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 1px rgba(34,197,94,0.12),
+    0 10px 30px rgba(0,0,0,0.6);
+}
+
+.buster-summary-item strong {
+  color: #34f5c5;
+}
+
+/* --- Advanced toggle --- */
+.buster-collapse-header {
+  color: #9af5d0;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+}
+
+/* --- Advanced rows --- */
+.buster-target {
+  border-bottom: 1px dashed rgba(34,197,94,0.15);
+  padding: 10px 6px;
+}
+
+.buster-target-name {
+  color: #e5fff5;
+}
+
+.buster-target-meta {
+  color: #9ca3af;
+}
+
+/* --- Assumed row --- */
+.buster-assumed {
+  opacity: 0.8;
+  font-style: italic;
+}

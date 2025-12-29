@@ -231,18 +231,16 @@ function render() {
   canStallEl.textContent = mayBeat.length;
   avoidEl.textContent = cannotBeat.length;
 
-  /* ---- Advanced Lists ---- */
-  document.getElementById("canBeatList").innerHTML =
-    canBeat.map(p => renderRow(p, myFSP)).join("") ||
-    `<div class="buster-target badge-muted">None</div>`;
+ /* ---- Advanced Lists (REAL + ASSUMED) ---- */
+document.getElementById("canBeatList").innerHTML =
+  renderAdvancedGroup(canBeat, myFSP);
 
-  document.getElementById("mayBeatList").innerHTML =
-    mayBeat.map(p => renderRow(p, myFSP)).join("") ||
-    `<div class="buster-target badge-muted">None</div>`;
+document.getElementById("mayBeatList").innerHTML =
+  renderAdvancedGroup(mayBeat, myFSP);
 
-  document.getElementById("cannotBeatList").innerHTML =
-    cannotBeat.map(p => renderRow(p, myFSP)).join("") ||
-    `<div class="buster-target badge-muted">None</div>`;
+document.getElementById("cannotBeatList").innerHTML =
+  renderAdvancedGroup(cannotBeat, myFSP);
+
 
   renderConfidence();
 }
@@ -265,6 +263,30 @@ function renderRow(p, myFSP) {
       </div>
     </div>
   `;
+}
+
+function renderAdvancedGroup(list, myFSP) {
+  const real = list.filter(p => !p.isSynthetic);
+  const syntheticCount = list.filter(p => p.isSynthetic).length;
+
+  let html = real.map(p => renderRow(p, myFSP)).join("");
+
+  if (syntheticCount > 0) {
+    html += `
+      <div class="buster-target buster-assumed">
+        <div>
+          <div class="buster-target-name">
+            Assumed Commanders × ${syntheticCount}
+          </div>
+          <div class="buster-target-meta">
+            Estimated from warzone base power
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return html || `<div class="buster-target badge-muted">None</div>`;
 }
 
 
