@@ -76,7 +76,11 @@ const MANUAL_FSP_CAP = 1.25;
 /* =============================
    BUSTER LOADER CONTROL
 ============================= */
-const busterLoader = document.getElementById("busterLoader");
+let busterLoader;
+
+document.addEventListener("DOMContentLoaded", () => {
+  busterLoader = document.getElementById("busterLoader");
+});
 
 function showLoader() {
   if (!busterLoader) return;
