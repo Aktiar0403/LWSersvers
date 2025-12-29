@@ -10,6 +10,7 @@ import { db, auth } from "./firebase-config.js";
 
 import {
   collection,
+  addDoc,
   query,
   where,
   orderBy,
@@ -617,6 +618,64 @@ if (btn.dataset.action === "rename-existing") {
   loadConflicts();
   return;
 }
+// =============================
+// CREATE NEW PLAYER
+// =============================
+if (btn.dataset.action === "create-new") {
+
+  const ok = confirm(
+    `Create NEW player?\n\n` +
+    `Name: ${c.excelName}\n` +
+    `Power: ${formatPowerM(c.excelPower)}\n` +
+    `Warzone: ${c.warzone}\n` +
+    `Alliance: ${c.alliance}\n\n` +
+    `This will create a fresh player record.`
+  );
+
+  if (!ok) return;
+
+  // 1️⃣ Create server_players doc
+  const newPlayerRef = await addDoc(
+    collection(db, "server_players"),
+    {
+      name: c.excelName,
+      alliance: c.alliance,
+      warzone: c.warzone,
+      totalPower: c.excelPower,
+      basePower: c.excelPower,
+      powerSource: "confirmed",
+      importedAt: serverTimestamp(),
+      createdAt: serverTimestamp()
+    }
+  );
+
+  // 2️⃣ Create identity
+  const { playerId } = await getOrCreateIdentity({
+    canonicalName: c.excelName,
+    warzone: c.warzone
+  });
+
+  // 3️⃣ Link identity → server doc
+  await linkServerPlayer({
+    playerId,
+    serverDocId: newPlayerRef.id,
+    name: c.excelName,
+    source: "excel-create"
+  });
+
+  // 4️⃣ Resolve conflict
+  await updateDoc(doc.ref, {
+    status: "resolved",
+    resolvedAt: serverTimestamp(),
+    resolution: "create-new",
+    resolvedPlayer: newPlayerRef.id
+  });
+
+  alert("✅ New player created & conflict resolved");
+  loadConflicts();
+  return;
+}
+
 
         
 
