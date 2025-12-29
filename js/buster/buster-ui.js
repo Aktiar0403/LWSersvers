@@ -331,7 +331,7 @@ function render() {
 
 
 /* ---- Warzone Threats ---- */
-const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
+
 
 if (top[0]) {
   threatTop1NameEl && (threatTop1NameEl.textContent = top[0].name);
