@@ -474,3 +474,8 @@ html, body {
   color: #94a3b8;
   margin-top: 2px;
 }
+@media (max-width: 768px) {
+  .buster-threats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
