@@ -556,13 +556,72 @@ card
           loadConflicts();
           return;
         }
+          // =============================
+// RENAME + UPDATE POWER
+// =============================
+if (btn.dataset.action === "rename-existing") {
+  if (!selectedServerDocId) {
+    alert("Please select a player (radio or search) first");
+    return;
+  }
+
+  const ok = confirm(
+    "Rename & update power?\n\n" +
+    `New name: ${c.excelName}\n` +
+    `New power: ${formatPowerM(c.excelPower)}\n\n` +
+    "• Player name will be changed\n" +
+    "• Power will be overwritten\n" +
+    "• Identity remains the same"
+  );
+
+  if (!ok) return;
+
+  // 1️⃣ Update server_players (name + power)
+  const playerRef = doc(db, "server_players", selectedServerDocId);
+
+  await updateDoc(playerRef, {
+    name: c.excelName,
+    totalPower: c.excelPower,
+    basePower: c.excelPower,
+    powerSource: "excel",
+    lastConfirmedAt: serverTimestamp()
+  });
+
+  // 2️⃣ Append name history to identity (if exists)
+  // (Safe even if identity not yet linked)
+  try {
+    const { playerId } = await getOrCreateIdentity({
+      canonicalName: c.excelName,
+      warzone: c.warzone
+    });
+
+    await linkServerPlayer({
+      playerId,
+      serverDocId: selectedServerDocId,
+      name: c.excelName,
+      source: "excel-rename"
+    });
+  } catch (e) {
+    console.warn("Identity history update skipped:", e.message);
+  }
+
+  // 3️⃣ Resolve conflict
+  await updateDoc(conflictDoc.ref, {
+    status: "resolved",
+    resolution: "rename-update",
+    resolvedPlayer: selectedServerDocId,
+    resolvedAt: serverTimestamp()
+  });
+
+  alert("Player renamed and power updated");
+  loadConflicts();
+  return;
+}
 
         
 
 
-
-
-                });
+           });
               });
 
 
