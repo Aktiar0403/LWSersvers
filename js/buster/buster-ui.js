@@ -32,6 +32,48 @@ const confidenceBadge = document.getElementById("confidenceBadge");
 const myAllianceSelect = document.getElementById("myAllianceSelect");
 const oppAllianceSelect = document.getElementById("oppAllianceSelect");
 
+import { db } from "../firebase-config.js";
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// TEMP: load all alliances (will be optimized later)
+async function loadAlliancesFromServerPlayers() {
+  const snap = await getDocs(collection(db, "server_players"));
+
+  const set = new Set();
+  snap.docs.forEach(doc => {
+    const a = doc.data().alliance;
+    if (a) set.add(a);
+  });
+
+  return [...set].sort();
+}
+
+async function populateAllianceSelectors() {
+  const alliances = await loadAlliancesFromServerPlayers();
+
+  myAllianceSelect.innerHTML =
+    `<option value="">Select My Alliance</option>`;
+  oppAllianceSelect.innerHTML =
+    `<option value="">Select Opponent Alliance</option>`;
+
+  alliances.forEach(a => {
+    const opt1 = document.createElement("option");
+    opt1.value = a;
+    opt1.textContent = a;
+    myAllianceSelect.appendChild(opt1);
+
+    const opt2 = document.createElement("option");
+    opt2.value = a;
+    opt2.textContent = a;
+    oppAllianceSelect.appendChild(opt2);
+  });
+
+  console.log("✅ Alliances loaded:", alliances.length);
+}
+
 
 // ---- INIT (expects globals set by your app/router) ----
 // =============================
@@ -251,3 +293,4 @@ function render() {
 
   targetList.innerHTML = html;
 }
+populateAllianceSelectors();
