@@ -1,338 +1,266 @@
 /* ======================================================
-   BUSTER DAY — SHARED STYLES
-   Aligned with LWServers UI
+   BUSTER DAY — FULLSCREEN ANALYTICS UI (STANDALONE)
+   No global CSS dependencies
 ====================================================== */
 
-:root {
-  --buster-bg: #0b0f1a;
-  --buster-card: #131a2b;
-  --buster-border: #1f2a44;
+/* =============================
+   RESET / BASE
+============================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  --buster-green: #22c55e;
-  --buster-yellow: #facc15;
-  --buster-red: #ef4444;
-  --buster-muted: #94a3b8;
-
-  --buster-text: #e5e7eb;
-  --buster-sub: #9ca3af;
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #020617;
+  color: #e5e7eb;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
 /* =============================
-   PAGE WRAPPER
+   PAGE ROOT
 ============================= */
-
 .buster-page {
-  max-width: 1200px;
-  margin: auto;
-  padding: 16px;
-  color: var(--buster-text);
-}
-
-.buster-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.buster-subtitle {
-  font-size: 13px;
-  color: var(--buster-sub);
-  margin-bottom: 18px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
 }
 
 /* =============================
-   CARD
+   HEADER
 ============================= */
-
-.buster-card {
-  background: var(--buster-card);
-  border: 1px solid var(--buster-border);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 14px;
+.buster-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #ecfeff;
 }
 
-.buster-card h3 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 10px;
+.buster-sub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #94a3b8;
 }
 
 /* =============================
-   ROWS & LAYOUT
+   GRID SYSTEM
 ============================= */
+.buster-grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.buster-grid.two {
+  grid-template-columns: repeat(2, 1fr);
+}
 
 .buster-row {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.buster-col {
-  flex: 1;
-  min-width: 260px;
-}
-
-/* =============================
-   INPUTS
-============================= */
-
-.buster-select,
-.buster-input {
-  width: 100%;
-  background: #0f172a;
-  border: 1px solid var(--buster-border);
-  color: var(--buster-text);
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.buster-input:disabled {
-  opacity: 0.6;
-}
-
-/* =============================
-   TOGGLES / RADIOS
-============================= */
-
-.buster-radio-group label {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-
-/* =============================
-   STATUS BADGES
-============================= */
-
-.buster-badge {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.badge-green { background: rgba(34,197,94,.15); color: var(--buster-green); }
-.badge-yellow { background: rgba(250,204,21,.15); color: var(--buster-yellow); }
-.badge-red { background: rgba(239,68,68,.15); color: var(--buster-red); }
-.badge-muted { background: rgba(148,163,184,.15); color: var(--buster-muted); }
-
-/* =============================
-   TARGET LIST
-============================= */
-
-.buster-target {
-  display: flex;
-  justify-content: space-between;
+  gap: 14px;
   align-items: center;
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--buster-border);
-  font-size: 13px;
-}
-
-.buster-target:last-child {
-  border-bottom: none;
-}
-
-.buster-target-name {
-  font-weight: 500;
-}
-
-.buster-target-meta {
-  font-size: 12px;
-  color: var(--buster-sub);
-}
-
-/* =============================
-   SUMMARY
-============================= */
-
-.buster-summary {
-  display: flex;
-  gap: 12px;
   flex-wrap: wrap;
 }
 
-.buster-summary-item {
-  flex: 1;
-  min-width: 140px;
-  background: #0f172a;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-}
-
-.buster-summary-item strong {
-  display: block;
-  font-size: 18px;
-}
-
 /* =============================
-   WARNINGS
+   CARDS
 ============================= */
-
-.buster-warning {
-  font-size: 12px;
-  color: var(--buster-yellow);
-  margin-top: 6px;
-}
-
-/* =============================
-   MOBILE
-============================= */
-
-@media (max-width: 768px) {
-  .buster-row {
-    flex-direction: column;
-  }
-}
-/* =============================
-   SEARCHABLE ALLIANCE DROPDOWN
-============================= */
-
-.buster-search-results {
-  background: #0f172a;
-  border: 1px solid var(--buster-border);
-  border-radius: 8px;
-  margin-top: 6px;
-  max-height: 240px;
-  overflow-y: auto;
-  display: none;
-}
-
-.buster-search-item {
-  padding: 8px 10px;
-  font-size: 14px;
-  cursor: pointer;
-  border-bottom: 1px solid var(--buster-border);
-}
-
-.buster-search-item:last-child {
-  border-bottom: none;
-}
-
-.buster-search-item:hover {
-  background: rgba(148,163,184,0.1);
-}
-/* =========================================
-   LWServers — Unified Premium Look (Buster)
-========================================= */
-
-.buster-page {
-  background: radial-gradient(
-    1200px 600px at 50% -200px,
-    rgba(34,197,94,0.12),
-    transparent 70%
-  );
-}
-
-/* --- Card refinement --- */
 .buster-card {
   background: linear-gradient(
     180deg,
     rgba(15,23,42,0.95),
     rgba(2,6,23,0.95)
   );
-  border: 1px solid rgba(34,197,94,0.15);
-  border-radius: 18px;
+  border-radius: 20px;
+  padding: 18px 20px;
   box-shadow:
-    0 0 0 1px rgba(34,197,94,0.05),
-    0 10px 40px rgba(0,0,0,0.6);
+    0 0 0 1px rgba(34,197,94,0.08),
+    0 20px 40px rgba(0,0,0,0.6);
 }
 
-/* --- Section titles --- */
+.buster-card.wide {
+  margin-top: 22px;
+}
+
 .buster-card h3 {
-  font-size: 14px;
+  margin: 0 0 14px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.4px;
-  color: #c7f9cc;
+  color: #a7f3d0;
 }
 
-/* --- Impact summary tiles --- */
-.buster-summary-item {
+/* =============================
+   INPUTS
+============================= */
+.buster-input {
+  width: 100%;
+  background: #020617;
+  border: 1px solid rgba(148,163,184,0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+.buster-input::placeholder {
+  color: #64748b;
+}
+
+.buster-input:focus {
+  outline: none;
+  border-color: #34f5c5;
+  box-shadow: 0 0 0 1px rgba(52,245,197,0.4);
+}
+
+.buster-input.small {
+  width: 160px;
+}
+
+/* =============================
+   SEARCH RESULTS
+============================= */
+.buster-search-results {
+  margin-top: 6px;
+  background: #020617;
+  border-radius: 12px;
+  overflow: hidden;
+  display: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+.buster-search-item {
+  padding: 10px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.buster-search-item:hover {
+  background: rgba(34,197,94,0.12);
+}
+
+/* =============================
+   FSP DISPLAY
+============================= */
+.buster-fsp-box {
   background: linear-gradient(
-    145deg,
+    160deg,
     rgba(2,6,23,0.9),
     rgba(15,23,42,0.9)
   );
-  border-radius: 16px;
-  box-shadow:
-    inset 0 0 0 1px rgba(34,197,94,0.12),
-    0 10px 30px rgba(0,0,0,0.6);
+  border-radius: 14px;
+  padding: 10px 14px;
+  text-align: center;
+  min-width: 120px;
 }
 
-.buster-summary-item strong {
+.buster-fsp-box span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.buster-fsp-box strong {
+  display: block;
+  font-size: 20px;
   color: #34f5c5;
 }
 
-/* --- Advanced toggle --- */
-.buster-collapse-header {
-  color: #9af5d0;
+/* =============================
+   CHECKBOX
+============================= */
+.buster-checkbox {
+  display: flex;
+  gap: 8px;
   font-size: 13px;
-  letter-spacing: 0.3px;
+  align-items: center;
+  color: #cbd5f5;
 }
 
-/* --- Advanced rows --- */
-.buster-target {
-  border-bottom: 1px dashed rgba(34,197,94,0.15);
-  padding: 10px 6px;
-}
-
-.buster-target-name {
-  color: #e5fff5;
-}
-
-.buster-target-meta {
-  color: #9ca3af;
-}
-
-/* --- Assumed row --- */
-.buster-assumed {
-  opacity: 0.8;
-  font-style: italic;
-}
 /* =============================
-   BUSTER PAGE LAYOUT FIX
+   NOTE
 ============================= */
+.buster-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #facc15;
+}
 
-.buster-page {
-  max-width: 1200px;          /* 👈 key fix */
-  margin: 0 auto;
-  padding: 20px 16px 60px;
-}
-.container,
-.page {
-  max-width: none !important;
-}
-.buster-card {
-  width: 100%;
-}
 /* =============================
-   ADVANCED MATCHUP CARDS
+   IMPACT SUMMARY
 ============================= */
+.buster-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 28px;
+}
 
+.buster-summary-item {
+  border-radius: 20px;
+  padding: 22px 16px;
+  text-align: center;
+  background: linear-gradient(
+    160deg,
+    rgba(2,6,23,0.95),
+    rgba(15,23,42,0.95)
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(148,163,184,0.15),
+    0 20px 40px rgba(0,0,0,0.6);
+}
+
+.buster-summary-item strong {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.buster-summary-item span {
+  font-size: 14px;
+  letter-spacing: 0.4px;
+}
+
+.buster-summary-item.can strong { color: #22c55e; }
+.buster-summary-item.maybe strong { color: #facc15; }
+.buster-summary-item.cannot strong { color: #ef4444; }
+
+/* =============================
+   ADVANCED MATCHUPS
+============================= */
+.buster-collapse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #9af5d0;
+}
+
+#advancedPanel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+/* =============================
+   MATCHUP CARDS
+============================= */
 .buster-target {
   background: linear-gradient(
     160deg,
     rgba(15,23,42,0.95),
     rgba(2,6,23,0.95)
   );
-  border: 1px solid rgba(34,197,94,0.18);
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 10px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
+  border-radius: 18px;
+  padding: 16px 18px;
   box-shadow:
-    inset 0 0 0 1px rgba(34,197,94,0.06),
-    0 6px 20px rgba(0,0,0,0.55);
+    inset 0 0 0 1px rgba(34,197,94,0.12),
+    0 16px 32px rgba(0,0,0,0.55);
 }
+
 .buster-target-name {
   font-size: 15px;
   font-weight: 600;
@@ -340,17 +268,57 @@
 }
 
 .buster-target-meta {
+  margin-top: 4px;
   font-size: 12px;
-  margin-top: 2px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
+
 .buster-assumed {
+  border-style: dashed;
   opacity: 0.85;
   font-style: italic;
-  border-style: dashed;
 }
-#advancedPanel {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
+
+/* =============================
+   BADGES
+============================= */
+.buster-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badge-green {
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+}
+
+.badge-yellow {
+  background: rgba(250,204,21,0.15);
+  color: #facc15;
+}
+
+.badge-red {
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+}
+
+.badge-muted {
+  background: rgba(148,163,184,0.12);
+  color: #94a3b8;
+}
+
+/* =============================
+   RESPONSIVE
+============================= */
+@media (max-width: 900px) {
+  .buster-grid.two {
+    grid-template-columns: 1fr;
+  }
+
+  .buster-summary {
+    grid-template-columns: 1fr;
+  }
 }
