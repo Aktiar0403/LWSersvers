@@ -36,7 +36,7 @@ const canStallEl = document.getElementById("canStallCount");
 const avoidEl = document.getElementById("avoidCount");
 
 const targetList = document.getElementById("targetList");
-const missingList = document.getElementById("missingPlayerList");
+
 const confidenceBadge = document.getElementById("confidenceBadge");
 
 /* =============================
@@ -48,7 +48,7 @@ let ALL_ALLIANCES = [];
 let myAlliancePlayers = [];
 let opponentPlayers = [];
 
-let missingIds = new Set();
+
 
 /* =============================
    CONFIG
@@ -177,7 +177,7 @@ function onMyAllianceSelected(alliance) {
 function onOppAllianceSelected(alliance) {
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
   missingIds.clear();
-  renderMissingList();
+
   render();
 }
 
@@ -238,8 +238,7 @@ function render() {
     referencePower: WARZONE_BASE_POWER
   });
 
-  const allOpponents = [...opponentPlayers, ...synthetic]
-    .filter(p => !missingIds.has(p.id));
+const missingList = document.getElementById("missingPlayerList");
 
   /* =============================
      CLASSIFICATION (LOCKED RULES)
@@ -369,25 +368,6 @@ function renderTargets(result, myFSP) {
   `;
 }
 
-/* =============================
-   MISSING PLAYERS
-============================= */
-function renderMissingList() {
-  missingList.innerHTML = opponentPlayers.map(p => `
-    <label style="display:block;font-size:13px;">
-      <input type="checkbox" data-id="${p.id}" />
-      ${p.name}
-    </label>
-  `).join("");
-
-  missingList.querySelectorAll("input").forEach(cb => {
-    cb.onchange = () => {
-      cb.checked ? missingIds.add(cb.dataset.id)
-                 : missingIds.delete(cb.dataset.id);
-      render();
-    };
-  });
-}
 
 /* =============================
    CONFIDENCE
@@ -395,7 +375,7 @@ function renderMissingList() {
 function renderConfidence() {
   let score = 100;
   if (manualToggle.checked) score -= 20;
-  score -= missingIds.size * 5;
+
 
   if (score >= 80) {
     confidenceBadge.textContent = "HIGH";
