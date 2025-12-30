@@ -433,45 +433,58 @@ function render() {
     p => p.id === myPlayerSelect.value
   );
 
-  /* =============================
-     WARZONE THREATS (INDEPENDENT)
-     MUST RUN EVEN IF player IS NULL
-  ============================== */
-  const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
+ // =============================
+// WARZONE THREATS — STABLE
+// =============================
 
-  if (top[0]) {
-    threatTop1NameEl.textContent = top[0].name;
-    threatTop1AllianceEl.textContent =
-  `WZ ${opponentPlayers[0].warzone} · ${top[0].alliance}`;
-    threatTop1FspEl.textContent =
-      `FSP ${Math.round(top[0].fsp / 1e6)}M`;
-  }
+// Guard: warzone must be known
+if (!OPPONENT_WARZONE) return;
 
-  if (top[1]) {
-    threatTop2NameEl.textContent = top[1].name;
-   threatTop2AllianceEl.textContent =
-  `WZ ${opponentPlayers[1].warzone} · ${top[1].alliance}`;
-    threatTop2FspEl.textContent =
-      `FSP ${Math.round(top[1].fsp / 1e6)}M`;
-  }
+// Pull WARZONE-WIDE players (not alliance)
+const warzonePlayers = ALL_PLAYERS.filter(
+  p => p.warzone === OPPONENT_WARZONE && p.fsp > 0
+);
 
-  if (top[2]) {
-    threatTop3NameEl.textContent = top[2].name;
-  threatTop2AllianceEl.textContent =
-  `WZ ${opponentPlayers[2].warzone} · ${top[2].alliance}`;
-    threatTop3FspEl.textContent =
-      `FSP ${Math.round(top[2].fsp / 1e6)}M`;
-  }
+// Compute threats ONLY from warzone data
+const { top, baseFsp } = computeWarzoneThreats(warzonePlayers);
 
-  if (threatBaseEl) {
-    threatBaseEl.textContent =
-      `${Math.round(baseFsp / 1e6)}M`;
-  }
+// --- TOP 1 ---
+if (top[0]) {
+  threatTop1NameEl.textContent = top[0].name;
+  threatTop1AllianceEl.textContent = top[0].alliance;
+  threatTop1FspEl.textContent =
+    `FSP ${Math.round(top[0].fsp / 1e6)}M`;
+}
 
-  console.log("🧪 BASE FSP CHECK", {
-    warzone: opponentPlayers.find(p => Number.isFinite(p.warzone))?.warzone,
-    baseFsp
-  });
+// --- TOP 2 ---
+if (top[1]) {
+  threatTop2NameEl.textContent = top[1].name;
+  threatTop2AllianceEl.textContent = top[1].alliance;
+  threatTop2FspEl.textContent =
+    `FSP ${Math.round(top[1].fsp / 1e6)}M`;
+}
+
+// --- TOP 3 ---
+if (top[2]) {
+  threatTop3NameEl.textContent = top[2].name;
+  threatTop3AllianceEl.textContent = top[2].alliance;
+  threatTop3FspEl.textContent =
+    `FSP ${Math.round(top[2].fsp / 1e6)}M`;
+}
+
+// --- WARZONE BASE (200th) ---
+if (threatBaseEl) {
+  threatBaseEl.textContent =
+    `${Math.round(baseFsp / 1e6)}M`;
+}
+
+// --- DEBUG (now truthful) ---
+console.log("🧪 WARZONE THREAT CHECK", {
+  warzone: OPPONENT_WARZONE,
+  top3: top.map(p => `${p.name} (${p.alliance})`),
+  baseFsp
+});
+
 
   /* =============================
      STOP HERE IF player NOT CHOSEN
