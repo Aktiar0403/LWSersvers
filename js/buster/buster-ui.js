@@ -89,8 +89,6 @@ let ALL_ALLIANCES = [];
 
 let myAlliancePlayers = [];
 let opponentPlayers = [];
-let OPPONENT_WARZONE = null;
-let ACTIVE_FSP = 0;
 let UI_PHASE = "INTRO";
 // INTRO → SELECT → IDENTIFY → RESULT
 
@@ -98,7 +96,7 @@ let UI_PHASE = "INTRO";
    CONFIG
 ============================= */
 const WARZONE_BASE_POWER = 130e6;
-const MANUAL_FSP_CAP = 1.5;
+const MANUAL_FSP_CAP = 1.25;
 
 /* =============================
    LOADER HELPERS
@@ -264,7 +262,6 @@ function onMyAllianceSelected(alliance) {
 }
 
 function onOppAllianceSelected(alliance) {
-  OPPONENT_WARZONE = opponentPlayers[0]?.warzone ?? null;
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
 
   identifySection.classList.remove("hidden");
@@ -279,51 +276,30 @@ function onOppAllianceSelected(alliance) {
 myPlayerSelect.addEventListener("change", () => {
   showLoader("Evaluating frontline pressure…");
 
-
-
-
-
-
-const player = myAlliancePlayers.find(
-    p => p.id === myPlayerSelect.value
-  );
-
-  if (!player) return;
-
-  // ✅ Phase 1 responsibility
-  ACTIVE_FSP = player.fsp;
-
-  // Keep existing display behavior
-  computedFspValue.textContent =
-    `${Math.round(player.fsp / 1e6)}M`
-
-
-
-
-  setTimeout(() => {
+setTimeout(() => {
   hideLoader();
   resultSection.classList.remove("hidden");
   UI_PHASE = "RESULT";
   render();
-  }, 1000);
+}, 1000);
 
-  });
+});
 
-  //manualToggle.addEventListener("change", render);
-  //manualInput.addEventListener("input", render);
-  document
+manualToggle.addEventListener("change", render);
+manualInput.addEventListener("input", render);
+document
   .querySelector(".buster-summary-item.can")
   .addEventListener("click", () =>
     openMatchupModal("Can Beat", window._lastBuckets?.canBeat || [])
   );
 
-  document
+document
   .querySelector(".buster-summary-item.maybe")
   .addEventListener("click", () =>
     openMatchupModal("May / May Not Beat", window._lastBuckets?.mayBeat || [])
   );
 
-  document
+document
   .querySelector(".buster-summary-item.cannot")
   .addEventListener("click", () =>
     openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [])
@@ -348,19 +324,21 @@ document
 
 
   function getCurrentFSP() {
-  return ACTIVE_FSP || 0;
+  const player = myAlliancePlayers.find(
+    p => p.id === myPlayerSelect.value
+  );
+  if (!player) return 0;
+
+  if (manualToggle.checked) {
+    const v = Number(manualInput.value);
+    if (v > 0 && v <= player.fsp * MANUAL_FSP_CAP) return v;
+  }
+  return player.fsp;
 }
 
 
 
 function computeWarzoneThreats(opponentAlliancePlayers) {
-
- console.log("🧪 THREAT INPUT SIZE:", opponentAlliancePlayers.length);
-  console.log(
-    "🧪 INPUT ALLIANCES:",
-    [...new Set(opponentAlliancePlayers.map(p => p.alliance))]
-  );
-
   if (!opponentAlliancePlayers.length) {
     return { top: [], baseFsp: 0 };
   }
@@ -384,7 +362,6 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
   const warzone = opponentAlliancePlayers.find(
     p => Number.isFinite(p.warzone)
   )?.warzone;
-  console.log("🧪 RESOLVED WARZONE:", warzone);
 
   if (!Number.isFinite(warzone)) {
     console.warn("⚠️ Invalid warzone value:", warzone);
@@ -393,14 +370,6 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 
   const warzonePlayers = ALL_PLAYERS
     .filter(p => p.warzone === warzone && p.fsp > 0);
-      console.log("🧪 WARZONE PLAYER COUNT:", warzonePlayers.length);
-  console.log(
-    "🧪 WARZONE TOP 3 ALLIANCES:",
-    warzonePlayers
-      .sort((a, b) => b.fsp - a.fsp)
-      .slice(0, 3)
-      .map(p => `${p.name} (${p.alliance})`)
-  );
 
   if (!warzonePlayers.length) {
     console.warn("⚠️ No players found for warzone", warzone);
@@ -424,82 +393,19 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 ============================= */
 
 
+
 function render() {
-  console.log("PHASE 1 | ACTIVE_FSP USED:", getCurrentFSP());
-
-  if (UI_PHASE !== "RESULT") return;
-  if (!opponentPlayers.length) return;   // 🔑 only opponent required
-
-  // 🔹 Declare player ONCE, before any use
+    if (UI_PHASE !== "RESULT") return;
   const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
   );
+  if (!player || !opponentPlayers.length) return;
 
- // =============================
-// WARZONE THREATS — STABLE
-// =============================
-
-// Guard: warzone must be known
-if (!OPPONENT_WARZONE) return;
-
-// Pull WARZONE-WIDE players (not alliance)
-const warzonePlayers = ALL_PLAYERS.filter(
-  p => p.warzone === OPPONENT_WARZONE && p.fsp > 0
-);
-
-// Compute threats ONLY from warzone data
-const { top, baseFsp } = computeWarzoneThreats(warzonePlayers);
-
-// --- TOP 1 ---
-if (top[0]) {
-  threatTop1NameEl.textContent = top[0].name;
-  threatTop1AllianceEl.textContent = top[0].alliance;
-  threatTop1FspEl.textContent =
-    `FSP ${Math.round(top[0].fsp / 1e6)}M`;
-}
-
-// --- TOP 2 ---
-if (top[1]) {
-  threatTop2NameEl.textContent = top[1].name;
-  threatTop2AllianceEl.textContent = top[1].alliance;
-  threatTop2FspEl.textContent =
-    `FSP ${Math.round(top[1].fsp / 1e6)}M`;
-}
-
-// --- TOP 3 ---
-if (top[2]) {
-  threatTop3NameEl.textContent = top[2].name;
-  threatTop3AllianceEl.textContent = top[2].alliance;
-  threatTop3FspEl.textContent =
-    `FSP ${Math.round(top[2].fsp / 1e6)}M`;
-}
-
-// --- WARZONE BASE (200th) ---
-if (threatBaseEl) {
-  threatBaseEl.textContent =
-    `${Math.round(baseFsp / 1e6)}M`;
-}
-
-// --- DEBUG (now truthful) ---
-console.log("🧪 WARZONE THREAT CHECK", {
-  warzone: OPPONENT_WARZONE,
-  top3: top.map(p => `${p.name} (${p.alliance})`),
-  baseFsp
-});
-
-
-  /* =============================
-     STOP HERE IF player NOT CHOSEN
-  ============================== */
-  if (!player) return;
-
-  /* =============================
-     PLAYER-DEPENDENT LOGIC BELOW
-  ============================== */
 
   computedFspValue.textContent =
     `${Math.round(player.fsp / 1e6)}M`;
 
+  /* ---- Effective FSP ---- */
   let myFSP = player.fsp;
 
   if (manualToggle.checked) {
@@ -519,6 +425,7 @@ console.log("🧪 WARZONE THREAT CHECK", {
     fspSourceNote.textContent = "";
   }
 
+  /* ---- Opponents (Real + Synthetic) ---- */
   const synthetic = buildSyntheticCommanders({
     listedPlayers: opponentPlayers,
     referencePower: WARZONE_BASE_POWER
@@ -526,9 +433,41 @@ console.log("🧪 WARZONE THREAT CHECK", {
 
   const allOpponents = [...opponentPlayers, ...synthetic];
 
-  // (bucketing logic continues unchanged)
 
+/* ---- Warzone Threats ---- */
+const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
 
+if (top[0]) {
+  threatTop1NameEl && (threatTop1NameEl.textContent = top[0].name);
+  threatTop1AllianceEl && (threatTop1AllianceEl.textContent = top[0].alliance);
+  threatTop1FspEl && (threatTop1FspEl.textContent =
+    `FSP ${Math.round(top[0].fsp / 1e6)}M`);
+}
+
+if (top[1]) {
+  threatTop2NameEl && (threatTop2NameEl.textContent = top[1].name);
+  threatTop2AllianceEl && (threatTop2AllianceEl.textContent = top[1].alliance);
+  threatTop2FspEl && (threatTop2FspEl.textContent =
+    `FSP ${Math.round(top[1].fsp / 1e6)}M`);
+}
+
+if (top[2]) {
+  threatTop3NameEl && (threatTop3NameEl.textContent = top[2].name);
+  threatTop3AllianceEl && (threatTop3AllianceEl.textContent = top[2].alliance);
+  threatTop3FspEl && (threatTop3FspEl.textContent =
+    `FSP ${Math.round(top[2].fsp / 1e6)}M`);
+}
+
+/* ---- Warzone Base ---- */
+if (threatBaseEl) {
+  threatBaseEl.textContent =
+    `${Math.round(baseFsp / 1e6)}M`;
+}
+
+console.log("🧪 BASE FSP CHECK", {
+  warzone: opponentPlayers.find(p => Number.isFinite(p.warzone))?.warzone,
+  baseFsp
+});
 
   /* ---- Bucketing (LOCKED RULES) ---- */
   const canBeat = [];
@@ -552,7 +491,6 @@ window._lastBuckets = {
   canHandleEl.textContent = canBeat.length;
   canStallEl.textContent = mayBeat.length;
   avoidEl.textContent = cannotBeat.length;
-
 
 
 
