@@ -908,22 +908,21 @@ html, body {
   display: none;
 }
 /* =============================
-   BUSTER HEADER – MOBILE TUNING
+   BUSTER HEADER – MOBILE HEIGHT TUNING
 ============================= */
 @media (max-width: 640px) {
 
-  .buster-header h1 {
-    font-size: 22px;     /* was larger */
-    line-height: 1.2;
+  .buster-header {
+    padding-top: 12px;
+    padding-bottom: 10px;
   }
 
-  .buster-header h1 i {
-    font-size: 20px;     /* icon scales with text */
+  .buster-header h1 {
+    margin-bottom: 4px;
   }
 
   .buster-header .buster-sub {
-    font-size: 12px;
-    margin-top: 4px;
-    opacity: 0.7;
+    margin-top: 0;
   }
 }
+
