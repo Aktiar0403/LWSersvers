@@ -277,6 +277,11 @@ function onOppAllianceSelected(alliance) {
 myPlayerSelect.addEventListener("change", () => {
   showLoader("Evaluating frontline pressure…");
 
+
+
+
+
+
 const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
   );
@@ -407,11 +412,13 @@ function render() {
   console.log("PHASE 1 | ACTIVE_FSP USED:", getCurrentFSP());
 
     if (UI_PHASE !== "RESULT") return;
+
+     if (!player || !opponentPlayers.length) return;
+
   const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
   );
-  if (!player || !opponentPlayers.length) return;
-
+ 
 
   computedFspValue.textContent =
     `${Math.round(player.fsp / 1e6)}M`;
