@@ -352,6 +352,13 @@ document
 
 
 function computeWarzoneThreats(opponentAlliancePlayers) {
+
+ console.log("🧪 THREAT INPUT SIZE:", opponentAlliancePlayers.length);
+  console.log(
+    "🧪 INPUT ALLIANCES:",
+    [...new Set(opponentAlliancePlayers.map(p => p.alliance))]
+  );
+
   if (!opponentAlliancePlayers.length) {
     return { top: [], baseFsp: 0 };
   }
@@ -375,6 +382,7 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
   const warzone = opponentAlliancePlayers.find(
     p => Number.isFinite(p.warzone)
   )?.warzone;
+  console.log("🧪 RESOLVED WARZONE:", warzone);
 
   if (!Number.isFinite(warzone)) {
     console.warn("⚠️ Invalid warzone value:", warzone);
@@ -383,6 +391,14 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 
   const warzonePlayers = ALL_PLAYERS
     .filter(p => p.warzone === warzone && p.fsp > 0);
+      console.log("🧪 WARZONE PLAYER COUNT:", warzonePlayers.length);
+  console.log(
+    "🧪 WARZONE TOP 3 ALLIANCES:",
+    warzonePlayers
+      .sort((a, b) => b.fsp - a.fsp)
+      .slice(0, 3)
+      .map(p => `${p.name} (${p.alliance})`)
+  );
 
   if (!warzonePlayers.length) {
     console.warn("⚠️ No players found for warzone", warzone);
