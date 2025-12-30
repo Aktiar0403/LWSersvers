@@ -64,6 +64,19 @@ const resultSection = document.getElementById("busterResult");
 const startBusterBtn = document.getElementById("startBusterBtn");
 const loaderEl = document.getElementById("busterLoader");
 
+/* =============================
+   INITIAL UI STATE (HARD RESET)
+============================= */
+function resetUI() {
+  introSection.classList.remove("hidden");
+
+  selectSection.classList.add("hidden");
+  identifySection.classList.add("hidden");
+  resultSection.classList.add("hidden");
+
+  UI_PHASE = "INTRO";
+  resetUI();
+}
 
 
 /* =============================
