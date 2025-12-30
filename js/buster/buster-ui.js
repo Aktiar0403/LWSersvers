@@ -89,6 +89,7 @@ let ALL_ALLIANCES = [];
 
 let myAlliancePlayers = [];
 let opponentPlayers = [];
+let OPPONENT_WARZONE = null;
 let ACTIVE_FSP = 0;
 let UI_PHASE = "INTRO";
 // INTRO → SELECT → IDENTIFY → RESULT
@@ -263,6 +264,7 @@ function onMyAllianceSelected(alliance) {
 }
 
 function onOppAllianceSelected(alliance) {
+  OPPONENT_WARZONE = opponentPlayers[0]?.warzone ?? null;
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
 
   identifySection.classList.remove("hidden");
