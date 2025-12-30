@@ -1298,3 +1298,28 @@ html, body {
   opacity: 0.85;
   margin: 6px 0 0;
 }
+/* =============================
+   INTRO CARDS — COMPACT FIT
+============================= */
+
+/* Remove forced vertical centering */
+.buster-intro-card.tall {
+  justify-content: flex-start; /* was center */
+  padding: 20px 18px;          /* reduced */
+}
+
+/* Reduce padding for all intro cards */
+.buster-intro-card {
+  padding: 16px 14px;
+}
+
+/* Tighten text spacing */
+.intro-card-text p {
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+/* Reduce icon spacing */
+.intro-card-icon {
+  margin-bottom: 6px;
+}
