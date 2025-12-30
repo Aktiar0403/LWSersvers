@@ -74,6 +74,8 @@ let ALL_ALLIANCES = [];
 
 let myAlliancePlayers = [];
 let opponentPlayers = [];
+let UI_PHASE = "INTRO";
+// INTRO → SELECT → IDENTIFY → RESULT
 
 /* =============================
    CONFIG
@@ -122,6 +124,7 @@ if (startBusterBtn) {
 
       // Reveal alliance selection
       selectSection.classList.remove("hidden");
+      UI_PHASE = "SELECT";
 
       // Feedback to user (optional, simple)
       console.log(
@@ -240,9 +243,10 @@ function onMyAllianceSelected(alliance) {
 function onOppAllianceSelected(alliance) {
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
 
-  // Reveal identify phase
   identifySection.classList.remove("hidden");
+  UI_PHASE = "IDENTIFY";
 }
+
 
 
 /* =============================
@@ -251,11 +255,13 @@ function onOppAllianceSelected(alliance) {
 myPlayerSelect.addEventListener("change", () => {
   showLoader("Evaluating frontline pressure…");
 
-  setTimeout(() => {
-    hideLoader();
-    resultSection.classList.remove("hidden");
-    render();
-  }, 1000);
+setTimeout(() => {
+  hideLoader();
+  resultSection.classList.remove("hidden");
+  UI_PHASE = "RESULT";
+  render();
+}, 1000);
+
 });
 
 manualToggle.addEventListener("change", render);
@@ -364,7 +370,11 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 /* =============================
    RENDER (FINAL)
 ============================= */
+
+
+
 function render() {
+    if (UI_PHASE !== "RESULT") return;
   const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
   );
