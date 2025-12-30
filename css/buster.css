@@ -1133,3 +1133,19 @@ html, body {
   flex-direction: column;
   align-items: center;
 }
+/* =============================
+   MOBILE NAV — FORCE 2 ROWS
+============================= */
+@media (max-width: 640px) {
+
+  .site-header .nav {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px 16px;
+    width: 100%;
+  }
+
+  .site-header .nav a {
+    white-space: nowrap;
+  }
+}
