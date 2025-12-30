@@ -1642,3 +1642,32 @@ body.buster-loading .buster-cta-wrap {
 .buster-btn.hidden {
   display: none !important;
 }
+/* =============================
+   CTA HIDING FIXES
+============================= */
+
+/* Fix 1: Ensure hidden class works on any element */
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Fix 2: Direct button hiding */
+.buster-btn.hidden,
+.page .buster-btn.primary.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Fix 3: Parent wrapper hiding */
+.buster-cta-wrap.hidden {
+  display: none !important;
+}
+
+/* Fix 4: If using JavaScript to add/remove hidden class */
+[hidden] {
+  display: none !important;
+}
