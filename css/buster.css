@@ -1507,3 +1507,96 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+/* =============================
+   BUSTER INTRO — NARRATIVE MODE
+============================= */
+
+.buster-intro-card.narrative {
+  max-width: 860px;
+  margin: 28px auto;
+  padding: 26px 24px;
+}
+
+/* Header */
+.buster-briefing-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.briefing-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.briefing-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.briefing-sub {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* Story */
+.buster-briefing-story p {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+  margin: 10px 0;
+}
+
+/* Flow */
+.buster-flow-diagram {
+  margin: 22px 0;
+}
+
+.flow-node {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.flow-index {
+  font-weight: 800;
+  opacity: 0.4;
+  min-width: 32px;
+}
+
+.flow-content strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.flow-content span {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.flow-arrow {
+  text-align: center;
+  opacity: 0.4;
+  margin: 6px 0;
+}
+
+/* Verdict */
+.buster-briefing-verdict {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+}
+
+.buster-briefing-verdict .sep {
+  margin: 0 6px;
+  opacity: 0.5;
+}
+
+/* Footer line */
+.buster-briefing-footer {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  opacity: 0.85;
+}
