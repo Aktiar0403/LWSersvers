@@ -1588,10 +1588,6 @@ html, body {
   letter-spacing: 0.12em;
 }
 
-.buster-briefing-verdict .sep {
-  margin: 0 6px;
-  opacity: 0.5;
-}
 
 /* Footer line */
 .buster-briefing-footer {
