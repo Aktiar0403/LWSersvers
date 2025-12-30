@@ -1355,3 +1355,69 @@ html, body {
   grid-column: 2;
   grid-row: 1 / span 2;
 }
+/* =============================
+   SINGLE INTRO CARD
+============================= */
+
+.buster-intro-card.single {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin: 24px 0;
+
+  text-align: center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 10px 24px rgba(0,0,0,0.28);
+}
+
+.buster-intro-card.single .intro-card-icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.buster-intro-card.single strong {
+  display: block;
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+}
+
+.buster-intro-card.single p {
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: 0.9;
+  margin: 8px 0;
+}
+
+/* Steps */
+.buster-intro-steps {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+}
+
+.buster-intro-steps li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.buster-intro-steps li span {
+  font-weight: 700;
+  opacity: 0.5;
+}
+
+/* Verdict line */
+.buster-verdict {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.buster-verdict strong {
+  letter-spacing: 0.12em;
+}
