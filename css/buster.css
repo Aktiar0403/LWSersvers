@@ -1199,3 +1199,44 @@ html, body {
   background: rgba(255,255,255,0.08);
   margin: 20px 0;
 }
+/* =============================
+   INTRO FEATURE CARDS
+============================= */
+
+.buster-intro-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.buster-intro-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px 16px;
+
+  text-align: center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 8px 20px rgba(0,0,0,0.25);
+}
+
+.intro-card-icon {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.intro-card-text strong {
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+
+.intro-card-text p {
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.85;
+  margin: 0;
+}
