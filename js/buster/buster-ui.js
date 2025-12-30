@@ -493,7 +493,7 @@ function render() {
   const allOpponents = [...opponentPlayers, ...synthetic];
 
   // (bucketing logic continues unchanged)
-}
+
 
 
   /* ---- Bucketing (LOCKED RULES) ---- */
