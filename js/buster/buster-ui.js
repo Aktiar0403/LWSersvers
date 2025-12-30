@@ -96,7 +96,7 @@ let UI_PHASE = "INTRO";
    CONFIG
 ============================= */
 const WARZONE_BASE_POWER = 130e6;
-const MANUAL_FSP_CAP = 1.25;
+const MANUAL_FSP_CAP = 1.5;
 
 /* =============================
    LOADER HELPERS
@@ -276,30 +276,46 @@ function onOppAllianceSelected(alliance) {
 myPlayerSelect.addEventListener("change", () => {
   showLoader("Evaluating frontline pressure…");
 
-setTimeout(() => {
+const player = myAlliancePlayers.find(
+    p => p.id === myPlayerSelect.value
+  );
+
+  if (!player) return;
+
+  // ✅ Phase 1 responsibility
+  ACTIVE_FSP = player.fsp;
+
+  // Keep existing display behavior
+  computedFspValue.textContent =
+    `${Math.round(player.fsp / 1e6)}M`
+
+
+
+
+  setTimeout(() => {
   hideLoader();
   resultSection.classList.remove("hidden");
   UI_PHASE = "RESULT";
   render();
-}, 1000);
+  }, 1000);
 
-});
+  });
 
-manualToggle.addEventListener("change", render);
-manualInput.addEventListener("input", render);
-document
+  //manualToggle.addEventListener("change", render);
+  //manualInput.addEventListener("input", render);
+  document
   .querySelector(".buster-summary-item.can")
   .addEventListener("click", () =>
     openMatchupModal("Can Beat", window._lastBuckets?.canBeat || [])
   );
 
-document
+  document
   .querySelector(".buster-summary-item.maybe")
   .addEventListener("click", () =>
     openMatchupModal("May / May Not Beat", window._lastBuckets?.mayBeat || [])
   );
 
-document
+  document
   .querySelector(".buster-summary-item.cannot")
   .addEventListener("click", () =>
     openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [])
@@ -324,16 +340,7 @@ document
 
 
   function getCurrentFSP() {
-  const player = myAlliancePlayers.find(
-    p => p.id === myPlayerSelect.value
-  );
-  if (!player) return 0;
-
-  if (manualToggle.checked) {
-    const v = Number(manualInput.value);
-    if (v > 0 && v <= player.fsp * MANUAL_FSP_CAP) return v;
-  }
-  return player.fsp;
+  return ACTIVE_FSP || 0;
 }
 
 
@@ -395,6 +402,9 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 
 
 function render() {
+  // 🔍 PHASE 1 DEBUG — ADD THIS LINE
+  console.log("PHASE 1 | ACTIVE_FSP USED:", getCurrentFSP());
+  
     if (UI_PHASE !== "RESULT") return;
   const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
