@@ -1150,3 +1150,28 @@ html, body {
     white-space: nowrap;
   }
 }
+/* =============================
+   MOBILE NAV — SINGLE ROW SCROLL
+============================= */
+@media (max-width: 640px) {
+
+  .site-header .nav {
+    display: flex;
+    flex-wrap: nowrap;          /* 🔑 force single row */
+    overflow-x: auto;           /* 🔑 allow horizontal scroll */
+    gap: 16px;
+
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;      /* Firefox */
+  }
+
+  /* Hide scrollbar (Chrome, Safari) */
+  .site-header .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header .nav a {
+    white-space: nowrap;        /* prevent breaking text */
+    flex-shrink: 0;             /* prevent shrinking */
+  }
+}
