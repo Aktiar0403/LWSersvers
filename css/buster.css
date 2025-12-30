@@ -804,3 +804,9 @@ html, body {
     font-size: 13px;
   }
 }
+/* =============================
+   GLOBAL VISIBILITY CONTROL
+============================= */
+.hidden {
+  display: none !important;
+}
