@@ -1241,39 +1241,42 @@ html, body {
   margin: 0;
 }
 /* =============================
-   INTRO CARDS — 1 + 2 LAYOUT
+   INTRO CARDS — TALL + STACKED
 ============================= */
 
-.buster-intro-cards {
-  display: flex;
-  flex-direction: column;
+.buster-intro-cards.split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
   gap: 16px;
   margin: 28px 0;
 }
 
-/* Base card */
+/* Tall primary card */
+.buster-intro-card.tall {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 24px;
+}
+
+/* Right-side stack */
+.buster-intro-side {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Base card (shared) */
 .buster-intro-card {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
-  padding: 20px 18px;
+  padding: 18px 16px;
   text-align: center;
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.05),
     0 10px 24px rgba(0,0,0,0.28);
-}
-
-/* Primary (top) card */
-.buster-intro-card.primary {
-  padding: 26px 22px;
-}
-
-/* Sub cards row */
-.buster-intro-subcards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
 }
 
 /* Icon */
@@ -1291,7 +1294,7 @@ html, body {
 
 .intro-card-text p {
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.45;
   opacity: 0.85;
-  margin: 0;
+  margin: 6px 0 0;
 }
