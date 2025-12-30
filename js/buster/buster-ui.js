@@ -557,3 +557,106 @@ function renderConfidence() {
     confidenceBadge.className = "buster-badge badge-red";
   }
 }
+/* =============================
+   BUSTER WEEKLY COUNTDOWN (IST)
+============================= */
+
+(function initBusterCountdown() {
+  const titleEl = document.getElementById("countdownTitle");
+  const timerEl = document.getElementById("countdownTimer");
+  const countdownBox = document.getElementById("busterCountdown");
+  const ctaBtn = document.getElementById("startBusterBtn");
+
+  if (!titleEl || !timerEl || !countdownBox) return;
+
+  // IST offset in minutes
+  const IST_OFFSET = 330;
+
+  function nowIST() {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    return new Date(utc + IST_OFFSET * 60000);
+  }
+
+  function getNextSaturday730(istNow) {
+    const d = new Date(istNow);
+    const day = d.getDay(); // 0=Sun ... 6=Sat
+
+    const daysUntilSaturday =
+      day <= 6 ? (6 - day) : 0;
+
+    d.setDate(d.getDate() + daysUntilSaturday);
+    d.setHours(7, 30, 0, 0);
+
+    // If it's already past Saturday 7:30, move to next week
+    if (istNow >= d) {
+      d.setDate(d.getDate() + 7);
+    }
+
+    return d;
+  }
+
+  function isBusterLive(istNow) {
+    const start = new Date(istNow);
+    const day = start.getDay();
+
+    // Saturday
+    if (day === 6) {
+      const startTime = new Date(start);
+      startTime.setHours(7, 30, 0, 0);
+      return istNow >= startTime;
+    }
+
+    // Sunday
+    if (day === 0) {
+      const endTime = new Date(start);
+      endTime.setHours(7, 30, 0, 0);
+      return istNow < endTime;
+    }
+
+    return false;
+  }
+
+  function format(ms) {
+    const s = Math.floor(ms / 1000);
+    const d = Math.floor(s / 86400);
+    const h = Math.floor((s % 86400) / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+
+    return `${d}d ${h}h ${m}m ${sec}s`;
+  }
+
+  function tick() {
+    const istNow = nowIST();
+
+    if (isBusterLive(istNow)) {
+      // BUSTER LIVE
+      titleEl.textContent = "🔥 Buster Day Live";
+      countdownBox.classList.add("buster-live");
+      ctaBtn && ctaBtn.classList.add("buster-live");
+
+      // End is Sunday 7:30 AM IST
+      const end = new Date(istNow);
+      end.setDate(end.getDate() + (end.getDay() === 6 ? 1 : 0));
+      end.setHours(7, 30, 0, 0);
+
+      const remaining = end - istNow;
+      timerEl.textContent = remaining > 0
+        ? `Ends in ${format(remaining)}`
+        : "Ending…";
+
+    } else {
+      // COUNTDOWN MODE
+      titleEl.textContent = "Next Buster Day";
+      countdownBox.classList.remove("buster-live");
+      ctaBtn && ctaBtn.classList.remove("buster-live");
+
+      const next = getNextSaturday730(istNow);
+      timerEl.textContent = format(next - istNow);
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();

@@ -855,3 +855,8 @@ html, body {
   color: #ff5252;
   text-shadow: 0 0 12px rgba(255,82,82,0.6);
 }
+/* CTA highlight during Buster Day */
+.buster-live.buster-btn {
+  box-shadow: 0 0 16px rgba(255,82,82,0.6);
+  border-color: #ff5252;
+}
