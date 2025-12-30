@@ -73,24 +73,6 @@ const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
 
-/* =============================
-   BUSTER LOADER CONTROL
-============================= */
-let busterLoader = null;
-
-document.addEventListener("DOMContentLoaded", () => {
-  busterLoader = document.getElementById("busterLoader");
-});
-
-function showLoader() {
-  if (!busterLoader) return;
-  busterLoader.classList.remove("hidden");
-}
-
-function hideLoader() {
-  if (!busterLoader) return;
-  busterLoader.classList.add("hidden");
-}
 
 
 
@@ -100,54 +82,35 @@ function hideLoader() {
 init();
 
 async function init() {
-  showLoader(); // 👈 START loader immediately
+  const snap = await getDocs(collection(db, "server_players"));
 
-  try {
-    const snap = await getDocs(collection(db, "server_players"));
+ ALL_PLAYERS = snap.docs.map(d => {
+  const x = d.data();
 
-    ALL_PLAYERS = snap.docs.map(d => {
-      const x = d.data();
+  const effectivePower = Number(
+    x.basePower ?? x.totalPower ?? 0
+  );
 
-      const effectivePower = Number(
-        x.basePower ?? x.totalPower ?? 0
-      );
+  return {
+    id: d.id,
+    name: x.name || "Unknown",
+    alliance: x.alliance || "",
+    warzone: Number(x.warzone),
+    rawPower: Number(x.totalPower ?? x.basePower ?? 0),
+    fsp: estimateFirstSquadPower(effectivePower)
+  };
+});
 
-      return {
-        id: d.id,
-        name: x.name || "Unknown",
-        alliance: x.alliance || "",
-        warzone: Number(x.warzone),
-        rawPower: Number(x.totalPower ?? x.basePower ?? 0),
-        fsp: estimateFirstSquadPower(effectivePower)
-      };
-    });
+  ALL_ALLIANCES = [...new Set(ALL_PLAYERS.map(p => p.alliance))].sort();
 
-    ALL_ALLIANCES = [...new Set(
-      ALL_PLAYERS.map(p => p.alliance)
-    )].sort();
+  setupAllianceSearch(myAllianceInput, myAllianceResults, onMyAllianceSelected);
+  setupAllianceSearch(oppAllianceInput, oppAllianceResults, onOppAllianceSelected);
 
-    setupAllianceSearch(
-      myAllianceInput,
-      myAllianceResults,
-      onMyAllianceSelected
-    );
+  console.log("✅ Players loaded:", ALL_PLAYERS.length);
+  console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
 
-    setupAllianceSearch(
-      oppAllianceInput,
-      oppAllianceResults,
-      onOppAllianceSelected
-    );
 
-    console.log("✅ Players loaded:", ALL_PLAYERS.length);
-    console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
-
-  } catch (err) {
-    console.error("❌ Buster init failed", err);
-  } finally {
-    hideLoader(); // 👈 ALWAYS hide, success or fail
-  }
 }
-
 
 
 /* =============================
