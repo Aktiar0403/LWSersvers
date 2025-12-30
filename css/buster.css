@@ -819,3 +819,39 @@ html, body {
 .page > footer {
   margin-top: auto;
 }
+/* =============================
+   BUSTER COUNTDOWN
+============================= */
+.buster-countdown {
+  text-align: center;
+  margin: 20px 0 28px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.countdown-title {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
+.countdown-timer {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0;
+  color: #00ffc8;
+}
+
+.countdown-sub {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* Buster Day highlight */
+.buster-live .countdown-timer {
+  color: #ff5252;
+  text-shadow: 0 0 12px rgba(255,82,82,0.6);
+}
