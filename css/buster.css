@@ -926,3 +926,46 @@ html, body {
   }
 }
 
+/* =============================
+   CTA — BASE STYLE POLISH
+============================= */
+.buster-btn.primary {
+  position: relative;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+  will-change: transform;
+}
+/* Desktop hover */
+@media (hover: hover) and (pointer: fine) {
+  .buster-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 255, 200, 0.35);
+  }
+}
+/* Press / tap feedback */
+.buster-btn.primary:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+/* Clean mobile tap feel */
+.buster-btn {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+/* CTA boost during Buster Day */
+.buster-btn.primary.buster-live {
+  box-shadow:
+    0 0 0 rgba(0,0,0,0),
+    0 0 16px rgba(255, 82, 82, 0.5);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .buster-btn.primary.buster-live:hover {
+    box-shadow:
+      0 0 20px rgba(255, 82, 82, 0.75),
+      0 8px 22px rgba(255, 82, 82, 0.45);
+  }
+}
