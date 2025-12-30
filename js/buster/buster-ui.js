@@ -541,11 +541,6 @@ function renderAdvancedGroup(list, myFSP) {
   return html || `<div class="buster-target badge-muted">None</div>`;
 }
 
-
-
-
-
-
 /* =============================
    CONFIDENCE
 ============================= */
