@@ -1175,3 +1175,27 @@ html, body {
     flex-shrink: 0;             /* prevent shrinking */
   }
 }
+.buster-intro-steps {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.buster-intro-steps li {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.step-number {
+  font-weight: 800;
+  opacity: 0.4;
+  min-width: 32px;
+}
+
+.buster-divider {
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 20px 0;
+}
