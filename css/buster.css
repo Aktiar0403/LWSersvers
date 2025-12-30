@@ -1608,3 +1608,37 @@ html, body {
   justify-content: center;
   margin: 32px 0 48px;
 }
+/* =============================
+   BUSTER LOADER — HARD LOCK
+============================= */
+.buster-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(5, 10, 18, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+/* Hidden means truly gone */
+.buster-loader.hidden {
+  display: none !important;
+}
+/* =============================
+   CTA vs LOADER — COLLISION FIX
+============================= */
+
+/* If loader is visible, CTA must be gone */
+body.buster-loading .buster-cta-wrap {
+  display: none !important;
+}
+
+/* Safety: hidden means hidden */
+.buster-cta-wrap.hidden,
+.buster-btn.hidden {
+  display: none !important;
+}
