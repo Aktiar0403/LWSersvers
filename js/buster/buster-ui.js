@@ -89,6 +89,7 @@ let ALL_ALLIANCES = [];
 
 let myAlliancePlayers = [];
 let opponentPlayers = [];
+let ACTIVE_FSP = 0;
 let UI_PHASE = "INTRO";
 // INTRO → SELECT → IDENTIFY → RESULT
 
@@ -404,7 +405,7 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 function render() {
   // 🔍 PHASE 1 DEBUG — ADD THIS LINE
   console.log("PHASE 1 | ACTIVE_FSP USED:", getCurrentFSP());
-  
+
     if (UI_PHASE !== "RESULT") return;
   const player = myAlliancePlayers.find(
     p => p.id === myPlayerSelect.value
