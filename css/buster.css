@@ -969,3 +969,90 @@ html, body {
       0 8px 22px rgba(255, 82, 82, 0.45);
   }
 }
+/* =============================
+   BUSTER CTA — COMMAND TRIGGER
+============================= */
+
+.buster-btn.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 18px 34px;
+  border-radius: 999px; /* pill / trigger feel */
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(0,255,200,0.25),
+      rgba(0,255,200,0.08)
+    );
+
+  border: 1px solid rgba(0,255,200,0.35);
+
+  color: #eafff9;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .buster-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 40px rgba(0,255,200,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+    filter: brightness(1.05);
+  }
+}
+.buster-btn.primary:active {
+  transform: translateY(0) scale(0.96);
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.55),
+    inset 0 2px 6px rgba(0,0,0,0.4);
+}
+.buster-btn.primary.buster-live {
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(255,82,82,0.35),
+      rgba(255,82,82,0.12)
+    );
+
+  border-color: rgba(255,82,82,0.55);
+
+  box-shadow:
+    0 0 24px rgba(255,82,82,0.6),
+    0 14px 40px rgba(255,82,82,0.35);
+}
+.buster-btn.primary.buster-live {
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(255,82,82,0.35),
+      rgba(255,82,82,0.12)
+    );
+
+  border-color: rgba(255,82,82,0.55);
+
+  box-shadow:
+    0 0 24px rgba(255,82,82,0.6),
+    0 14px 40px rgba(255,82,82,0.35);
+}
+@media (max-width: 640px) {
+  .buster-btn.primary {
+    padding: 16px 26px;
+    font-size: 15px;
+  }
+}
