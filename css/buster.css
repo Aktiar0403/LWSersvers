@@ -1323,3 +1323,10 @@ html, body {
 .intro-card-icon {
   margin-bottom: 6px;
 }
+/* =============================
+   INTRO CARD — VERDICT ONE LINE
+============================= */
+.buster-verdict-line {
+  display: inline-block;
+  white-space: nowrap;
+}
