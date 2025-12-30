@@ -1127,3 +1127,9 @@ html, body {
     font-size: 13px;
   }
 }
+/* Center only the CTA */
+.buster-intro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
