@@ -860,3 +860,50 @@ html, body {
   box-shadow: 0 0 16px rgba(255,82,82,0.6);
   border-color: #ff5252;
 }
+/* =============================
+   STICKY BUSTER CLOCK
+============================= */
+#busterCountdown {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+/* HERO CLOCK (INTRO MODE) */
+#busterCountdown {
+  margin: 18px auto 28px;
+  max-width: 720px;
+}
+
+#busterCountdown .countdown-timer {
+  font-size: 34px;
+}
+
+#busterCountdown .countdown-title {
+  font-size: 14px;
+}
+
+#busterCountdown .countdown-sub {
+  font-size: 12px;
+}
+/* COMPACT CLOCK MODE */
+#busterCountdown.compact {
+  max-width: 100%;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+#busterCountdown.compact .countdown-timer {
+  font-size: 18px;
+}
+
+#busterCountdown.compact .countdown-title {
+  font-size: 11px;
+}
+
+#busterCountdown.compact .countdown-sub {
+  display: none;
+}

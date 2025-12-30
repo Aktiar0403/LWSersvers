@@ -73,6 +73,8 @@ function resetUI() {
   selectSection.classList.add("hidden");
   identifySection.classList.add("hidden");
   resultSection.classList.add("hidden");
+  setClockCompact(false);
+
 
   UI_PHASE = "INTRO";
   resetUI();
@@ -114,6 +116,11 @@ function hideLoader() {
 }
 
 
+function setClockCompact(isCompact) {
+  const clock = document.getElementById("busterCountdown");
+  if (!clock) return;
+  clock.classList.toggle("compact", isCompact);
+}
 
 /* =============================
    BUSTER START FLOW
@@ -123,6 +130,7 @@ if (startBusterBtn) {
 
     // Hide intro
     introSection.classList.add("hidden");
+    setClockCompact(true);
 
     // Fake 1s anticipation loader
     showLoader("Initializing Buster Intelligence…");
