@@ -88,11 +88,41 @@
       </p>
     </div>
   </header>
+<!-- =============================
+     BUSTER INTRO / GUIDE
+============================= -->
+<section id="busterIntro" class="buster-intro">
+
+  <div class="buster-intro-card">
+    <h2>
+      <i class="fa-solid fa-bolt"></i>
+      What is Buster?
+    </h2>
+
+    <p>
+      Buster simulates <strong>First Squad Power (FSP)</strong> pressure
+      to help you decide whether engaging an opponent alliance is safe,
+      risky, or a bad idea.
+    </p>
+
+    <ul class="buster-intro-points">
+      <li>⚔️ Evaluates frontline pressure</li>
+      <li>🧠 Highlights top 3 threats</li>
+      <li>📊 Shows CAN / MAY / CAN’T outcomes</li>
+    </ul>
+
+    <button id="startBusterBtn" class="buster-btn primary">
+      ⚔️ Initiate Buster
+    </button>
+  </div>
+
+</section>
 
 
   <!-- =============================
        ALLIANCE SELECTION
   ============================== -->
+  <section id="busterSelect" class="buster-phase hidden">
   <section class="buster-grid two">
 
     <div class="buster-card">
@@ -124,10 +154,12 @@
     </div>
 
   </section>
-
+</section>
   <!-- =============================
        PLAYER CONTEXT (NO playerCard ID NEEDED)
   ============================== -->
+ 
+ <section id="busterIdentify" class="buster-phase hidden">
   <section class="buster-card wide">
 
     <h3>
@@ -162,11 +194,12 @@
     </div>
 
     <div id="fspSourceNote" class="buster-note"></div>
-
+</section>
   </section>
 <!-- =============================
      THREATS OVERVIEW
 ============================= -->
+<section id="busterResult" class="buster-phase hidden">
 <section class="buster-threats">
 
   <div class="buster-threat-card primary">
@@ -251,7 +284,7 @@
   </div>
 </section>
 
-
+</section>
 
 
 </div>

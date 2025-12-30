@@ -1,4 +1,4 @@
-console.log("🧨 Buster UI loaded");
+console.log("🧨 buster-ui.js ");
 
 /* =============================
    FIREBASE
@@ -50,11 +50,20 @@ const threatTop3AllianceEl = document.getElementById("threatTop3Alliance");
 const threatTop3FspEl = document.getElementById("threatTop3Fsp");
 
 const threatBaseEl = document.getElementById("threatBase");
-
-
-
-
 const confidenceBadge = document.getElementById("confidenceBadge");
+
+
+/* =============================
+   UI PHASE ELEMENTS
+============================= */
+const introSection = document.getElementById("busterIntro");
+const selectSection = document.getElementById("busterSelect");
+const identifySection = document.getElementById("busterIdentify");
+const resultSection = document.getElementById("busterResult");
+
+const startBusterBtn = document.getElementById("startBusterBtn");
+const loaderEl = document.getElementById("busterLoader");
+
 
 
 /* =============================
@@ -72,14 +81,63 @@ let opponentPlayers = [];
 const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
+/* =============================
+   LOADER HELPERS
+============================= */
+function showLoader(text) {
+  if (!loaderEl) return;
+  loaderEl.classList.remove("hidden");
+  if (text) {
+    const t = loaderEl.querySelector(".loader-text");
+    if (t) t.textContent = text;
+  }
+}
 
+function hideLoader() {
+  if (!loaderEl) return;
+  loaderEl.classList.add("hidden");
+}
+
+
+
+/* =============================
+   BUSTER START FLOW
+============================= */
+if (startBusterBtn) {
+  startBusterBtn.addEventListener("click", async () => {
+
+    // Hide intro
+    introSection.classList.add("hidden");
+
+    // Fake 1s anticipation loader
+    showLoader("Initializing Buster Intelligence…");
+
+    setTimeout(async () => {
+      showLoader("Loading battlefield data…");
+
+      // REAL DATA LOAD
+      await init();
+
+      hideLoader();
+
+      // Reveal alliance selection
+      selectSection.classList.remove("hidden");
+
+      // Feedback to user (optional, simple)
+      console.log(
+        `Loaded ${ALL_PLAYERS.length} players across ${ALL_ALLIANCES.length} alliances`
+      );
+
+    }, 1000);
+  });
+}
 
 
 
 /* =============================
    INIT
 ============================= */
-init();
+
 
 async function init() {
   const snap = await getDocs(collection(db, "server_players"));
@@ -181,13 +239,25 @@ function onMyAllianceSelected(alliance) {
 
 function onOppAllianceSelected(alliance) {
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
-  render();
+
+  // Reveal identify phase
+  identifySection.classList.remove("hidden");
 }
+
 
 /* =============================
    EVENTS
 ============================= */
-myPlayerSelect.addEventListener("change", render);
+myPlayerSelect.addEventListener("change", () => {
+  showLoader("Evaluating frontline pressure…");
+
+  setTimeout(() => {
+    hideLoader();
+    resultSection.classList.remove("hidden");
+    render();
+  }, 1000);
+});
+
 manualToggle.addEventListener("change", render);
 manualInput.addEventListener("input", render);
 document
