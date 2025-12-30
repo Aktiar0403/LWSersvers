@@ -1330,3 +1330,28 @@ html, body {
   display: inline-block;
   white-space: nowrap;
 }
+/* =============================
+   INTRO CARDS — 2x2 COMPACT GRID
+============================= */
+
+.buster-intro-cards.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;     /* two equal halves */
+  grid-template-rows: auto auto;      /* two rows */
+  gap: 16px;
+}
+
+/* Tall card spans two rows on left */
+.buster-intro-card.tall {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+/* Right side stack occupies right column */
+.buster-intro-side {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 16px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
