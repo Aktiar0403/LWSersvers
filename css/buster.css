@@ -709,3 +709,98 @@ html, body {
   }
 }
 
+/* =========================
+   BUSTER — HEADER / NAV (SCOPED)
+========================= */
+
+.page .site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(5, 10, 18, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.page .site-header .logo a {
+  color: #00ffc8;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+/* =========================
+   NAV LINKS
+========================= */
+
+.page .nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap; /* mobile safety */
+}
+
+.page .nav a {
+  position: relative;
+  color: #d8fdf3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.85;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.page .nav a:hover {
+  opacity: 1;
+  color: #00ffc8;
+}
+
+/* =========================
+   BADGE LINK (Experimental)
+========================= */
+
+.page .badge-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.75;
+}
+
+.page .badge-link:hover {
+  opacity: 1;
+}
+
+.page .badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* =========================
+   MOBILE SAFETY
+========================= */
+
+@media (max-width: 640px) {
+  .page .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .page .nav {
+    width: 100%;
+    gap: 14px;
+  }
+
+  .page .nav a {
+    font-size: 13px;
+  }
+}
