@@ -943,7 +943,18 @@ function renderConfidence() {
     confidenceBadge.className = "buster-badge badge-red";
   }
 }
-
+/* =============================
+   CLICK OUTSIDE TO CLOSE
+============================= */
+document.addEventListener('click', (event) => {
+  // Check if click is on modal backdrop
+  if (event.target.classList.contains('buster-modal-backdrop')) {
+    const modal = event.target.closest('.buster-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  }
+});
 /* =============================
    BUSTER WEEKLY COUNTDOWN (IST)
 ============================= */
