@@ -174,7 +174,6 @@ if (startBusterBtn) {
     }, 1000);
   });
 }
-
 /* =============================
    INIT
 ============================= */
@@ -207,8 +206,6 @@ async function init() {
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
   console.log("✅ Manual mode initialized");
 }
-
-
 
 /* =============================
    MANUAL MODE INITIALIZATION (WITH NULL CHECKS)
@@ -260,6 +257,7 @@ function initManualMode() {
   updateSliderDisplay(50);
   console.log("✅ Manual mode initialized successfully");
 }
+
 /* =============================
    MANUAL INPUT HANDLERS
 ============================= */
@@ -478,7 +476,6 @@ function setupAllianceSearch(input, resultBox, onSelect) {
     }
   });
 }
-
 /* =============================
    ALLIANCE SELECTION
 ============================= */
@@ -572,9 +569,6 @@ if (modalBackdrop) {
   };
 }
 
-
-
-
 /* =============================
    COMPUTE WARZONE THREATS
 ============================= */
@@ -625,6 +619,99 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
   const baseFsp = warzonePlayers[baseIndex].fsp;
 
   return { top, baseFsp };
+}
+
+/* =============================
+   RENDER (FINAL)
+============================= */
+function render() {
+  if (UI_PHASE !== "RESULT") return;
+  
+  // Get current FSP based on manual mode
+  const myFSP = getCurrentFSP();
+  
+  // Update FSP source note
+  if (fspSourceNote) {
+    if (MANUAL_MODE.active && MANUAL_MODE.baseValue > 0) {
+      if (MANUAL_MODE.sliderOffset !== 50) {
+        const offset = ((MANUAL_MODE.sliderOffset - 50) / 2).toFixed(1);
+        fspSourceNote.textContent = `Manual FSP with ${offset}M adjustment`;
+      } else {
+        fspSourceNote.textContent = "Manual FSP input";
+      }
+    } else if (MANUAL_MODE.usingFallback) {
+      const selectedPlayer = myAlliancePlayers.find(p => p.id === myPlayerSelect.value);
+      if (selectedPlayer) {
+        fspSourceNote.textContent = `Using ${selectedPlayer.name}'s computed FSP`;
+      }
+    } else {
+      fspSourceNote.textContent = "Using default FSP calculation";
+    }
+  }
+  
+  /* ---- Opponents (Real + Synthetic) ---- */
+  const synthetic = buildSyntheticCommanders({
+    listedPlayers: opponentPlayers,
+    referencePower: WARZONE_BASE_POWER
+  });
+
+  const allOpponents = [...opponentPlayers, ...synthetic];
+
+  /* ---- Warzone Threats ---- */
+  const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
+
+  if (top[0]) {
+    threatTop1NameEl && (threatTop1NameEl.textContent = top[0].name);
+    threatTop1AllianceEl && (threatTop1AllianceEl.textContent = top[0].alliance);
+    threatTop1FspEl && (threatTop1FspEl.textContent =
+      `FSP ${Math.round(top[0].fsp / 1e6)}M`);
+  }
+
+  if (top[1]) {
+    threatTop2NameEl && (threatTop2NameEl.textContent = top[1].name);
+    threatTop2AllianceEl && (threatTop2AllianceEl.textContent = top[1].alliance);
+    threatTop2FspEl && (threatTop2FspEl.textContent =
+      `FSP ${Math.round(top[1].fsp / 1e6)}M`);
+  }
+
+  if (top[2]) {
+    threatTop3NameEl && (threatTop3NameEl.textContent = top[2].name);
+    threatTop3AllianceEl && (threatTop3AllianceEl.textContent = top[2].alliance);
+    threatTop3FspEl && (threatTop3FspEl.textContent =
+      `FSP ${Math.round(top[2].fsp / 1e6)}M`);
+  }
+
+  /* ---- Warzone Base ---- */
+  if (threatBaseEl) {
+    threatBaseEl.textContent =
+      `${Math.round(baseFsp / 1e6)}M`;
+  }
+
+  /* ---- Bucketing (LOCKED RULES) ---- */
+  const canBeat = [];
+  const mayBeat = [];
+  const cannotBeat = [];
+
+  allOpponents.forEach(p => {
+    const diff = p.fsp - myFSP;
+
+    if (diff <= 0) canBeat.push(p);
+    else if (diff <= 5_000_000) mayBeat.push(p);
+    else cannotBeat.push(p);
+  });
+  
+  window._lastBuckets = {
+    canBeat,
+    mayBeat,
+    cannotBeat
+  };
+
+  /* ---- Impact Summary (COUNTS ONLY) ---- */
+  canHandleEl.textContent = canBeat.length;
+  canStallEl.textContent = mayBeat.length;
+  avoidEl.textContent = cannotBeat.length;
+
+  renderConfidence();
 }
 
 /* =============================
