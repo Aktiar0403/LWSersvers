@@ -2174,3 +2174,36 @@ body.buster-loading .buster-cta-wrap {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 255, 200, 0.2);
 }
+/* Support Widget Styles */
+.support-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.support-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #FFDD00, #FF6B00);
+  color: #000 !important;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.support-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4);
+  color: #000 !important;
+}
+
+.support-link i {
+  font-size: 16px;
+}
