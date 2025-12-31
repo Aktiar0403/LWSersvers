@@ -3,46 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <title>Buster Day</title>
-
   <link rel="manifest" href="/manifest.json">
-
   <!-- Standard favicon -->
   <link rel="icon" href="/favicon.ico" sizes="any">
-
   <!-- PNG favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
-
   <meta name="theme-color" content="#00ffc8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="LWServers">
-
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-
   <meta name="robots" content="index, follow">
   <meta name="description" content="Buster PTI analysis using First Squad Power to evaluate alliance threats and matchup viability.">
-
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Global styles 
-  <link rel="stylesheet" href="/css/style.css">-->
-
   <!-- Page-specific styles -->
   <link rel="stylesheet" href="/css/buster.css">
-
   <!-- Icons (buster-specific, allowed) -->
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     rel="stylesheet"
   />
-
   <!-- AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1248850512161754"
     crossorigin="anonymous">
   </script>
-
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6SBZ7TWCCE"></script>
   <script>
@@ -51,11 +37,8 @@
     gtag('js', new Date());
   </script>
 </head>
-
-
 <body class="bg">
 <div class="page">
-
   <!-- =============================
        SITE HEADER (GLOBAL NAV)
   ============================== -->
@@ -63,7 +46,6 @@
     <div class="logo">
       <a href="/">LWServers</a>
     </div>
-
     <nav class="nav">
       <a href="/server-intelligence">Server Intelligence</a>
       <a href="/server-compare">Compare</a>
@@ -73,7 +55,6 @@
       </a>
     </nav>
   </header>
-
   <!-- =============================
        BUSTER PAGE HEADER
   ============================== -->
@@ -88,7 +69,6 @@
       </p>
     </div>
   </header>
-
   <!-- =============================
      BUSTER WEEKLY COUNTDOWN (ALWAYS VISIBLE)
 ============================= -->
@@ -96,23 +76,18 @@
   <div class="countdown-title" id="countdownTitle">
     Next Buster Day
   </div>
-
   <div class="countdown-timer" id="countdownTimer">
     --
   </div>
-
   <div class="countdown-sub">
     Runs every Saturday for 24 hours (IST)
   </div>
 </div>
-
 <!-- =============================
      BUSTER INTRO / MISSION BRIEFING
 ============================= -->
 <section id="busterIntro" class="buster-intro">
-
   <div class="buster-intro-card single narrative">
-
     <!-- HEADER -->
     <div class="buster-briefing-header">
       <div class="briefing-icon">
@@ -125,29 +100,24 @@
         This is not scouting. This is a combat decision.
       </div>
     </div>
-
     <!-- STORY -->
     <div class="buster-briefing-story">
       <p>
         Every war looks easy on rankings.
         Every alliance looks manageable on paper.
       </p>
-
       <p>
         Buster exists for the moment <strong>before commitment</strong> —
         when a wrong call can collapse your frontline
-        and a right call can break the enemy’s will.
+        and a right call can break the enemy's will.
       </p>
-
       <p>
         It strips away assumptions and answers one question:
-        <strong>Can your First Squad survive what’s coming?</strong>
+        <strong>Can your First Squad survive what's coming?</strong>
       </p>
     </div>
-
-    <!-- FLOW DIAGRAM -->
+        <!-- FLOW DIAGRAM -->
     <div class="buster-flow-diagram">
-
       <div class="flow-node">
         <div class="flow-index">01</div>
         <div class="flow-content">
@@ -158,22 +128,18 @@
           </span>
         </div>
       </div>
-
       <div class="flow-arrow">↓</div>
-
       <div class="flow-node">
         <div class="flow-index">02</div>
         <div class="flow-content">
           <strong>Choose the Opponent</strong>
           <span>
             Not the name. Not the reputation.
-            The actual force you’re about to face.
+            The actual force you're about to face.
           </span>
         </div>
       </div>
-
       <div class="flow-arrow">↓</div>
-
       <div class="flow-node">
         <div class="flow-index">03</div>
         <div class="flow-content">
@@ -184,9 +150,7 @@
           </span>
         </div>
       </div>
-
       <div class="flow-arrow">↓</div>
-
       <div class="flow-node final">
         <div class="flow-index">04</div>
         <div class="flow-content">
@@ -197,21 +161,14 @@
           </span>
         </div>
       </div>
-
     </div>
-
-
     <!-- CTA LEAD -->
     <div class="buster-briefing-footer">
-      When you’re ready, initiate Buster.
+      When you're ready, initiate Buster.
       <br />
       See the battlefield <strong>before</strong> you step into it.
     </div>
-
   </div>
-
-
-
 <!-- =============================
      BUSTER CTA (CENTERED)
 ============================= -->
@@ -226,13 +183,11 @@
   ============================== -->
   <section id="busterSelect" class="buster-phase hidden">
   <section class="buster-grid two">
-
     <div class="buster-card">
       <h3>
         <i class="fa-solid fa-flag"></i>
         My Alliance
       </h3>
-
       <input
         id="myAllianceSearch"
         class="buster-input"
@@ -240,13 +195,11 @@
       />
       <div id="myAllianceResults" class="buster-search-results"></div>
     </div>
-
     <div class="buster-card">
       <h3>
         <i class="fa-solid fa-skull-crossbones"></i>
         Opponent Alliance
       </h3>
-
       <input
         id="oppAllianceSearch"
         class="buster-input"
@@ -254,37 +207,29 @@
       />
       <div id="oppAllianceResults" class="buster-search-results"></div>
     </div>
-
   </section>
 </section>
   <!-- =============================
        PLAYER CONTEXT (NO playerCard ID NEEDED)
   ============================== -->
- 
  <section id="busterIdentify" class="buster-phase hidden">
   <section class="buster-card wide">
-
     <h3>
       <i class="fa-solid fa-user-ninja"></i>
       I am
     </h3>
-
     <div class="buster-row">
-
       <select id="myPlayerSelect" class="buster-input">
         <option value="">Select yourself</option>
       </select>
-
       <div class="buster-fsp-box">
         <span>Computed FSP</span>
         <strong id="computedFspValue">–</strong>
       </div>
-
       <label class="buster-checkbox">
         <input type="checkbox" id="manualFspToggle" />
         My Actual 1st Squad 
       </label>
-
       <input
         type="number"
         id="manualFspInput"
@@ -292,9 +237,7 @@
         placeholder="Manual FSP"
         disabled
       />
-
     </div>
-
     <div id="fspSourceNote" class="buster-note"></div>
 </section>
   </section>
@@ -303,19 +246,14 @@
 ============================= -->
 <section id="busterResult" class="buster-phase hidden">
 <section class="buster-threats">
-
   <div class="buster-threat-card primary">
     <div class="threat-icon">⚠️</div>
-  
  <div class="threat-info">
   <div class="threat-value" id="threatTop1Name">–</div>
   <div class="threat-title" id="threatTop1Alliance">–</div>
   <div class="threat-sub" id="threatTop1Fsp">FSP –</div>
 </div>
-
-   
   </div>
-
   <div class="buster-threat-card">
     <div class="threat-icon">🔥</div>
    <div class="threat-info">
@@ -323,9 +261,7 @@
   <div class="threat-title" id="threatTop2Alliance">–</div>
   <div class="threat-sub" id="threatTop2Fsp">FSP –</div>
 </div>
-
   </div>
-
   <div class="buster-threat-card">
     <div class="threat-icon">🧨</div>
    <div class="threat-info">
@@ -334,8 +270,6 @@
   <div class="threat-sub" id="threatTop3Fsp">FSP –</div>
 </div>
 </div>
-
- 
   <div class="buster-threat-card">
     <div class="threat-icon">☠️</div>
     <div class="threat-info">
@@ -344,29 +278,23 @@
       <div class="threat-sub">Warzone Base (200th)</div>
     </div>
   </div>
-
 </section>
-
   <!-- =============================
        IMPACT SUMMARY (ANALYTICS HERO)
   ============================== -->
   <section class="buster-summary">
-
     <div class="buster-summary-item can">
       <strong id="canHandleCount">0</strong>
       <span>Can Beat</span>
     </div>
-
     <div class="buster-summary-item maybe">
       <strong id="canStallCount">0</strong>
       <span>May / May Not</span>
     </div>
-
     <div class="buster-summary-item cannot">
       <strong id="avoidCount">0</strong>
       <span>Cannot Beat</span>
     </div>
-
   </section>
   <!-- =============================
      CONFIDENCE INDICATOR
@@ -376,7 +304,6 @@
     <i class="fa-solid fa-shield-halved"></i>
     Engagement Confidence
   </h3>
-
   <div
     id="confidenceBadge"
     class="buster-badge badge-muted"
@@ -385,12 +312,8 @@
     –
   </div>
 </section>
-
 </section>
-
-
 </div>
-
 <script type="module" src="./js/buster/buster-ui.js"></script>
 
 <!-- =============================
