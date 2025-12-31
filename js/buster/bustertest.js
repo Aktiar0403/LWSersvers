@@ -17,9 +17,12 @@ import { buildSyntheticCommanders } from "./synthetic-engine.js";
 ============================= */
 const myAllianceInput = document.getElementById("myAllianceSearch");
 const myAllianceResults = document.getElementById("myAllianceResults");
+
 const oppAllianceInput = document.getElementById("oppAllianceSearch");
 const oppAllianceResults = document.getElementById("oppAllianceResults");
+
 const computedFspValue = document.getElementById("computedFspValue");
+
 const canHandleEl = document.getElementById("canHandleCount");
 const canStallEl = document.getElementById("canStallCount");
 const avoidEl = document.getElementById("avoidCount");
@@ -30,12 +33,15 @@ const closeModalBtn = document.getElementById("closeModal");
 const threatTop1NameEl = document.getElementById("threatTop1Name");
 const threatTop1AllianceEl = document.getElementById("threatTop1Alliance");
 const threatTop1FspEl = document.getElementById("threatTop1Fsp");
+
 const threatTop2NameEl = document.getElementById("threatTop2Name");
 const threatTop2AllianceEl = document.getElementById("threatTop2Alliance");
 const threatTop2FspEl = document.getElementById("threatTop2Fsp");
+
 const threatTop3NameEl = document.getElementById("threatTop3Name");
 const threatTop3AllianceEl = document.getElementById("threatTop3Alliance");
 const threatTop3FspEl = document.getElementById("threatTop3Fsp");
+
 const threatBaseEl = document.getElementById("threatBase");
 const confidenceBadge = document.getElementById("confidenceBadge");
 
@@ -59,6 +65,7 @@ const introSection = document.getElementById("busterIntro");
 const selectSection = document.getElementById("busterSelect");
 const identifySection = document.getElementById("busterIdentify");
 const resultSection = document.getElementById("busterResult");
+
 const startBusterBtn = document.getElementById("startBusterBtn");
 const loaderEl = document.getElementById("busterLoader");
 
@@ -67,6 +74,7 @@ const loaderEl = document.getElementById("busterLoader");
 ============================= */
 function resetUI() {
   introSection.classList.remove("hidden");
+
   selectSection.classList.add("hidden");
   identifySection.classList.add("hidden");
   resultSection.classList.add("hidden");
@@ -81,7 +89,7 @@ function resetUI() {
     usingFallback: false
   };
   
-  // Reset inputs if they exist
+  // Reset inputs
   if (manualFspPrimaryInput) {
     manualFspPrimaryInput.value = "";
   }
@@ -106,9 +114,11 @@ function resetUI() {
 ============================= */
 let ALL_PLAYERS = [];
 let ALL_ALLIANCES = [];
+
 let myAlliancePlayers = [];
 let opponentPlayers = [];
 let UI_PHASE = "INTRO";
+// INTRO → SELECT → IDENTIFY → RESULT
 
 /* =============================
    MANUAL MODE STATE
@@ -164,13 +174,21 @@ if (startBusterBtn) {
 
     setTimeout(async () => {
       showLoader("Loading battlefield data…");
+
       // REAL DATA LOAD
       await init();
+
       hideLoader();
+
       // Reveal alliance selection
       selectSection.classList.remove("hidden");
       UI_PHASE = "SELECT";
-      console.log(`Loaded ${ALL_PLAYERS.length} players across ${ALL_ALLIANCES.length} alliances`);
+
+      // Feedback to user (optional, simple)
+      console.log(
+        `Loaded ${ALL_PLAYERS.length} players across ${ALL_ALLIANCES.length} alliances`
+      );
+
     }, 1000);
   });
 }
@@ -183,7 +201,10 @@ async function init() {
 
   ALL_PLAYERS = snap.docs.map(d => {
     const x = d.data();
-    const effectivePower = Number(x.basePower ?? x.totalPower ?? 0);
+
+    const effectivePower = Number(
+      x.basePower ?? x.totalPower ?? 0
+    );
 
     return {
       id: d.id,
@@ -200,7 +221,7 @@ async function init() {
   setupAllianceSearch(myAllianceInput, myAllianceResults, onMyAllianceSelected);
   setupAllianceSearch(oppAllianceInput, oppAllianceResults, onOppAllianceSelected);
   
-  // Initialize manual mode with null checks
+  // Initialize manual mode
   initManualMode();
 
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
@@ -208,30 +229,10 @@ async function init() {
   console.log("✅ Manual mode initialized");
 }
 
-
-
 /* =============================
-   MANUAL MODE INITIALIZATION (WITH NULL CHECKS)
+   MANUAL MODE INITIALIZATION
 ============================= */
 function initManualMode() {
-  console.log("🔧 Initializing manual mode elements...");
-  
-  // Check if manual mode elements exist
-  if (!fspSlider) {
-    console.error("❌ fspSlider element not found!");
-    return;
-  }
-  
-  if (!manualFspPrimaryInput) {
-    console.error("❌ manualFspPrimaryInput element not found!");
-    return;
-  }
-  
-  if (!myPlayerSelect) {
-    console.error("❌ myPlayerSelect element not found!");
-    return;
-  }
-  
   // Setup slider
   fspSlider.addEventListener("input", handleSliderInput);
   
@@ -242,7 +243,7 @@ function initManualMode() {
   // Setup player select fallback
   myPlayerSelect.addEventListener("change", handlePlayerSelectChange);
   
-  // Setup modal close handlers if modals exist
+  // Setup modal close handlers
   if (closeManualModal) {
     closeManualModal.onclick = closeManualInfoModal;
   }
@@ -250,16 +251,13 @@ function initManualMode() {
     closeManualModalBtn.onclick = closeManualInfoModal;
   }
   if (manualModeInfoModal) {
-    const backdrop = manualModeInfoModal.querySelector(".buster-modal-backdrop");
-    if (backdrop) {
-      backdrop.onclick = closeManualInfoModal;
-    }
+    manualModeInfoModal.querySelector(".buster-modal-backdrop").onclick = closeManualInfoModal;
   }
   
   // Initial state
   updateSliderDisplay(50);
-  console.log("✅ Manual mode initialized successfully");
 }
+
 /* =============================
    MANUAL INPUT HANDLERS
 ============================= */
@@ -381,7 +379,7 @@ function closeManualInfoModal() {
 }
 
 /* =============================
-   GET CURRENT FSP (REVISED)
+   GET CURRENT FSP (REVISED - SINGLE VERSION)
 ============================= */
 function getCurrentFSP() {
   // Primary: Manual mode
@@ -436,8 +434,6 @@ function formatFspValue(value) {
    SEARCHABLE ALLIANCE INPUT
 ============================= */
 function setupAllianceSearch(input, resultBox, onSelect) {
-  if (!input || !resultBox) return;
-  
   input.addEventListener("input", () => {
     const q = input.value.toLowerCase().trim();
     resultBox.innerHTML = "";
@@ -452,7 +448,8 @@ function setupAllianceSearch(input, resultBox, onSelect) {
       .slice(0, 20);
 
     if (!matches.length) {
-      resultBox.innerHTML = `<div class="buster-search-item">No results</div>`;
+      resultBox.innerHTML =
+        `<div class="buster-search-item">No results</div>`;
       resultBox.style.display = "block";
       return;
     }
@@ -486,16 +483,14 @@ function onMyAllianceSelected(alliance) {
   myAlliancePlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
   
   // Clear and populate fallback select
-  if (myPlayerSelect) {
-    myPlayerSelect.innerHTML = `<option value="">Select yourself from alliance</option>`;
-    
-    myAlliancePlayers.forEach(p => {
-      const opt = document.createElement("option");
-      opt.value = p.id;
-      opt.textContent = `${p.name} (${Math.round(p.fsp / 1e6)}M FSP)`;
-      myPlayerSelect.appendChild(opt);
-    });
-  }
+  myPlayerSelect.innerHTML = `<option value="">Select yourself from alliance</option>`;
+  
+  myAlliancePlayers.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = `${p.name} (${Math.round(p.fsp / 1e6)}M FSP)`;
+    myPlayerSelect.appendChild(opt);
+  });
   
   // If manual input is empty, show fallback section
   if (MANUAL_MODE.baseValue <= 0 && fallbackSection) {
@@ -507,77 +502,56 @@ function onMyAllianceSelected(alliance) {
 function onOppAllianceSelected(alliance) {
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
 
-  if (identifySection) {
-    identifySection.classList.remove("hidden");
-  }
+  identifySection.classList.remove("hidden");
   UI_PHASE = "IDENTIFY";
 }
 
 /* =============================
    EVENTS
 ============================= */
-if (myPlayerSelect) {
-  myPlayerSelect.addEventListener("change", () => {
-    showLoader("Evaluating frontline pressure…");
-    setTimeout(() => {
-      hideLoader();
-      if (resultSection) {
-        resultSection.classList.remove("hidden");
-      }
-      UI_PHASE = "RESULT";
-      render();
-    }, 1000);
-  });
-}
+myPlayerSelect.addEventListener("change", () => {
+  showLoader("Evaluating frontline pressure…");
 
-// Matchup modal events
-const canBeatEl = document.querySelector(".buster-summary-item.can");
-const maybeEl = document.querySelector(".buster-summary-item.maybe");
-const cannotEl = document.querySelector(".buster-summary-item.cannot");
+  setTimeout(() => {
+    hideLoader();
+    resultSection.classList.remove("hidden");
+    UI_PHASE = "RESULT";
+    render();
+  }, 1000);
+});
 
-if (canBeatEl) {
-  canBeatEl.addEventListener("click", () =>
+document
+  .querySelector(".buster-summary-item.can")
+  .addEventListener("click", () =>
     openMatchupModal("Can Beat", window._lastBuckets?.canBeat || [])
   );
-}
-if (maybeEl) {
-  maybeEl.addEventListener("click", () =>
+
+document
+  .querySelector(".buster-summary-item.maybe")
+  .addEventListener("click", () =>
     openMatchupModal("May / May Not Beat", window._lastBuckets?.mayBeat || [])
   );
-}
-if (cannotEl) {
-  cannotEl.addEventListener("click", () =>
+
+document
+  .querySelector(".buster-summary-item.cannot")
+  .addEventListener("click", () =>
     openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [])
   );
-}
 
 function openMatchupModal(title, list) {
-  if (!matchupModal || !modalTitle || !modalBody) return;
-  
   modalTitle.textContent = title;
   modalBody.innerHTML = renderAdvancedGroup(list, getCurrentFSP());
   matchupModal.classList.remove("hidden");
 }
 
-if (closeModalBtn) {
-  closeModalBtn.onclick = () => {
-    if (matchupModal) matchupModal.classList.add("hidden");
-  };
-}
+closeModalBtn.onclick = () => {
+  matchupModal.classList.add("hidden");
+};
 
-const modalBackdrop = document.querySelector(".buster-modal-backdrop");
-if (modalBackdrop) {
-  modalBackdrop.onclick = () => {
-    if (matchupModal) matchupModal.classList.add("hidden");
-  };
-}
+document
+  .querySelector(".buster-modal-backdrop")
+  .onclick = closeModalBtn.onclick;
 
-
-
-
-/* =============================
-   COMPUTE WARZONE THREATS
-============================= */
 function computeWarzoneThreats(opponentAlliancePlayers) {
   if (!opponentAlliancePlayers.length) {
     return { top: [], baseFsp: 0 };
@@ -625,6 +599,99 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
   const baseFsp = warzonePlayers[baseIndex].fsp;
 
   return { top, baseFsp };
+}
+
+/* =============================
+   RENDER (FINAL)
+============================= */
+function render() {
+  if (UI_PHASE !== "RESULT") return;
+  
+  // Get current FSP based on manual mode
+  const myFSP = getCurrentFSP();
+  
+  // Update FSP source note
+  if (fspSourceNote) {
+    if (MANUAL_MODE.active && MANUAL_MODE.baseValue > 0) {
+      if (MANUAL_MODE.sliderOffset !== 50) {
+        const offset = ((MANUAL_MODE.sliderOffset - 50) / 2).toFixed(1);
+        fspSourceNote.textContent = `Manual FSP with ${offset}M adjustment`;
+      } else {
+        fspSourceNote.textContent = "Manual FSP input";
+      }
+    } else if (MANUAL_MODE.usingFallback) {
+      const selectedPlayer = myAlliancePlayers.find(p => p.id === myPlayerSelect.value);
+      if (selectedPlayer) {
+        fspSourceNote.textContent = `Using ${selectedPlayer.name}'s computed FSP`;
+      }
+    } else {
+      fspSourceNote.textContent = "Using default FSP calculation";
+    }
+  }
+  
+  /* ---- Opponents (Real + Synthetic) ---- */
+  const synthetic = buildSyntheticCommanders({
+    listedPlayers: opponentPlayers,
+    referencePower: WARZONE_BASE_POWER
+  });
+
+  const allOpponents = [...opponentPlayers, ...synthetic];
+
+  /* ---- Warzone Threats ---- */
+  const { top, baseFsp } = computeWarzoneThreats(opponentPlayers);
+
+  if (top[0]) {
+    threatTop1NameEl && (threatTop1NameEl.textContent = top[0].name);
+    threatTop1AllianceEl && (threatTop1AllianceEl.textContent = top[0].alliance);
+    threatTop1FspEl && (threatTop1FspEl.textContent =
+      `FSP ${Math.round(top[0].fsp / 1e6)}M`);
+  }
+
+  if (top[1]) {
+    threatTop2NameEl && (threatTop2NameEl.textContent = top[1].name);
+    threatTop2AllianceEl && (threatTop2AllianceEl.textContent = top[1].alliance);
+    threatTop2FspEl && (threatTop2FspEl.textContent =
+      `FSP ${Math.round(top[1].fsp / 1e6)}M`);
+  }
+
+  if (top[2]) {
+    threatTop3NameEl && (threatTop3NameEl.textContent = top[2].name);
+    threatTop3AllianceEl && (threatTop3AllianceEl.textContent = top[2].alliance);
+    threatTop3FspEl && (threatTop3FspEl.textContent =
+      `FSP ${Math.round(top[2].fsp / 1e6)}M`);
+  }
+
+  /* ---- Warzone Base ---- */
+  if (threatBaseEl) {
+    threatBaseEl.textContent =
+      `${Math.round(baseFsp / 1e6)}M`;
+  }
+
+  /* ---- Bucketing (LOCKED RULES) ---- */
+  const canBeat = [];
+  const mayBeat = [];
+  const cannotBeat = [];
+
+  allOpponents.forEach(p => {
+    const diff = p.fsp - myFSP;
+
+    if (diff <= 0) canBeat.push(p);
+    else if (diff <= 5_000_000) mayBeat.push(p);
+    else cannotBeat.push(p);
+  });
+  
+  window._lastBuckets = {
+    canBeat,
+    mayBeat,
+    cannotBeat
+  };
+
+  /* ---- Impact Summary (COUNTS ONLY) ---- */
+  canHandleEl.textContent = canBeat.length;
+  canStallEl.textContent = mayBeat.length;
+  avoidEl.textContent = cannotBeat.length;
+
+  renderConfidence();
 }
 
 /* =============================

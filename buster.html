@@ -3,32 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <title>Buster Day</title>
+
   <link rel="manifest" href="/manifest.json">
-  <!-- Standard favicon -->
   <link rel="icon" href="/favicon.ico" sizes="any">
-  <!-- PNG favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+
   <meta name="theme-color" content="#00ffc8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="LWServers">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+
   <meta name="robots" content="index, follow">
   <meta name="description" content="Buster PTI analysis using First Squad Power to evaluate alliance threats and matchup viability.">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <!-- Page-specific styles -->
   <link rel="stylesheet" href="/css/buster.css">
-  <!-- Icons (buster-specific, allowed) -->
+
+  <!-- Icons -->
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     rel="stylesheet"
   />
+
   <!-- AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1248850512161754"
     crossorigin="anonymous">
   </script>
+
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6SBZ7TWCCE"></script>
   <script>
@@ -37,8 +42,10 @@
     gtag('js', new Date());
   </script>
 </head>
+
 <body class="bg">
 <div class="page">
+
   <!-- =============================
        SITE HEADER (GLOBAL NAV)
   ============================== -->
@@ -55,6 +62,7 @@
       </a>
     </nav>
   </header>
+
   <!-- =============================
        BUSTER PAGE HEADER
   ============================== -->
@@ -69,8 +77,9 @@
       </p>
     </div>
   </header>
+
   <!-- =============================
-     BUSTER WEEKLY COUNTDOWN (ALWAYS VISIBLE)
+     BUSTER WEEKLY COUNTDOWN
 ============================= -->
 <div id="busterCountdown" class="buster-countdown">
   <div class="countdown-title" id="countdownTitle">
@@ -83,12 +92,12 @@
     Runs every Saturday for 24 hours (IST)
   </div>
 </div>
+
 <!-- =============================
      BUSTER INTRO / MISSION BRIEFING
 ============================= -->
 <section id="busterIntro" class="buster-intro">
   <div class="buster-intro-card single narrative">
-    <!-- HEADER -->
     <div class="buster-briefing-header">
       <div class="briefing-icon">
         <i class="fa-solid fa-bolt"></i>
@@ -100,7 +109,7 @@
         This is not scouting. This is a combat decision.
       </div>
     </div>
-    <!-- STORY -->
+
     <div class="buster-briefing-story">
       <p>
         Every war looks easy on rankings.
@@ -116,16 +125,13 @@
         <strong>Can your First Squad survive what's coming?</strong>
       </p>
     </div>
-        <!-- FLOW DIAGRAM -->
+
     <div class="buster-flow-diagram">
       <div class="flow-node">
         <div class="flow-index">01</div>
         <div class="flow-content">
           <strong>Select Your Alliance</strong>
-          <span>
-            Your alliance defines the baseline.
-            All pressure is measured relative to your frontline.
-          </span>
+          <span>Your alliance defines the baseline. All pressure is measured relative to your frontline.</span>
         </div>
       </div>
       <div class="flow-arrow">↓</div>
@@ -133,10 +139,7 @@
         <div class="flow-index">02</div>
         <div class="flow-content">
           <strong>Choose the Opponent</strong>
-          <span>
-            Not the name. Not the reputation.
-            The actual force you're about to face.
-          </span>
+          <span>Not the name. Not the reputation. The actual force you're about to face.</span>
         </div>
       </div>
       <div class="flow-arrow">↓</div>
@@ -144,10 +147,7 @@
         <div class="flow-index">03</div>
         <div class="flow-content">
           <strong>Identify Yourself</strong>
-          <span>
-            Buster evaluates pressure at squad level —
-            where wars are really decided.
-          </span>
+          <span>Buster evaluates pressure at squad level — where wars are really decided.</span>
         </div>
       </div>
       <div class="flow-arrow">↓</div>
@@ -155,39 +155,32 @@
         <div class="flow-index">04</div>
         <div class="flow-content">
           <strong>Engagement Verdict</strong>
-          <span>
-            No ambiguity. No interpretation.
-            The battlefield gives a single answer.
-          </span>
+          <span>No ambiguity. No interpretation. The battlefield gives a single answer.</span>
         </div>
       </div>
     </div>
-    <!-- CTA LEAD -->
+
     <div class="buster-briefing-footer">
       When you're ready, initiate Buster.
       <br />
       See the battlefield <strong>before</strong> you step into it.
     </div>
   </div>
-<!-- =============================
-     BUSTER CTA (CENTERED)
-============================= -->
-<div class="buster-cta-wrap">
-  <button id="startBusterBtn" class="buster-btn primary">
-    ⚔️ Initiate Buster
-  </button>
-</div>
+
+  <div class="buster-cta-wrap">
+    <button id="startBusterBtn" class="buster-btn primary">
+      ⚔️ Initiate Buster
+    </button>
+  </div>
 </section>
-  <!-- =============================
-       ALLIANCE SELECTION
-  ============================== -->
-  <section id="busterSelect" class="buster-phase hidden">
+
+<!-- =============================
+     ALLIANCE SELECTION
+============================= -->
+<section id="busterSelect" class="buster-phase hidden">
   <section class="buster-grid two">
     <div class="buster-card">
-      <h3>
-        <i class="fa-solid fa-flag"></i>
-        My Alliance
-      </h3>
+      <h3><i class="fa-solid fa-flag"></i> My Alliance</h3>
       <input
         id="myAllianceSearch"
         class="buster-input"
@@ -196,10 +189,7 @@
       <div id="myAllianceResults" class="buster-search-results"></div>
     </div>
     <div class="buster-card">
-      <h3>
-        <i class="fa-solid fa-skull-crossbones"></i>
-        Opponent Alliance
-      </h3>
+      <h3><i class="fa-solid fa-skull-crossbones"></i> Opponent Alliance</h3>
       <input
         id="oppAllianceSearch"
         class="buster-input"
@@ -209,37 +199,89 @@
     </div>
   </section>
 </section>
-  <!-- =============================
-       PLAYER CONTEXT (NO playerCard ID NEEDED)
-  ============================== -->
- <section id="busterIdentify" class="buster-phase hidden">
-  <section class="buster-card wide">
-    <h3>
-      <i class="fa-solid fa-user-ninja"></i>
-      I am
-    </h3>
-    <div class="buster-row">
-      <select id="myPlayerSelect" class="buster-input">
-        <option value="">Select yourself</option>
-      </select>
-      <div class="buster-fsp-box">
-        <span>Computed FSP</span>
-        <strong id="computedFspValue">–</strong>
+<!-- =============================
+     PLAYER CONTEXT (Revised for Manual First)
+============================= -->
+<section id="busterIdentify" class="buster-phase hidden">
+  <section class="buster-card wide manual-mode-default">
+    <div class="manual-mode-header">
+      <h3><i class="fa-solid fa-bullseye"></i> Choose Yourself (Manual)</h3>
+      <div class="manual-mode-subtitle">
+        Enter your First Squad Power directly for precise analysis
       </div>
-      <label class="buster-checkbox">
-        <input type="checkbox" id="manualFspToggle" />
-        My Actual 1st Squad 
-      </label>
-      <input
-        type="number"
-        id="manualFspInput"
-        class="buster-input small"
-        placeholder="Manual FSP"
-        disabled
-      />
     </div>
-    <div id="fspSourceNote" class="buster-note"></div>
-</section>
+
+    <div class="manual-input-section">
+      <div class="manual-input-group">
+        <div class="input-with-slider">
+          <input
+            type="number"
+            id="manualFspPrimaryInput"
+            class="buster-input large"
+            placeholder="Enter your FSP (e.g., 125000000)"
+            step="1000000"
+            min="0"
+            max="1500000000"
+          />
+          <div class="input-suffix">FSP</div>
+        </div>
+        
+        <div class="slider-container">
+          <div class="slider-header">
+            <span class="slider-label">FSP Adjustment</span>
+            <span class="slider-value" id="sliderValueDisplay">±0.0M</span>
+          </div>
+          <input
+            type="range"
+            id="fspSlider"
+            class="fsp-slider"
+            min="0"
+            max="100"
+            step="0.5"
+            value="50"
+          />
+          <div class="slider-ticks">
+            <span>-50M</span>
+            <span>±0</span>
+            <span>+50M</span>
+          </div>
+        </div>
+
+        <div class="manual-mode-status">
+          <div class="mode-indicator manual-active">
+            <i class="fa-solid fa-pen"></i>
+            Manual Mode Active
+          </div>
+          <div class="mode-hint">
+            Slider adjusts ±50M around entered value
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fallbackSection" class="fallback-section hidden">
+      <div class="fallback-divider">
+        <span class="divider-text">Or select from alliance</span>
+      </div>
+      <div class="fallback-content">
+        <div class="fallback-header">
+          <i class="fa-solid fa-users"></i>
+          <span>Select Player from Alliance</span>
+        </div>
+        <select id="myPlayerSelect" class="buster-input fallback-select">
+          <option value="">Choose a player...</option>
+        </select>
+        <div class="player-fsp-display">
+          <span class="fsp-label">Computed FSP:</span>
+          <strong id="computedFspValue">–</strong>
+        </div>
+      </div>
+    </div>
+
+    <div id="fspSourceNote" class="buster-note manual-note">
+      <i class="fa-solid fa-circle-info"></i>
+      Enter your First Squad Power or use slider to adjust
+    </div>
   </section>
 </section>
 
@@ -247,43 +289,41 @@
      THREATS OVERVIEW
 ============================= -->
 <section id="busterResult" class="buster-phase hidden">
-<section class="buster-threats">
-  <div class="buster-threat-card primary">
-    <div class="threat-icon">⚠️</div>
- <div class="threat-info">
-  <div class="threat-value" id="threatTop1Name">–</div>
-  <div class="threat-title" id="threatTop1Alliance">–</div>
-  <div class="threat-sub" id="threatTop1Fsp">FSP –</div>
-</div>
-  </div>
-  <div class="buster-threat-card">
-    <div class="threat-icon">🔥</div>
-   <div class="threat-info">
-  <div class="threat-value" id="threatTop2Name">–</div>
-  <div class="threat-title" id="threatTop2Alliance">–</div>
-  <div class="threat-sub" id="threatTop2Fsp">FSP –</div>
-</div>
-  </div>
-  <div class="buster-threat-card">
-    <div class="threat-icon">🧨</div>
-   <div class="threat-info">
-  <div class="threat-value" id="threatTop3Name">–</div>
-  <div class="threat-title" id="threatTop3Alliance">–</div>
-  <div class="threat-sub" id="threatTop3Fsp">FSP –</div>
-</div>
-</div>
-  <div class="buster-threat-card">
-    <div class="threat-icon">☠️</div>
-    <div class="threat-info">
-      <div class="threat-title">Unknown Depth</div>
-      <div class="threat-value" id="threatBase">–</div>
-      <div class="threat-sub">Warzone Base (200th)</div>
+  <section class="buster-threats">
+    <div class="buster-threat-card primary">
+      <div class="threat-icon">⚠️</div>
+      <div class="threat-info">
+        <div class="threat-value" id="threatTop1Name">–</div>
+        <div class="threat-title" id="threatTop1Alliance">–</div>
+        <div class="threat-sub" id="threatTop1Fsp">FSP –</div>
+      </div>
     </div>
-  </div>
-</section>
-  <!-- =============================
-       IMPACT SUMMARY (ANALYTICS HERO)
-  ============================== -->
+    <div class="buster-threat-card">
+      <div class="threat-icon">🔥</div>
+      <div class="threat-info">
+        <div class="threat-value" id="threatTop2Name">–</div>
+        <div class="threat-title" id="threatTop2Alliance">–</div>
+        <div class="threat-sub" id="threatTop2Fsp">FSP –</div>
+      </div>
+    </div>
+    <div class="buster-threat-card">
+      <div class="threat-icon">🧨</div>
+      <div class="threat-info">
+        <div class="threat-value" id="threatTop3Name">–</div>
+        <div class="threat-title" id="threatTop3Alliance">–</div>
+        <div class="threat-sub" id="threatTop3Fsp">FSP –</div>
+      </div>
+    </div>
+    <div class="buster-threat-card">
+      <div class="threat-icon">☠️</div>
+      <div class="threat-info">
+        <div class="threat-title">Unknown Depth</div>
+        <div class="threat-value" id="threatBase">–</div>
+        <div class="threat-sub">Warzone Base (200th)</div>
+      </div>
+    </div>
+  </section>
+
   <section class="buster-summary">
     <div class="buster-summary-item can">
       <strong id="canHandleCount">0</strong>
@@ -298,30 +338,22 @@
       <span>Cannot Beat</span>
     </div>
   </section>
-  
-  <!-- =============================
-     CONFIDENCE INDICATOR
-============================== -->
-<section class="buster-card wide">
-  <h3>
-    <i class="fa-solid fa-shield-halved"></i>
-    Engagement Confidence
-  </h3>
-  <div
-    id="confidenceBadge"
-    class="buster-badge badge-muted"
-    style="font-size:18px; padding:10px 18px;"
-  >
-    –
-  </div>
+
+  <section class="buster-card wide">
+    <h3><i class="fa-solid fa-shield-halved"></i> Engagement Confidence</h3>
+    <div id="confidenceBadge" class="buster-badge badge-muted" style="font-size:18px; padding:10px 18px;">
+      –
+    </div>
+  </section>
 </section>
-</section>
+
 </div>
+
 <script type="module" src="./js/buster/buster-ui.js"></script>
 
 <!-- =============================
      MATCHUP MODAL
-============================== -->
+============================= -->
 <div id="matchupModal" class="buster-modal hidden">
   <div class="buster-modal-backdrop"></div>
   <div class="buster-modal-content">
@@ -329,15 +361,13 @@
       <h3 id="modalTitle">Matchups</h3>
       <button id="closeModal">✕</button>
     </div>
-    <div id="modalBody" class="buster-modal-body">
-      <!-- dynamic content -->
-    </div>
+    <div id="modalBody" class="buster-modal-body"></div>
   </div>
 </div>
 
 <!-- =============================
      MANUAL MODE INFO MODAL
-============================== -->
+============================= -->
 <div id="manualModeInfoModal" class="buster-modal hidden">
   <div class="buster-modal-backdrop"></div>
   <div class="buster-modal-content small">
@@ -370,9 +400,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="buster-btn secondary" id="closeManualModalBtn">
-          Got it
-        </button>
+        <button class="buster-btn secondary" id="closeManualModalBtn">Got it</button>
       </div>
     </div>
   </div>
@@ -412,9 +440,7 @@
 <div id="busterLoader" class="buster-loader hidden">
   <div class="loader-core">
     <div class="neon-ring"></div>
-    <div class="loader-text">
-      Analyzing Battlefield Data…
-    </div>
+    <div class="loader-text">Analyzing Battlefield Data…</div>
   </div>
 </div>
 
