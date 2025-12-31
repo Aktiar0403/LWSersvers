@@ -257,30 +257,9 @@ function initManualMode() {
   updateSliderDisplay(50);
   console.log("✅ Manual mode initialized successfully");
 }
-/* =============================
-   AUTO-SUBMIT WHEN READY
-============================= */
-function checkAndAutoSubmit() {
-  // Check if we have all required inputs
-  const hasManualInput = MANUAL_MODE.baseValue > 0;
-  const hasOpponent = opponentPlayers.length > 0;
-  
-  if (hasManualInput && hasOpponent && UI_PHASE === "IDENTIFY") {
-    showLoader("Analyzing battlefield data…");
-    setTimeout(() => {
-      hideLoader();
-      if (resultSection) {
-        resultSection.classList.remove("hidden");
-      }
-      UI_PHASE = "RESULT";
-      render();
-    }, 1000);
-  }
-}
-
 
 /* =============================
-   MANUAL INPUT HANDLERS (UPDATED)
+   MANUAL INPUT HANDLERS
 ============================= */
 function handleManualInput(e) {
   const rawValue = e.target.value.replace(/,/g, '');
@@ -297,16 +276,24 @@ function handleManualInput(e) {
       fallbackSection.classList.add("hidden");
     }
     
+    // If we already have opponent selected, show results
+    if (UI_PHASE === "IDENTIFY" && opponentPlayers.length > 0) {
+      showLoader("Evaluating frontline pressure…");
+      setTimeout(() => {
+        hideLoader();
+        if (resultSection) {
+          resultSection.classList.remove("hidden");
+        }
+        UI_PHASE = "RESULT";
+        render();
+      }, 1000);
+    }
     // Trigger render if we're in result phase
-    if (UI_PHASE === "RESULT") {
+    else if (UI_PHASE === "RESULT") {
       render();
     }
-    
-    // Check if we can auto-submit
-    checkAndAutoSubmit();
   }
 }
-
 
 function validateManualInput() {
   const value = parseFloat(manualFspPrimaryInput.value.replace(/,/g, ''));
@@ -360,96 +347,7 @@ function updateSliderDisplay(value) {
   
   sliderValueDisplay.textContent = displayText;
 }
-/* =============================
-   MANUAL SUBMIT BUTTON
-============================= */
-const manualSubmitBtn = document.getElementById("manualSubmitBtn");
 
-if (manualSubmitBtn) {
-  manualSubmitBtn.addEventListener("click", () => {
-    if (MANUAL_MODE.baseValue <= 0) {
-      alert("Please enter your FSP value first");
-      manualFspPrimaryInput.focus();
-      return;
-    }
-    
-    if (opponentPlayers.length === 0) {
-      alert("Please select an opponent alliance first");
-      oppAllianceInput.focus();
-      return;
-    }
-    
-    showLoader("Calculating matchups…");
-    setTimeout(() => {
-      hideLoader();
-      if (resultSection) {
-        resultSection.classList.remove("hidden");
-      }
-      UI_PHASE = "RESULT";
-      render();
-    }, 1000);
-  });
-}
-
-// Update the submit button state based on input
-function updateSubmitButtonState() {
-  if (!manualSubmitBtn) return;
-  
-  const hasValidInput = MANUAL_MODE.baseValue > 0;
-  const hasOpponent = opponentPlayers.length > 0;
-  
-  if (hasValidInput && hasOpponent) {
-    manualSubmitBtn.disabled = false;
-    manualSubmitBtn.textContent = "Calculate Matchups";
-  } else if (!hasValidInput) {
-    manualSubmitBtn.disabled = true;
-    manualSubmitBtn.innerHTML = '<i class="fa-solid fa-keyboard"></i> Enter FSP to Continue';
-  } else if (!hasOpponent) {
-    manualSubmitBtn.disabled = true;
-    manualSubmitBtn.innerHTML = '<i class="fa-solid fa-users"></i> Select Opponent Alliance';
-  }
-}
-
-// Call this function whenever input changes
-function handleManualInput(e) {
-  const rawValue = e.target.value.replace(/,/g, '');
-  const numericValue = parseFloat(rawValue);
-  
-  if (!isNaN(numericValue) && numericValue >= 0) {
-    MANUAL_MODE.baseValue = numericValue;
-    MANUAL_MODE.lastValidInput = numericValue;
-    MANUAL_MODE.active = true;
-    MANUAL_MODE.usingFallback = false;
-    
-    // Hide fallback section if manual input has value
-    if (numericValue > 0 && fallbackSection) {
-      fallbackSection.classList.add("hidden");
-    }
-    
-    // Update submit button
-    updateSubmitButtonState();
-    
-    // Trigger render if we're in result phase
-    if (UI_PHASE === "RESULT") {
-      render();
-    }
-  } else {
-    updateSubmitButtonState();
-  }
-}
-
-// Also update when opponent is selected
-function onOppAllianceSelected(alliance) {
-  opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
-
-  if (identifySection) {
-    identifySection.classList.remove("hidden");
-  }
-  UI_PHASE = "IDENTIFY";
-  
-  // Update submit button
-  updateSubmitButtonState();
-}
 /* =============================
    FALLBACK HANDLERS
 ============================= */
@@ -615,9 +513,6 @@ function onMyAllianceSelected(alliance) {
   }
 }
 
-/* =============================
-   ALLIANCE SELECTION
-============================= */
 function onOppAllianceSelected(alliance) {
   opponentPlayers = ALL_PLAYERS.filter(p => p.alliance === alliance);
 
@@ -639,8 +534,6 @@ function onOppAllianceSelected(alliance) {
     }, 1000);
   }
 }
-
-
 
 /* =============================
    EVENTS
