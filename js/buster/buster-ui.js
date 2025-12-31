@@ -499,13 +499,7 @@ function getCurrentFSP() {
   return 0;
 }
 
-/* =============================
-   HELPER FUNCTIONS
-============================= */
-function formatFspValue(value) {
-  if (!value || value <= 0) return "";
-  return Math.round(value).toLocaleString();
-}
+
 /* =============================
    HELPER FUNCTIONS FOR FSP FORMAT
 ============================= */
