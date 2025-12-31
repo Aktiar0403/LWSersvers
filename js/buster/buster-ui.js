@@ -63,7 +63,7 @@ const startBusterBtn = document.getElementById("startBusterBtn");
 const loaderEl = document.getElementById("busterLoader");
 
 /* =============================
-   INITIAL UI STATE (HARD RESET)
+   RESET UI (Updated)
 ============================= */
 function resetUI() {
   introSection.classList.remove("hidden");
@@ -89,7 +89,7 @@ function resetUI() {
     fspSlider.value = 50;
   }
   if (sliderValueDisplay) {
-    sliderValueDisplay.textContent = "±0.0M";
+    sliderValueDisplay.textContent = "±0.00M";
   }
   if (fallbackSection) {
     fallbackSection.classList.add("hidden");
@@ -270,21 +270,8 @@ function initManualMode() {
 }
 
 /* =============================
-   MANUAL SUBMIT BUTTON HANDLER
+   MANUAL SUBMIT BUTTON HANDLER (Updated)
 ============================= */
-function initManualSubmitButton() {
-  const manualSubmitBtn = document.getElementById("manualSubmitBtn");
-  
-  if (!manualSubmitBtn) {
-    console.error("❌ manualSubmitBtn element not found!");
-    return;
-  }
-  
-  console.log("✅ Found manualSubmitBtn, adding event listener...");
-  
-  manualSubmitBtn.addEventListener("click", handleManualSubmit);
-}
-
 function handleManualSubmit() {
   console.log("🧮 Manual submit button clicked");
   
@@ -300,13 +287,14 @@ function handleManualSubmit() {
   }
   
   // Validate manual input
-  const manualValue = parseFloat(manualFspPrimaryInput.value.replace(/,/g, ''));
+  const inputValue = manualFspPrimaryInput.value;
+  const numericValue = parseFloat(inputValue);
   
-  if (isNaN(manualValue) || manualValue <= 0) {
+  if (isNaN(numericValue) || numericValue <= 0) {
     // Check if we're using fallback
     const selectedPlayerId = myPlayerSelect.value;
     if (!selectedPlayerId) {
-      alert("Please enter your First Squad Power or select a player from your alliance!");
+      alert("Please enter your First Squad Power (e.g., 125.00) or select a player from your alliance!");
       return;
     }
     
@@ -315,13 +303,14 @@ function handleManualSubmit() {
     MANUAL_MODE.usingFallback = true;
   } else {
     // Using manual input
+    const actualFsp = inputToFsp(numericValue);
     MANUAL_MODE.active = true;
-    MANUAL_MODE.baseValue = manualValue;
-    MANUAL_MODE.lastValidInput = manualValue;
+    MANUAL_MODE.baseValue = actualFsp;
+    MANUAL_MODE.lastValidInput = actualFsp;
     MANUAL_MODE.usingFallback = false;
     
-    // Update display if needed
-    manualFspPrimaryInput.value = formatFspValue(manualValue);
+    // Format input to 2 decimal places
+    manualFspPrimaryInput.value = numericValue.toFixed(2);
   }
   
   // Show loader and proceed to results
@@ -338,7 +327,7 @@ function handleManualSubmit() {
     render();
     
     console.log("✅ Manual calculation complete");
-    console.log(`Current FSP: ${Math.round(getCurrentFSP() / 1e6)}M`);
+    console.log(`Current FSP: ${fspToDisplay(getCurrentFSP())}`);
     console.log(`Manual mode: ${MANUAL_MODE.active ? 'Active' : 'Inactive'}`);
     console.log(`Using fallback: ${MANUAL_MODE.usingFallback ? 'Yes' : 'No'}`);
     
@@ -346,15 +335,16 @@ function handleManualSubmit() {
 }
 
 /* =============================
-   MANUAL INPUT HANDLERS
+   MANUAL INPUT HANDLERS (Updated)
 ============================= */
 function handleManualInput(e) {
-  const rawValue = e.target.value.replace(/,/g, '');
-  const numericValue = parseFloat(rawValue);
+  const inputValue = e.target.value;
+  const numericValue = parseFloat(inputValue);
   
   if (!isNaN(numericValue) && numericValue >= 0) {
-    MANUAL_MODE.baseValue = numericValue;
-    MANUAL_MODE.lastValidInput = numericValue;
+    const actualFsp = inputToFsp(numericValue);
+    MANUAL_MODE.baseValue = actualFsp;
+    MANUAL_MODE.lastValidInput = actualFsp;
     MANUAL_MODE.active = true;
     MANUAL_MODE.usingFallback = false;
     
@@ -362,30 +352,14 @@ function handleManualInput(e) {
     if (numericValue > 0 && fallbackSection) {
       fallbackSection.classList.add("hidden");
     }
-    
-    // If we already have opponent selected, show results
-    if (UI_PHASE === "IDENTIFY" && opponentPlayers.length > 0) {
-      showLoader("Evaluating frontline pressure…");
-      setTimeout(() => {
-        hideLoader();
-        if (resultSection) {
-          resultSection.classList.remove("hidden");
-        }
-        UI_PHASE = "RESULT";
-        render();
-      }, 1000);
-    }
-    // Trigger render if we're in result phase
-    else if (UI_PHASE === "RESULT") {
-      render();
-    }
   }
 }
 
 function validateManualInput() {
-  const value = parseFloat(manualFspPrimaryInput.value.replace(/,/g, ''));
+  const inputValue = manualFspPrimaryInput.value;
+  const numericValue = parseFloat(inputValue);
   
-  if (isNaN(value) || value <= 0) {
+  if (isNaN(numericValue) || numericValue <= 0) {
     // No valid manual input, show fallback
     MANUAL_MODE.active = false;
     MANUAL_MODE.usingFallback = true;
@@ -400,11 +374,14 @@ function validateManualInput() {
         manualModeInfoModal.classList.remove("hidden");
       }, 500);
     }
+  } else {
+    // Format the input to 2 decimal places
+    manualFspPrimaryInput.value = numericValue.toFixed(2);
   }
 }
 
 /* =============================
-   SLIDER HANDLERS
+   SLIDER HANDLERS (Updated)
 ============================= */
 function handleSliderInput(e) {
   const sliderValue = parseFloat(e.target.value);
@@ -422,21 +399,22 @@ function updateSliderDisplay(value) {
   if (!sliderValueDisplay) return;
   
   const offsetInMillions = (value - 50) / 2; // Convert 0-100 to -50 to +50
-  let displayText = `${Math.abs(offsetInMillions).toFixed(1)}M`;
+  let displayText = `${Math.abs(offsetInMillions).toFixed(2)}`;
   
   if (offsetInMillions > 0) {
     displayText = `+${displayText}`;
   } else if (offsetInMillions < 0) {
     displayText = `-${displayText}`;
   } else {
-    displayText = "±0.0M";
+    displayText = "±0.00";
   }
   
-  sliderValueDisplay.textContent = displayText;
+  sliderValueDisplay.textContent = `${displayText}M`;
 }
 
+
 /* =============================
-   FALLBACK HANDLERS
+   FALLBACK HANDLERS (Updated)
 ============================= */
 function handlePlayerSelectChange() {
   const selectedPlayerId = myPlayerSelect.value;
@@ -451,11 +429,11 @@ function handlePlayerSelectChange() {
     
     // Update computed FSP display
     if (computedFspValue) {
-      computedFspValue.textContent = `${Math.round(player.fsp / 1e6)}M`;
+      computedFspValue.textContent = fspToDisplay(player.fsp);
     }
     
-    // Update manual input for reference
-    manualFspPrimaryInput.value = formatFspValue(player.fsp);
+    // Update manual input for reference (format as decimal)
+    manualFspPrimaryInput.value = fspToInput(player.fsp);
     
     // Reset slider to midpoint
     fspSlider.value = 50;
@@ -478,7 +456,7 @@ function closeManualInfoModal() {
 }
 
 /* =============================
-   GET CURRENT FSP (REVISED)
+   GET CURRENT FSP (Updated)
 ============================= */
 function getCurrentFSP() {
   // Primary: Manual mode
@@ -487,8 +465,8 @@ function getCurrentFSP() {
     const sliderOffset = MANUAL_MODE.sliderOffset;
     
     // Calculate slider effect (±50M range)
-    const offsetInMillions = (sliderOffset - 50) / 2; // -50 to +50
-    const offsetValue = offsetInMillions * 1e6;
+    const offsetInMillions = (sliderOffset - 50) / 2; // -50 to +50 in millions
+    const offsetValue = offsetInMillions * 1e6; // Convert to actual FSP
     
     let finalValue = baseValue + offsetValue;
     
@@ -527,6 +505,32 @@ function getCurrentFSP() {
 function formatFspValue(value) {
   if (!value || value <= 0) return "";
   return Math.round(value).toLocaleString();
+}
+/* =============================
+   HELPER FUNCTIONS FOR FSP FORMAT
+============================= */
+// Convert input value (e.g., 125.00) to actual FSP (125,000,000)
+function inputToFsp(value) {
+  if (!value || isNaN(value)) return 0;
+  return Math.round(parseFloat(value) * 1e6);
+}
+
+// Convert actual FSP to display format (e.g., 125.00M)
+function fspToDisplay(value) {
+  if (!value || isNaN(value)) return "0.00M";
+  return (value / 1e6).toFixed(2) + "M";
+}
+
+// Convert actual FSP to input format (e.g., 125.00)
+function fspToInput(value) {
+  if (!value || isNaN(value)) return "";
+  return (value / 1e6).toFixed(2);
+}
+
+// Format FSP value for UI display with proper formatting
+function formatFspValue(value) {
+  if (!value || isNaN(value)) return "";
+  return (value / 1e6).toFixed(2);
 }
 
 /* =============================
@@ -588,7 +592,7 @@ function onMyAllianceSelected(alliance) {
     myAlliancePlayers.forEach(p => {
       const opt = document.createElement("option");
       opt.value = p.id;
-      opt.textContent = `${p.name} (${Math.round(p.fsp / 1e6)}M FSP)`;
+      opt.textContent = `${p.name} (${fspToDisplay(p.fsp)})`;
       myPlayerSelect.appendChild(opt);
     });
   }
@@ -734,7 +738,7 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 }
 
 /* =============================
-   RENDER (FINAL)
+   RENDER (Updated for Display Format)
 ============================= */
 function render() {
   if (UI_PHASE !== "RESULT") return;
@@ -746,7 +750,7 @@ function render() {
   if (fspSourceNote) {
     if (MANUAL_MODE.active && MANUAL_MODE.baseValue > 0) {
       if (MANUAL_MODE.sliderOffset !== 50) {
-        const offset = ((MANUAL_MODE.sliderOffset - 50) / 2).toFixed(1);
+        const offset = ((MANUAL_MODE.sliderOffset - 50) / 2).toFixed(2);
         fspSourceNote.textContent = `Manual FSP with ${offset}M adjustment`;
       } else {
         fspSourceNote.textContent = "Manual FSP input";
@@ -775,28 +779,24 @@ function render() {
   if (top[0]) {
     threatTop1NameEl && (threatTop1NameEl.textContent = top[0].name);
     threatTop1AllianceEl && (threatTop1AllianceEl.textContent = top[0].alliance);
-    threatTop1FspEl && (threatTop1FspEl.textContent =
-      `FSP ${Math.round(top[0].fsp / 1e6)}M`);
+    threatTop1FspEl && (threatTop1FspEl.textContent = fspToDisplay(top[0].fsp));
   }
 
   if (top[1]) {
     threatTop2NameEl && (threatTop2NameEl.textContent = top[1].name);
     threatTop2AllianceEl && (threatTop2AllianceEl.textContent = top[1].alliance);
-    threatTop2FspEl && (threatTop2FspEl.textContent =
-      `FSP ${Math.round(top[1].fsp / 1e6)}M`);
+    threatTop2FspEl && (threatTop2FspEl.textContent = fspToDisplay(top[1].fsp));
   }
 
   if (top[2]) {
     threatTop3NameEl && (threatTop3NameEl.textContent = top[2].name);
     threatTop3AllianceEl && (threatTop3AllianceEl.textContent = top[2].alliance);
-    threatTop3FspEl && (threatTop3FspEl.textContent =
-      `FSP ${Math.round(top[2].fsp / 1e6)}M`);
+    threatTop3FspEl && (threatTop3FspEl.textContent = fspToDisplay(top[2].fsp));
   }
 
   /* ---- Warzone Base ---- */
   if (threatBaseEl) {
-    threatBaseEl.textContent =
-      `${Math.round(baseFsp / 1e6)}M`;
+    threatBaseEl.textContent = fspToDisplay(baseFsp);
   }
 
   /* ---- Bucketing (LOCKED RULES) ---- */
@@ -827,19 +827,19 @@ function render() {
 }
 
 /* =============================
-   ROW RENDER
+   ROW RENDER (Updated)
 ============================= */
 function renderRow(p, myFSP) {
   const diff = p.fsp - myFSP;
-  const diffTxt =
-    diff > 0 ? ` (+${Math.round(diff / 1e6)}M)` : "";
+  const diffM = diff / 1e6;
+  const diffTxt = diffM > 0 ? ` (+${diffM.toFixed(2)}M)` : diffM < 0 ? ` (${diffM.toFixed(2)}M)` : "";
 
   return `
     <div class="buster-target">
       <div>
         <div class="buster-target-name">${p.name}</div>
         <div class="buster-target-meta">
-          FSP ${Math.round(p.fsp / 1e6)}M${diffTxt}
+          FSP ${fspToDisplay(p.fsp)}${diffTxt}
         </div>
       </div>
     </div>

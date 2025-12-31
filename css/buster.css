@@ -2642,3 +2642,22 @@ body.buster-loading .buster-cta-wrap {
     font-size: 15px;
   }
 }
+/* Add to existing CSS */
+.input-suffix {
+  position: absolute;
+  right: 16px;
+  color: #00ffc8;
+  font-weight: 600;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Adjust input to accommodate suffix */
+.input-with-slider .buster-input.large {
+  padding-right: 60px !important;
+}
+
+.slider-ticks span {
+  font-size: 12px;
+  opacity: 0.8;
+}
