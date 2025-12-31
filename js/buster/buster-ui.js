@@ -59,7 +59,6 @@ function resetUI() {
   resultSection.classList.add("hidden");
   setClockCompact(false);
   UI_PHASE = "INTRO";
-  resetUI();
 }
 /* =============================
    STATE
@@ -70,6 +69,17 @@ let myAlliancePlayers = [];
 let opponentPlayers = [];
 let UI_PHASE = "INTRO";
 // INTRO → SELECT → IDENTIFY → RESULT
+/* =============================
+   MANUAL MODE STATE
+============================= */
+let MANUAL_MODE = {
+  active: true,
+  baseValue: 0,
+  sliderOffset: 50,
+  lastValidInput: 0,
+  usingFallback: false
+};
+
 /* =============================
    CONFIG
 ============================= */
@@ -145,6 +155,100 @@ async function init() {
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
 }
+/* =============================
+   FALLBACK HANDLERS
+============================= */
+function handlePlayerSelectChange() {
+  const selectedPlayerId = myPlayerSelect.value;
+  if (!selectedPlayerId) return;
+  
+  const player = myAlliancePlayers.find(p => p.id === selectedPlayerId);
+  if (player) {
+    // Switch to fallback mode
+    MANUAL_MODE.active = false;
+    MANUAL_MODE.usingFallback = true;
+    MANUAL_MODE.baseValue = player.fsp;
+    
+    // Update computed FSP display
+    if (computedFspValue) {
+      computedFspValue.textContent = `${Math.round(player.fsp / 1e6)}M`;
+    }
+    
+    // Update manual input for reference
+    manualFspPrimaryInput.value = formatFspValue(player.fsp);
+    
+    // Reset slider to midpoint
+    fspSlider.value = 50;
+    updateSliderDisplay(50);
+    
+    // Trigger render if in result phase
+    if (UI_PHASE === "RESULT") {
+      render();
+    }
+  }
+}
+
+/* =============================
+   MODAL FUNCTIONS
+============================= */
+function closeManualInfoModal() {
+  if (manualModeInfoModal) {
+    manualModeInfoModal.classList.add("hidden");
+  }
+}
+
+/* =============================
+   UPDATED GET CURRENT FSP
+============================= */
+function getCurrentFSP() {
+  // Primary: Manual mode
+  if (MANUAL_MODE.active && MANUAL_MODE.baseValue > 0) {
+    const baseValue = MANUAL_MODE.baseValue;
+    const sliderOffset = MANUAL_MODE.sliderOffset;
+    
+    // Calculate slider effect (±50M range)
+    const offsetInMillions = (sliderOffset - 50) / 2; // -50 to +50
+    const offsetValue = offsetInMillions * 1e6;
+    
+    let finalValue = baseValue + offsetValue;
+    
+    // Apply cap (1.25x of base if using slider)
+    const capValue = baseValue * MANUAL_FSP_CAP;
+    if (sliderOffset !== 50 && finalValue > capValue) {
+      finalValue = capValue;
+    }
+    
+    // Ensure non-negative
+    return Math.max(0, finalValue);
+  }
+  
+  // Fallback: Player selection
+  if (MANUAL_MODE.usingFallback) {
+    const selectedPlayerId = myPlayerSelect.value;
+    if (selectedPlayerId) {
+      const player = myAlliancePlayers.find(p => p.id === selectedPlayerId);
+      if (player) {
+        return player.fsp;
+      }
+    }
+  }
+  
+  // Default fallback: First player in alliance or 0
+  if (myAlliancePlayers.length > 0) {
+    return myAlliancePlayers[0].fsp;
+  }
+  
+  return 0;
+}
+
+/* =============================
+   HELPER FUNCTIONS
+============================= */
+function formatFspValue(value) {
+  if (!value || value <= 0) return "";
+  return Math.round(value).toLocaleString();
+}
+
 /* =============================
    SEARCHABLE ALLIANCE INPUT
 ============================= */
@@ -313,12 +417,8 @@ function render() {
       fspSourceNote.textContent =
         "⚠ Manual FSP override (session only)";
     } else {
-      fspSourceNote.textContent =
-        "⚠ Invalid manual FSP (using computed)";
+      fspSourceNote.textContent = "Using default FSP calculation";
     }
-  } else {
-    manualInput.disabled = true;
-    fspSourceNote.textContent = "";
   }
   /* ---- Opponents (Real + Synthetic) ---- */
   const synthetic = buildSyntheticCommanders({
@@ -431,6 +531,7 @@ function renderConfidence() {
     confidenceBadge.className = "buster-badge badge-red";
   }
 }
+
 /* =============================
    BUSTER WEEKLY COUNTDOWN (IST)
 ============================= */

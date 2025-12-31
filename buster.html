@@ -241,6 +241,8 @@
     <div id="fspSourceNote" class="buster-note"></div>
 </section>
   </section>
+</section>
+
 <!-- =============================
      THREATS OVERVIEW
 ============================= -->
@@ -296,6 +298,7 @@
       <span>Cannot Beat</span>
     </div>
   </section>
+  
   <!-- =============================
      CONFIDENCE INDICATOR
 ============================== -->
@@ -320,21 +323,61 @@
      MATCHUP MODAL
 ============================== -->
 <div id="matchupModal" class="buster-modal hidden">
-
   <div class="buster-modal-backdrop"></div>
-
   <div class="buster-modal-content">
     <div class="buster-modal-header">
       <h3 id="modalTitle">Matchups</h3>
       <button id="closeModal">✕</button>
     </div>
-
     <div id="modalBody" class="buster-modal-body">
       <!-- dynamic content -->
     </div>
   </div>
-
 </div>
+
+<!-- =============================
+     MANUAL MODE INFO MODAL
+============================== -->
+<div id="manualModeInfoModal" class="buster-modal hidden">
+  <div class="buster-modal-backdrop"></div>
+  <div class="buster-modal-content small">
+    <div class="buster-modal-header">
+      <h3>Manual Mode Guide</h3>
+      <button id="closeManualModal">✕</button>
+    </div>
+    <div class="buster-modal-body">
+      <div class="manual-guide">
+        <div class="guide-item">
+          <div class="guide-icon">🔧</div>
+          <div class="guide-content">
+            <strong>Primary Input</strong>
+            <p>Enter your exact First Squad Power (FSP) in the input field.</p>
+          </div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon">🎚️</div>
+          <div class="guide-content">
+            <strong>Fine-tune with Slider</strong>
+            <p>Adjust ±50M around your entered value for scenario testing.</p>
+          </div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon">🔄</div>
+          <div class="guide-content">
+            <strong>Automatic Fallback</strong>
+            <p>If no manual input, system uses alliance player selection.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="buster-btn secondary" id="closeManualModalBtn">
+          Got it
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Buy Me a Coffee -->
 <script
   data-name="BMC-Widget"
@@ -349,9 +392,6 @@
   data-y_margin="12">
 </script>
 
-
-
-
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2025 LWServers</span>
@@ -365,9 +405,9 @@
     </nav>
   </div>
 </footer>
+
 <!-- =============================
      BUSTER GLOBAL LOADER
-     (HTML only – no JS yet)
 ============================= -->
 <div id="busterLoader" class="buster-loader hidden">
   <div class="loader-core">
