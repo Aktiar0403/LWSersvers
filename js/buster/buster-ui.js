@@ -63,7 +63,7 @@ const startBusterBtn = document.getElementById("startBusterBtn");
 const loaderEl = document.getElementById("busterLoader");
 
 /* =============================
-   RESET UI (Updated)
+   INITIAL UI STATE (HARD RESET)
 ============================= */
 function resetUI() {
   introSection.classList.remove("hidden");
@@ -128,6 +128,33 @@ const WARZONE_BASE_POWER = 130e6;
 const MANUAL_FSP_CAP = 1.25;
 
 /* =============================
+   HELPER FUNCTIONS FOR FSP FORMAT
+============================= */
+// Convert input value (e.g., 125.00) to actual FSP (125,000,000)
+function inputToFsp(value) {
+  if (!value || isNaN(value)) return 0;
+  return Math.round(parseFloat(value) * 1e6);
+}
+
+// Convert actual FSP to display format (e.g., 125.00M)
+function fspToDisplay(value) {
+  if (!value || isNaN(value)) return "0.00M";
+  return (value / 1e6).toFixed(2) + "M";
+}
+
+// Convert actual FSP to input format (e.g., 125.00)
+function fspToInput(value) {
+  if (!value || isNaN(value)) return "";
+  return (value / 1e6).toFixed(2);
+}
+
+// Format FSP value for UI display with proper formatting
+function formatFspValue(value) {
+  if (!value || isNaN(value)) return "";
+  return (value / 1e6).toFixed(2);
+}
+
+/* =============================
    LOADER HELPERS
 ============================= */
 function showLoader(text) {
@@ -174,6 +201,7 @@ if (startBusterBtn) {
     }, 1000);
   });
 }
+
 /* =============================
    INIT
 ============================= */
@@ -205,73 +233,135 @@ async function init() {
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
   console.log("✅ Manual mode initialized");
-  
-  // Check if manual submit button exists
-  const manualSubmitBtn = document.getElementById("manualSubmitBtn");
-  if (manualSubmitBtn) {
-    console.log("✅ Manual submit button found in DOM");
-  } else {
-    console.error("❌ Manual submit button NOT found in DOM!");
-  }
 }
 
 /* =============================
-   MANUAL MODE INITIALIZATION (WITH NULL CHECKS)
+   MANUAL INPUT HANDLERS
 ============================= */
-function initManualMode() {
-  console.log("🔧 Initializing manual mode elements...");
+function handleManualInput(e) {
+  const inputValue = e.target.value;
+  const numericValue = parseFloat(inputValue);
   
-  // Check if manual mode elements exist
-  if (!fspSlider) {
-    console.error("❌ fspSlider element not found!");
-    return;
-  }
-  
-  if (!manualFspPrimaryInput) {
-    console.error("❌ manualFspPrimaryInput element not found!");
-    return;
-  }
-  
-  if (!myPlayerSelect) {
-    console.error("❌ myPlayerSelect element not found!");
-    return;
-  }
-  
-  // Setup slider
-  fspSlider.addEventListener("input", handleSliderInput);
-  
-  // Setup manual input
-  manualFspPrimaryInput.addEventListener("input", handleManualInput);
-  manualFspPrimaryInput.addEventListener("blur", validateManualInput);
-  
-  // Setup player select fallback
-  myPlayerSelect.addEventListener("change", handlePlayerSelectChange);
-  
-  // Setup modal close handlers if modals exist
-  if (closeManualModal) {
-    closeManualModal.onclick = closeManualInfoModal;
-  }
-  if (closeManualModalBtn) {
-    closeManualModalBtn.onclick = closeManualInfoModal;
-  }
-  if (manualModeInfoModal) {
-    const backdrop = manualModeInfoModal.querySelector(".buster-modal-backdrop");
-    if (backdrop) {
-      backdrop.onclick = closeManualInfoModal;
+  if (!isNaN(numericValue) && numericValue >= 0) {
+    const actualFsp = inputToFsp(numericValue);
+    MANUAL_MODE.baseValue = actualFsp;
+    MANUAL_MODE.lastValidInput = actualFsp;
+    MANUAL_MODE.active = true;
+    MANUAL_MODE.usingFallback = false;
+    
+    // Hide fallback section if manual input has value
+    if (numericValue > 0 && fallbackSection) {
+      fallbackSection.classList.add("hidden");
     }
   }
+}
+
+function validateManualInput() {
+  const inputValue = manualFspPrimaryInput.value;
+  const numericValue = parseFloat(inputValue);
   
-  // Initialize the manual submit button
-  initManualSubmitButton();
-  
-  // Initial state
-  updateSliderDisplay(50);
-  console.log("✅ Manual mode initialized successfully");
+  if (isNaN(numericValue) || numericValue <= 0) {
+    // No valid manual input, show fallback
+    MANUAL_MODE.active = false;
+    MANUAL_MODE.usingFallback = true;
+    
+    if (fallbackSection) {
+      fallbackSection.classList.remove("hidden");
+    }
+    
+    // Show info modal on first empty input
+    if (MANUAL_MODE.lastValidInput === 0 && manualModeInfoModal) {
+      setTimeout(() => {
+        manualModeInfoModal.classList.remove("hidden");
+      }, 500);
+    }
+  } else {
+    // Format the input to 2 decimal places
+    manualFspPrimaryInput.value = numericValue.toFixed(2);
+  }
 }
 
 /* =============================
-   MANUAL SUBMIT BUTTON HANDLER (Updated)
+   SLIDER HANDLERS
 ============================= */
+function handleSliderInput(e) {
+  const sliderValue = parseFloat(e.target.value);
+  MANUAL_MODE.sliderOffset = sliderValue;
+  
+  updateSliderDisplay(sliderValue);
+  
+  // If we have a base value, trigger render
+  if (MANUAL_MODE.baseValue > 0 && UI_PHASE === "RESULT") {
+    render();
+  }
+}
+
+function updateSliderDisplay(value) {
+  if (!sliderValueDisplay) return;
+  
+  const offsetInMillions = (value - 50) / 2; // Convert 0-100 to -50 to +50
+  let displayText = `${Math.abs(offsetInMillions).toFixed(2)}`;
+  
+  if (offsetInMillions > 0) {
+    displayText = `+${displayText}`;
+  } else if (offsetInMillions < 0) {
+    displayText = `-${displayText}`;
+  } else {
+    displayText = "±0.00";
+  }
+  
+  sliderValueDisplay.textContent = `${displayText}M`;
+}
+
+/* =============================
+   FALLBACK HANDLERS
+============================= */
+function handlePlayerSelectChange() {
+  const selectedPlayerId = myPlayerSelect.value;
+  if (!selectedPlayerId) return;
+  
+  const player = myAlliancePlayers.find(p => p.id === selectedPlayerId);
+  if (player) {
+    // Switch to fallback mode
+    MANUAL_MODE.active = false;
+    MANUAL_MODE.usingFallback = true;
+    MANUAL_MODE.baseValue = player.fsp;
+    
+    // Update computed FSP display
+    if (computedFspValue) {
+      computedFspValue.textContent = fspToDisplay(player.fsp);
+    }
+    
+    // Update manual input for reference (format as decimal)
+    manualFspPrimaryInput.value = fspToInput(player.fsp);
+    
+    // Reset slider to midpoint
+    fspSlider.value = 50;
+    updateSliderDisplay(50);
+    
+    // Trigger render if in result phase
+    if (UI_PHASE === "RESULT") {
+      render();
+    }
+  }
+}
+
+/* =============================
+   MANUAL SUBMIT BUTTON HANDLER
+============================= */
+function initManualSubmitButton() {
+  const manualSubmitBtn = document.getElementById("manualSubmitBtn");
+  
+  if (!manualSubmitBtn) {
+    console.error("❌ manualSubmitBtn element not found!");
+    return;
+  }
+  
+  console.log("✅ Found manualSubmitBtn, adding event listener...");
+  
+  manualSubmitBtn.addEventListener("click", handleManualSubmit);
+}
+
 function handleManualSubmit() {
   console.log("🧮 Manual submit button clicked");
   
@@ -335,118 +425,6 @@ function handleManualSubmit() {
 }
 
 /* =============================
-   MANUAL INPUT HANDLERS (Updated)
-============================= */
-function handleManualInput(e) {
-  const inputValue = e.target.value;
-  const numericValue = parseFloat(inputValue);
-  
-  if (!isNaN(numericValue) && numericValue >= 0) {
-    const actualFsp = inputToFsp(numericValue);
-    MANUAL_MODE.baseValue = actualFsp;
-    MANUAL_MODE.lastValidInput = actualFsp;
-    MANUAL_MODE.active = true;
-    MANUAL_MODE.usingFallback = false;
-    
-    // Hide fallback section if manual input has value
-    if (numericValue > 0 && fallbackSection) {
-      fallbackSection.classList.add("hidden");
-    }
-  }
-}
-
-function validateManualInput() {
-  const inputValue = manualFspPrimaryInput.value;
-  const numericValue = parseFloat(inputValue);
-  
-  if (isNaN(numericValue) || numericValue <= 0) {
-    // No valid manual input, show fallback
-    MANUAL_MODE.active = false;
-    MANUAL_MODE.usingFallback = true;
-    
-    if (fallbackSection) {
-      fallbackSection.classList.remove("hidden");
-    }
-    
-    // Show info modal on first empty input
-    if (MANUAL_MODE.lastValidInput === 0 && manualModeInfoModal) {
-      setTimeout(() => {
-        manualModeInfoModal.classList.remove("hidden");
-      }, 500);
-    }
-  } else {
-    // Format the input to 2 decimal places
-    manualFspPrimaryInput.value = numericValue.toFixed(2);
-  }
-}
-
-/* =============================
-   SLIDER HANDLERS (Updated)
-============================= */
-function handleSliderInput(e) {
-  const sliderValue = parseFloat(e.target.value);
-  MANUAL_MODE.sliderOffset = sliderValue;
-  
-  updateSliderDisplay(sliderValue);
-  
-  // If we have a base value, trigger render
-  if (MANUAL_MODE.baseValue > 0 && UI_PHASE === "RESULT") {
-    render();
-  }
-}
-
-function updateSliderDisplay(value) {
-  if (!sliderValueDisplay) return;
-  
-  const offsetInMillions = (value - 50) / 2; // Convert 0-100 to -50 to +50
-  let displayText = `${Math.abs(offsetInMillions).toFixed(2)}`;
-  
-  if (offsetInMillions > 0) {
-    displayText = `+${displayText}`;
-  } else if (offsetInMillions < 0) {
-    displayText = `-${displayText}`;
-  } else {
-    displayText = "±0.00";
-  }
-  
-  sliderValueDisplay.textContent = `${displayText}M`;
-}
-
-
-/* =============================
-   FALLBACK HANDLERS (Updated)
-============================= */
-function handlePlayerSelectChange() {
-  const selectedPlayerId = myPlayerSelect.value;
-  if (!selectedPlayerId) return;
-  
-  const player = myAlliancePlayers.find(p => p.id === selectedPlayerId);
-  if (player) {
-    // Switch to fallback mode
-    MANUAL_MODE.active = false;
-    MANUAL_MODE.usingFallback = true;
-    MANUAL_MODE.baseValue = player.fsp;
-    
-    // Update computed FSP display
-    if (computedFspValue) {
-      computedFspValue.textContent = fspToDisplay(player.fsp);
-    }
-    
-    // Update manual input for reference (format as decimal)
-    manualFspPrimaryInput.value = fspToInput(player.fsp);
-    
-    // Reset slider to midpoint
-    fspSlider.value = 50;
-    updateSliderDisplay(50);
-    
-    // Trigger render if in result phase
-    if (UI_PHASE === "RESULT") {
-      render();
-    }
-  }
-}
-
-/* =============================
    MODAL FUNCTIONS
 ============================= */
 function closeManualInfoModal() {
@@ -456,7 +434,61 @@ function closeManualInfoModal() {
 }
 
 /* =============================
-   GET CURRENT FSP (Updated)
+   MANUAL MODE INITIALIZATION (WITH NULL CHECKS)
+============================= */
+function initManualMode() {
+  console.log("🔧 Initializing manual mode elements...");
+  
+  // Check if manual mode elements exist
+  if (!fspSlider) {
+    console.error("❌ fspSlider element not found!");
+    return;
+  }
+  
+  if (!manualFspPrimaryInput) {
+    console.error("❌ manualFspPrimaryInput element not found!");
+    return;
+  }
+  
+  if (!myPlayerSelect) {
+    console.error("❌ myPlayerSelect element not found!");
+    return;
+  }
+  
+  // Setup slider
+  fspSlider.addEventListener("input", handleSliderInput);
+  
+  // Setup manual input
+  manualFspPrimaryInput.addEventListener("input", handleManualInput);
+  manualFspPrimaryInput.addEventListener("blur", validateManualInput);
+  
+  // Setup player select fallback
+  myPlayerSelect.addEventListener("change", handlePlayerSelectChange);
+  
+  // Setup modal close handlers if modals exist
+  if (closeManualModal) {
+    closeManualModal.onclick = closeManualInfoModal;
+  }
+  if (closeManualModalBtn) {
+    closeManualModalBtn.onclick = closeManualInfoModal;
+  }
+  if (manualModeInfoModal) {
+    const backdrop = manualModeInfoModal.querySelector(".buster-modal-backdrop");
+    if (backdrop) {
+      backdrop.onclick = closeManualInfoModal;
+    }
+  }
+  
+  // Initialize the manual submit button
+  initManualSubmitButton();
+  
+  // Initial state
+  updateSliderDisplay(50);
+  console.log("✅ Manual mode initialized successfully");
+}
+
+/* =============================
+   GET CURRENT FSP (REVISED)
 ============================= */
 function getCurrentFSP() {
   // Primary: Manual mode
@@ -465,8 +497,8 @@ function getCurrentFSP() {
     const sliderOffset = MANUAL_MODE.sliderOffset;
     
     // Calculate slider effect (±50M range)
-    const offsetInMillions = (sliderOffset - 50) / 2; // -50 to +50 in millions
-    const offsetValue = offsetInMillions * 1e6; // Convert to actual FSP
+    const offsetInMillions = (sliderOffset - 50) / 2; // -50 to +50
+    const offsetValue = offsetInMillions * 1e6;
     
     let finalValue = baseValue + offsetValue;
     
@@ -497,34 +529,6 @@ function getCurrentFSP() {
   }
   
   return 0;
-}
-
-
-/* =============================
-   HELPER FUNCTIONS FOR FSP FORMAT
-============================= */
-// Convert input value (e.g., 125.00) to actual FSP (125,000,000)
-function inputToFsp(value) {
-  if (!value || isNaN(value)) return 0;
-  return Math.round(parseFloat(value) * 1e6);
-}
-
-// Convert actual FSP to display format (e.g., 125.00M)
-function fspToDisplay(value) {
-  if (!value || isNaN(value)) return "0.00M";
-  return (value / 1e6).toFixed(2) + "M";
-}
-
-// Convert actual FSP to input format (e.g., 125.00)
-function fspToInput(value) {
-  if (!value || isNaN(value)) return "";
-  return (value / 1e6).toFixed(2);
-}
-
-// Format FSP value for UI display with proper formatting
-function formatFspValue(value) {
-  if (!value || isNaN(value)) return "";
-  return (value / 1e6).toFixed(2);
 }
 
 /* =============================
@@ -573,6 +577,7 @@ function setupAllianceSearch(input, resultBox, onSelect) {
     }
   });
 }
+
 /* =============================
    ALLIANCE SELECTION
 ============================= */
@@ -732,7 +737,7 @@ function computeWarzoneThreats(opponentAlliancePlayers) {
 }
 
 /* =============================
-   RENDER (Updated for Display Format)
+   RENDER (FINAL)
 ============================= */
 function render() {
   if (UI_PHASE !== "RESULT") return;
