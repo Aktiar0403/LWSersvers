@@ -205,6 +205,14 @@ async function init() {
   console.log("✅ Players loaded:", ALL_PLAYERS.length);
   console.log("✅ Alliances loaded:", ALL_ALLIANCES.length);
   console.log("✅ Manual mode initialized");
+  
+  // Check if manual submit button exists
+  const manualSubmitBtn = document.getElementById("manualSubmitBtn");
+  if (manualSubmitBtn) {
+    console.log("✅ Manual submit button found in DOM");
+  } else {
+    console.error("❌ Manual submit button NOT found in DOM!");
+  }
 }
 
 /* =============================
@@ -253,9 +261,88 @@ function initManualMode() {
     }
   }
   
+  // Initialize the manual submit button
+  initManualSubmitButton();
+  
   // Initial state
   updateSliderDisplay(50);
   console.log("✅ Manual mode initialized successfully");
+}
+
+/* =============================
+   MANUAL SUBMIT BUTTON HANDLER
+============================= */
+function initManualSubmitButton() {
+  const manualSubmitBtn = document.getElementById("manualSubmitBtn");
+  
+  if (!manualSubmitBtn) {
+    console.error("❌ manualSubmitBtn element not found!");
+    return;
+  }
+  
+  console.log("✅ Found manualSubmitBtn, adding event listener...");
+  
+  manualSubmitBtn.addEventListener("click", handleManualSubmit);
+}
+
+function handleManualSubmit() {
+  console.log("🧮 Manual submit button clicked");
+  
+  // Validate that we have both alliances selected
+  if (!myAlliancePlayers.length) {
+    alert("Please select your alliance first!");
+    return;
+  }
+  
+  if (!opponentPlayers.length) {
+    alert("Please select an opponent alliance first!");
+    return;
+  }
+  
+  // Validate manual input
+  const manualValue = parseFloat(manualFspPrimaryInput.value.replace(/,/g, ''));
+  
+  if (isNaN(manualValue) || manualValue <= 0) {
+    // Check if we're using fallback
+    const selectedPlayerId = myPlayerSelect.value;
+    if (!selectedPlayerId) {
+      alert("Please enter your First Squad Power or select a player from your alliance!");
+      return;
+    }
+    
+    // Using fallback selection
+    MANUAL_MODE.active = false;
+    MANUAL_MODE.usingFallback = true;
+  } else {
+    // Using manual input
+    MANUAL_MODE.active = true;
+    MANUAL_MODE.baseValue = manualValue;
+    MANUAL_MODE.lastValidInput = manualValue;
+    MANUAL_MODE.usingFallback = false;
+    
+    // Update display if needed
+    manualFspPrimaryInput.value = formatFspValue(manualValue);
+  }
+  
+  // Show loader and proceed to results
+  showLoader("Calculating matchups…");
+  
+  setTimeout(() => {
+    hideLoader();
+    
+    if (resultSection) {
+      resultSection.classList.remove("hidden");
+    }
+    
+    UI_PHASE = "RESULT";
+    render();
+    
+    console.log("✅ Manual calculation complete");
+    console.log(`Current FSP: ${Math.round(getCurrentFSP() / 1e6)}M`);
+    console.log(`Manual mode: ${MANUAL_MODE.active ? 'Active' : 'Inactive'}`);
+    console.log(`Using fallback: ${MANUAL_MODE.usingFallback ? 'Yes' : 'No'}`);
+    
+  }, 1000);
 }
 
 /* =============================
