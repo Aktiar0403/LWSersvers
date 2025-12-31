@@ -227,6 +227,9 @@ async function init() {
   setupAllianceSearch(myAllianceInput, myAllianceResults, onMyAllianceSelected);
   setupAllianceSearch(oppAllianceInput, oppAllianceResults, onOppAllianceSelected);
   
+  // Setup modal event listeners
+  setupModalEventListeners();
+  
   // Initialize manual mode with null checks
   initManualMode();
 
@@ -433,6 +436,61 @@ function closeManualInfoModal() {
   }
 }
 
+function closeMatchupModal() {
+  if (matchupModal) {
+    matchupModal.classList.add("hidden");
+  }
+}
+
+/* =============================
+   SETUP MODAL EVENT LISTENERS
+============================= */
+function setupModalEventListeners() {
+  console.log("🔧 Setting up modal event listeners...");
+  
+  // Matchup modal close button
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closeMatchupModal);
+    console.log("✅ Matchup modal close button listener added");
+  }
+  
+  // Matchup modal backdrop
+  const matchupBackdrop = matchupModal?.querySelector(".buster-modal-backdrop");
+  if (matchupBackdrop) {
+    matchupBackdrop.addEventListener("click", closeMatchupModal);
+    console.log("✅ Matchup modal backdrop listener added");
+  }
+  
+  // Manual mode modal close buttons
+  if (closeManualModal) {
+    closeManualModal.addEventListener("click", closeManualInfoModal);
+  }
+  
+  if (closeManualModalBtn) {
+    closeManualModalBtn.addEventListener("click", closeManualInfoModal);
+  }
+  
+  // Manual mode modal backdrop
+  const manualBackdrop = manualModeInfoModal?.querySelector(".buster-modal-backdrop");
+  if (manualBackdrop) {
+    manualBackdrop.addEventListener("click", closeManualInfoModal);
+  }
+  
+  // Close modal with Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if (!matchupModal.classList.contains("hidden")) {
+        closeMatchupModal();
+      }
+      if (!manualModeInfoModal.classList.contains("hidden")) {
+        closeManualInfoModal();
+      }
+    }
+  });
+  
+  console.log("✅ Modal event listeners setup complete");
+}
+
 /* =============================
    MANUAL MODE INITIALIZATION (WITH NULL CHECKS)
 ============================= */
@@ -465,22 +523,11 @@ function initManualMode() {
   // Setup player select fallback
   myPlayerSelect.addEventListener("change", handlePlayerSelectChange);
   
-  // Setup modal close handlers if modals exist
-  if (closeManualModal) {
-    closeManualModal.onclick = closeManualInfoModal;
-  }
-  if (closeManualModalBtn) {
-    closeManualModalBtn.onclick = closeManualInfoModal;
-  }
-  if (manualModeInfoModal) {
-    const backdrop = manualModeInfoModal.querySelector(".buster-modal-backdrop");
-    if (backdrop) {
-      backdrop.onclick = closeManualInfoModal;
-    }
-  }
-  
   // Initialize the manual submit button
   initManualSubmitButton();
+  
+  // Setup modal event listeners
+  setupModalEventListeners();
   
   // Initial state
   updateSliderDisplay(50);
@@ -670,15 +717,19 @@ function openMatchupModal(title, list, category) {
   
   // Clear previous category classes
   const modalContent = matchupModal.querySelector('.buster-modal-content');
-  modalContent.classList.remove('can-category', 'maybe-category', 'cannot-category');
-  
-  // Add category class for header coloring
-  if (category) {
-    modalContent.classList.add(`${category}-category`);
+  if (modalContent) {
+    modalContent.classList.remove('can-category', 'maybe-category', 'cannot-category');
+    
+    // Add category class for header coloring
+    if (category) {
+      modalContent.classList.add(`${category}-category`);
+    }
   }
   
   modalBody.innerHTML = renderAdvancedGroup(list, getCurrentFSP(), category);
   matchupModal.classList.remove("hidden");
+  
+  console.log(`✅ Modal opened: ${title}`);
 }
 
 /* =============================
