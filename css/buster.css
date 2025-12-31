@@ -2661,3 +2661,149 @@ body.buster-loading .buster-cta-wrap {
   font-size: 12px;
   opacity: 0.8;
 }
+/* =============================
+   MATCHUP MODAL COLORED CARDS
+============================= */
+
+/* Base card styles */
+.buster-target {
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: rgba(0, 30, 60, 0.6);
+  border-left: 4px solid #5d8aa8;
+  transition: all 0.2s ease;
+}
+
+/* Green (Can Beat) cards */
+.buster-target.can-card {
+  background: rgba(0, 255, 200, 0.08);
+  border-left: 4px solid #00ffc8;
+  border: 1px solid rgba(0, 255, 200, 0.2);
+}
+
+.buster-target.can-card:hover {
+  background: rgba(0, 255, 200, 0.12);
+  transform: translateX(4px);
+}
+
+/* Yellow (May/May Not) cards */
+.buster-target.maybe-card {
+  background: rgba(255, 209, 102, 0.08);
+  border-left: 4px solid #ffd166;
+  border: 1px solid rgba(255, 209, 102, 0.2);
+}
+
+.buster-target.maybe-card:hover {
+  background: rgba(255, 209, 102, 0.12);
+  transform: translateX(4px);
+}
+
+/* Red (Cannot Beat) cards */
+.buster-target.cannot-card {
+  background: rgba(255, 107, 107, 0.08);
+  border-left: 4px solid #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.buster-target.cannot-card:hover {
+  background: rgba(255, 107, 107, 0.12);
+  transform: translateX(4px);
+}
+
+/* Assumed commanders card */
+.buster-target.buster-assumed {
+  background: rgba(128, 128, 128, 0.08);
+  border-left: 4px solid #8a8a8a;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  opacity: 0.8;
+}
+
+/* Card content */
+.buster-target-name {
+  color: #e0f7fa;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.buster-target-meta {
+  color: #a0e7ff;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Color-specific text for Can Beat */
+.buster-target.can-card .buster-target-name {
+  color: #00ffc8;
+}
+
+.buster-target.can-card .buster-target-meta {
+  color: #80e3d0;
+}
+
+/* Color-specific text for May/May Not */
+.buster-target.maybe-card .buster-target-name {
+  color: #ffd166;
+}
+
+.buster-target.maybe-card .buster-target-meta {
+  color: #ffdc91;
+}
+
+/* Color-specific text for Cannot Beat */
+.buster-target.cannot-card .buster-target-name {
+  color: #ff6b6b;
+}
+
+.buster-target.cannot-card .buster-target-meta {
+  color: #ffa8a8;
+}
+
+/* Modal header with category colors */
+.buster-modal-content.can-category .buster-modal-header {
+  background: linear-gradient(135deg, #00ffc8 0%, #00cca6 100%);
+  color: #001a33;
+}
+
+.buster-modal-content.maybe-category .buster-modal-header {
+  background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
+  color: #001a33;
+}
+
+.buster-modal-content.cannot-category .buster-modal-header {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: #001a33;
+}
+
+/* Summary section colors (existing but ensure consistency) */
+.buster-summary-item.can {
+  background: linear-gradient(135deg, #00ffc8 0%, #00cca6 100%);
+  color: #001a33;
+}
+
+.buster-summary-item.maybe {
+  background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
+  color: #001a33;
+}
+
+.buster-summary-item.cannot {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: #001a33;
+}
+
+/* Threat cards color updates */
+.buster-threat-card.primary {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+}
+
+.buster-threat-card.primary .threat-icon {
+  color: white;
+}
+
+.buster-threat-card.primary .threat-value,
+.buster-threat-card.primary .threat-title,
+.buster-threat-card.primary .threat-sub {
+  color: white;
+}

@@ -649,39 +649,36 @@ const cannotEl = document.querySelector(".buster-summary-item.cannot");
 
 if (canBeatEl) {
   canBeatEl.addEventListener("click", () =>
-    openMatchupModal("Can Beat", window._lastBuckets?.canBeat || [])
+    openMatchupModal("Can Beat", window._lastBuckets?.canBeat || [], 'can')
   );
 }
 if (maybeEl) {
   maybeEl.addEventListener("click", () =>
-    openMatchupModal("May / May Not Beat", window._lastBuckets?.mayBeat || [])
+    openMatchupModal("May / May Not Beat", window._lastBuckets?.mayBeat || [], 'maybe')
   );
 }
 if (cannotEl) {
   cannotEl.addEventListener("click", () =>
-    openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [])
+    openMatchupModal("Cannot Beat", window._lastBuckets?.cannotBeat || [], 'cannot')
   );
 }
 
-function openMatchupModal(title, list) {
+function openMatchupModal(title, list, category) {
   if (!matchupModal || !modalTitle || !modalBody) return;
   
   modalTitle.textContent = title;
-  modalBody.innerHTML = renderAdvancedGroup(list, getCurrentFSP());
+  
+  // Clear previous category classes
+  const modalContent = matchupModal.querySelector('.buster-modal-content');
+  modalContent.classList.remove('can-category', 'maybe-category', 'cannot-category');
+  
+  // Add category class for header coloring
+  if (category) {
+    modalContent.classList.add(`${category}-category`);
+  }
+  
+  modalBody.innerHTML = renderAdvancedGroup(list, getCurrentFSP(), category);
   matchupModal.classList.remove("hidden");
-}
-
-if (closeModalBtn) {
-  closeModalBtn.onclick = () => {
-    if (matchupModal) matchupModal.classList.add("hidden");
-  };
-}
-
-const modalBackdrop = document.querySelector(".buster-modal-backdrop");
-if (modalBackdrop) {
-  modalBackdrop.onclick = () => {
-    if (matchupModal) matchupModal.classList.add("hidden");
-  };
 }
 
 /* =============================
@@ -828,13 +825,19 @@ function render() {
 /* =============================
    ROW RENDER (Updated)
 ============================= */
-function renderRow(p, myFSP) {
+function renderRow(p, myFSP, category) {
   const diff = p.fsp - myFSP;
   const diffM = diff / 1e6;
   const diffTxt = diffM > 0 ? ` (+${diffM.toFixed(2)}M)` : diffM < 0 ? ` (${diffM.toFixed(2)}M)` : "";
+  
+  // Determine card class based on category
+  let cardClass = '';
+  if (category === 'can') cardClass = 'can-card';
+  else if (category === 'maybe') cardClass = 'maybe-card';
+  else if (category === 'cannot') cardClass = 'cannot-card';
 
   return `
-    <div class="buster-target">
+    <div class="buster-target ${cardClass}">
       <div>
         <div class="buster-target-name">${p.name}</div>
         <div class="buster-target-meta">
@@ -845,11 +848,11 @@ function renderRow(p, myFSP) {
   `;
 }
 
-function renderAdvancedGroup(list, myFSP) {
+function renderAdvancedGroup(list, myFSP, category) {
   const real = list.filter(p => !p.isSynthetic);
   const syntheticCount = list.filter(p => p.isSynthetic).length;
 
-  let html = real.map(p => renderRow(p, myFSP)).join("");
+  let html = real.map(p => renderRow(p, myFSP, category)).join("");
 
   if (syntheticCount > 0) {
     html += `
