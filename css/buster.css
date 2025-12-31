@@ -2207,3 +2207,438 @@ body.buster-loading .buster-cta-wrap {
 .support-link i {
   font-size: 16px;
 }
+/* =============================
+   DROPDOWN & SELECT STYLES
+============================= */
+
+/* Base dropdown/select styling */
+.buster-input.fallback-select {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: rgba(0, 15, 30, 0.9);
+  border: 1px solid rgba(0, 255, 200, 0.3);
+  border-radius: 8px;
+  color: #e0f7fa;
+  font-size: 16px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300ffc8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.1);
+}
+
+/* Hover state */
+.buster-input.fallback-select:hover {
+  border-color: rgba(0, 255, 200, 0.6);
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.2);
+}
+
+/* Focus state */
+.buster-input.fallback-select:focus {
+  outline: none;
+  border-color: #00ffc8;
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+}
+
+/* Disabled state */
+.buster-input.fallback-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(0, 15, 30, 0.5);
+}
+
+/* Dropdown options styling */
+.buster-input.fallback-select option {
+  background-color: #001a33;
+  color: #e0f7fa;
+  padding: 10px;
+  font-size: 15px;
+}
+
+/* Selected option */
+.buster-input.fallback-select option:checked {
+  background-color: rgba(0, 255, 200, 0.2);
+  color: #00ffc8;
+}
+
+/* Custom dropdown container for player selection */
+.fallback-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fallback-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #00ffc8;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.fallback-header i {
+  font-size: 18px;
+}
+
+.player-fsp-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(0, 255, 200, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 255, 200, 0.2);
+}
+
+.fsp-label {
+  color: #a0e7ff;
+  font-size: 14px;
+}
+
+#computedFspValue {
+  color: #00ffc8;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Divider between manual and fallback sections */
+.fallback-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #5d8aa8;
+}
+
+.divider-text {
+  padding: 0 15px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 255, 200, 0.1) 20%, 
+    rgba(0, 255, 200, 0.2) 50%, 
+    rgba(0, 255, 200, 0.1) 80%, 
+    transparent 100%
+  );
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Fallback section visibility toggle */
+.fallback-section.hidden {
+  display: none;
+}
+
+.fallback-section {
+  margin-top: 25px;
+  padding: 20px;
+  background: rgba(0, 30, 60, 0.4);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 200, 0.15);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* =============================
+   BUTTON STYLES (Manual Submit)
+============================= */
+
+.manual-submit-section {
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.manual-submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #00ffc8 0%, #00cca6 100%);
+  border: none;
+  border-radius: 10px;
+  color: #001a33;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 20px rgba(0, 255, 200, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.manual-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 200, 0.6);
+  background: linear-gradient(135deg, #00ffc8 0%, #00e6ba 100%);
+}
+
+.manual-submit-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 15px rgba(0, 255, 200, 0.4);
+}
+
+.manual-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 3px 10px rgba(0, 255, 200, 0.2);
+}
+
+.manual-submit-btn i {
+  font-size: 20px;
+}
+
+/* =============================
+   MANUAL MODE SPECIFIC STYLES
+============================= */
+
+.manual-mode-header {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(0, 255, 200, 0.2);
+}
+
+.manual-mode-header h3 {
+  color: #00ffc8;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.manual-mode-subtitle {
+  color: #a0e7ff;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.manual-input-section {
+  background: rgba(0, 20, 40, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 200, 0.1);
+}
+
+.manual-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-with-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-slider .buster-input.large {
+  flex: 1;
+  padding-right: 60px;
+  font-size: 18px;
+  font-weight: 600;
+  height: 56px;
+  background: rgba(0, 30, 60, 0.7);
+}
+
+.input-suffix {
+  position: absolute;
+  right: 16px;
+  color: #00ffc8;
+  font-weight: 600;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Slider styles */
+.slider-container {
+  background: rgba(0, 30, 60, 0.5);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 200, 0.1);
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.slider-label {
+  color: #a0e7ff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.slider-value {
+  color: #00ffc8;
+  font-weight: 700;
+  font-size: 16px;
+  background: rgba(0, 255, 200, 0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.fsp-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(90deg, 
+    #ff6b6b 0%, 
+    #ffd166 25%, 
+    #00ffc8 50%, 
+    #06d6a0 75%, 
+    #118ab2 100%
+  );
+  border-radius: 3px;
+  outline: none;
+  margin: 10px 0;
+}
+
+.fsp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #00ffc8;
+  cursor: pointer;
+  border: 3px solid #001a33;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+}
+
+.fsp-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #00ffc8;
+  cursor: pointer;
+  border: 3px solid #001a33;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+}
+
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: #5d8aa8;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Manual mode status indicator */
+.manual-mode-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: rgba(0, 255, 200, 0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 255, 200, 0.2);
+}
+
+.mode-indicator.manual-active {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #00ffc8;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.mode-indicator i {
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+
+.mode-hint {
+  color: #a0e7ff;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Manual mode note */
+.manual-note {
+  margin-top: 15px;
+  padding: 12px 16px;
+  background: rgba(0, 255, 200, 0.05);
+  border-left: 3px solid #00ffc8;
+  font-size: 14px;
+}
+
+/* Animation for manual mode activation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+============================= */
+
+@media (max-width: 768px) {
+  .buster-input.fallback-select {
+    padding: 10px 14px;
+    font-size: 15px;
+    background-position: right 12px center;
+  }
+  
+  .manual-submit-btn {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+  
+  .input-with-slider .buster-input.large {
+    height: 48px;
+    font-size: 16px;
+  }
+  
+  .manual-mode-header h3 {
+    font-size: 20px;
+  }
+  
+  .slider-container {
+    padding: 12px;
+  }
+  
+  .fallback-section {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manual-mode-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .slider-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .fallback-header {
+    font-size: 15px;
+  }
+}
