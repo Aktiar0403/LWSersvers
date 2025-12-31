@@ -2762,7 +2762,7 @@ body.buster-loading .buster-cta-wrap {
 
 /* Modal header with category colors */
 .buster-modal-content.can-category .buster-modal-header {
-  background: linear-gradient(135deg, #00ffc8 0%, #00cca6 100%);
+  background: linear-gradient(135deg, #026d56 0%, #00cca6 100%);
   color: #001a33;
 }
 
