@@ -84,6 +84,37 @@ function getEffectivePowerValue(p) {
   return computeEffectivePower(p).value;
 }
 
+/* =============================
+   G1 — ALLIANCE MOMENTUM
+============================= */
+function computeAllianceG1(players, alliance, warzone) {
+  if (!alliance || alliance === "ALL") return null;
+
+  const eligible = players.filter(p =>
+    p.alliance === alliance &&
+    p.warzone === Number(warzone) &&
+    p.g1 &&
+    typeof p.g1.pctPerDay === "number" &&
+    p.g1.days >= 1
+  );
+
+  if (eligible.length < 5) {
+    return {
+      value: null,
+      count: eligible.length
+    };
+  }
+
+  const sum = eligible.reduce(
+    (acc, p) => acc + p.g1.pctPerDay,
+    0
+  );
+
+  return {
+    value: sum / eligible.length,
+    count: eligible.length
+  };
+}
 
 
 function renderPagedPlayers(players) {
@@ -862,11 +893,27 @@ setupInfiniteScroll();
   updatePowerSegments(filteredPlayers);
   updateOverviewStats(allPlayers);
 
-  // 👑 Dominance
-  dominanceSection.style.display = "block";
-  renderAllianceDominance(filteredPlayers);
-  updateTopRankSegment(filteredPlayers);
-  updateBasePowerSegment();
+ // 👑 Dominance
+dominanceSection.style.display = "block";
+
+// =============================
+// ALLIANCE G1 (CURRENT)
+// =============================
+if (activeAlliance !== "ALL") {
+  const allianceG1 = computeAllianceG1(
+    allPlayers,
+    activeAlliance,
+    activeWarzone
+  );
+
+  console.log("Alliance G1", allianceG1);
+  // UI hookup comes next
+}
+
+renderAllianceDominance(filteredPlayers);
+updateTopRankSegment(filteredPlayers);
+updateBasePowerSegment();
+
 
 }
 
