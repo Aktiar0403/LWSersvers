@@ -4812,3 +4812,68 @@ body.admin-view .admin-only {
   background: rgba(180, 180, 180, 0.15);
   color: #bbb;
 }
+/* =============================
+   G1 PLACEHOLDER (WARZONE)
+============================= */
+.top-rank-right.placeholder {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #aaa;
+}
+
+.top-rank-right.placeholder .g1-value {
+  color: #888;
+}
+/* =============================
+   TOP RANK GRID
+============================= */
+.top-rank-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.top-rank-left,
+.top-rank-right {
+  padding: 14px;
+  border-radius: 14px;
+}
+
+/* LEFT */
+.top-rank-left {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* RIGHT — G1 */
+.top-rank-right {
+  background: linear-gradient(135deg, #0b1d17, #0f2f25);
+  border: 1px solid rgba(0, 200, 120, 0.35);
+  text-align: center;
+}
+
+.g1-title {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.g1-value {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 6px 0;
+  color: #00e6a8;
+}
+
+.g1-meta {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* NEGATIVE G1 */
+.top-rank-right.negative {
+  background: linear-gradient(135deg, #2a0f0f, #3a1515);
+  border-color: rgba(255, 80, 80, 0.4);
+}
+
+.top-rank-right.negative .g1-value {
+  color: #ff6b6b;
+}

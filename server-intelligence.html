@@ -358,24 +358,25 @@
 
 <!-- 🥇 TOP PLAYER HIGHLIGHT (CONTEXTUAL) -->
 <section class="top-rank-segment hidden" id="topRankSegment">
-  <div class="top-rank-card">
+ <div id="topRankSegment" class="top-rank-grid hidden">
 
-    <div class="top-rank-left">
-      <div class="top-rank-crown">👑</div>
-
-      <div class="top-rank-text">
-        <div class="top-rank-label" id="topRankLabel"></div>
-        <div class="top-rank-name" id="topRankName"></div>
-      </div>
-    </div>
-
-    <!-- Right side -->
-    <div class="top-rank-right">
-      <div class="top-rank-power" id="topRankPower"></div>
-      <div class="top-rank-s1" id="topRankS1"></div>
-    </div>
-
+  <!-- LEFT: Rank #1 -->
+  <div class="top-rank-left">
+    <div id="topRankLabel" class="top-rank-label"></div>
+    <div id="topRankName" class="top-rank-name"></div>
+    <div id="topRankPower" class="top-rank-power"></div>
+    <div id="topRankS1" class="top-rank-s1"></div>
   </div>
+
+  <!-- RIGHT: G1 -->
+  <div id="topRankG1Box" class="top-rank-right hidden">
+    <div class="g1-title">Alliance Growth (G1)</div>
+    <div id="topRankG1Value" class="g1-value">—</div>
+    <div id="topRankG1Meta" class="g1-meta"></div>
+  </div>
+
+</div>
+
 </section>
 
 
@@ -433,7 +434,6 @@
   <!-- ALLIANCE DOMINANCE -->
  <section class="dominance" id="dominanceSection">
   <h2>Alliance Dominance (%)</h2>
-  <div id="allianceG1Badge" class="g1-badge hidden"></div>
   <div id="dominanceGrid" class="dominance-grid"></div>
 </section>
 
