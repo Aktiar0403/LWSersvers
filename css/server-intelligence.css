@@ -4765,3 +4765,21 @@ body.admin-view .admin-only {
 .hidden {
   display: none !important;
 }
+.pc-g1 {
+  font-size: 12px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+.g1-positive {
+  color: #2ecc71;
+}
+
+.g1-negative {
+  color: #e74c3c;
+}
+
+.g1-neutral,
+.g1-none {
+  color: #aaa;
+}

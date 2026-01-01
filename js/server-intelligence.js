@@ -259,10 +259,85 @@ function normalizeName(name) {
     .replace(/\s+/g, " ");
 }
 
+// =============================
+// G1 — OBSERVED GROWTH COMPUTE
+// =============================
+// Computes real growth ONLY when:
+// - Power has changed
+// - There is a previous timestamp
+// - At least 1 full day has passed
+//
+// Returns null if G1 should NOT be computed
+function computeG1Growth({
+  prevPower,
+  prevTimestamp,
+  newPower,
+  newTimestamp
+}) {
+  if (
+    prevPower == null ||
+    newPower == null ||
+    prevTimestamp == null ||
+    newTimestamp == null
+  ) {
+    return null;
+  }
+
+  const prevMs = prevTimestamp.toMillis
+    ? prevTimestamp.toMillis()
+    : new Date(prevTimestamp).getTime();
+
+  const newMs = newTimestamp.toMillis
+    ? newTimestamp.toMillis()
+    : new Date(newTimestamp).getTime();
+
+  const diffMs = newMs - prevMs;
+
+  // ⛔ Same-day or invalid time difference
+  const days = diffMs / (1000 * 60 * 60 * 24);
+  if (days < 1) return null;
+
+  const deltaPower = newPower - prevPower;
+
+  // Avoid divide-by-zero
+  if (prevPower <= 0) return null;
+
+  const pctPerDay = (deltaPower / prevPower) / days;
+  const powerPerDay = deltaPower / days;
+
+  return {
+    deltaPower: Math.round(deltaPower),
+    days: Number(days.toFixed(2)),
+    pctPerDay: Number(pctPerDay.toFixed(6)), // high precision, UI formats later
+    powerPerDay: Math.round(powerPerDay)
+  };
+}
+
+
+
 async function updateExistingPlayer(player, { rank, alliance, power, uploadId }) {
   const ref = doc(db, "server_players", player.id);
 
-  await updateDoc(ref, {
+  // =============================
+  // G1 — CAPTURE PREVIOUS STATE
+  // =============================
+  const prevPower = player.basePower;
+  const prevTimestamp = player.lastConfirmedAt;
+
+  // =============================
+  // G1 — COMPUTE OBSERVED GROWTH
+  // =============================
+  const g1 = computeG1Growth({
+    prevPower,
+    prevTimestamp,
+    newPower: power,
+    newTimestamp: new Date() // client time for diff
+  });
+
+  // =============================
+  // BUILD UPDATE PAYLOAD
+  // =============================
+  const updates = {
     rank: Number(rank),
     alliance,
     totalPower: power,
@@ -271,8 +346,25 @@ async function updateExistingPlayer(player, { rank, alliance, power, uploadId })
     lastConfirmedAt: serverTimestamp(),
     snapshotStatus: "present",
     uploadId
-  });
+  };
+
+  // =============================
+  // ATTACH G1 (ONLY IF VALID)
+  // =============================
+  if (g1) {
+    updates.g1 = {
+      ...g1,
+      source: "excel",
+      computedAt: serverTimestamp()
+    };
+  }
+
+  // =============================
+  // FIRESTORE UPDATE
+  // =============================
+  await updateDoc(ref, updates);
 }
+
 
 async function addNewPlayer({ rank, alliance, name, warzone, power, uploadId }) {
   await addDoc(collection(db, "server_players"), {
@@ -795,6 +887,24 @@ function renderPlayerCards(players, rankOffset = 0) {
     const powerM = Math.round(effectivePower / 1_000_000);
     const firstSquad = estimateFirstSquad(effectivePower);
 
+    // =============================
+// G1 — UI EXTRACTION
+// =============================
+let g1Text = "—";
+let g1Class = "g1-none";
+
+if (p.g1 && typeof p.g1.pctPerDay === "number") {
+  const pct = p.g1.pctPerDay * 100;
+
+  const sign = pct > 0 ? "+" : "";
+  g1Text = `${sign}${pct.toFixed(2)}% / day`;
+
+  if (pct > 0) g1Class = "g1-positive";
+  else if (pct < 0) g1Class = "g1-negative";
+  else g1Class = "g1-neutral";
+}
+
+
     const card = document.createElement("div");
     card.className = "player-card";
 
@@ -831,6 +941,10 @@ function renderPlayerCards(players, rankOffset = 0) {
   <div class="pc-power-meta ${powerTag}">
     ${getPowerMeta(p)}
   </div>
+  <div class="pc-g1 ${g1Class}">
+  📈 G1: ${g1Text}
+</div>
+
 
 ${LIKES_ENABLED ? `
   <div class="pc-like">
@@ -1473,10 +1587,22 @@ epSaveBtn.onclick = async () => {
   if (!editingPlayer) return;
 
 
+// =============================
+// G1 — CAPTURE PREVIOUS STATE
+// =============================
+const prevPower = editingPlayer.basePower;
+const prevTimestamp = editingPlayer.lastConfirmedAt;
 
 const newName = epNewName.value.trim();
 const newWarzone = Number(epNewWarzone.value);
 const newPower = Number(epNewPowerInput.value);
+
+const g1 = computeG1Growth({
+  prevPower,
+  prevTimestamp,
+  newPower,
+  newTimestamp: new Date() // admin action time
+});
 
 // =============================
 // BUILD UPDATE PAYLOAD (DIFF)
@@ -1501,6 +1627,15 @@ if (newPower !== editingPlayer.totalPower) {
   updates.powerSource = "confirmed";
   updates.lastConfirmedAt = serverTimestamp();
   updates.overrideAt = serverTimestamp();
+
+  // 🔥 ATTACH G1 IF VALID
+  if (g1) {
+    updates.g1 = {
+      ...g1,
+      source: "admin-edit",
+      computedAt: serverTimestamp()
+    };
+  }
 }
 
 // 🚫 NOTHING CHANGED
