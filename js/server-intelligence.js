@@ -926,19 +926,19 @@ setupInfiniteScroll();
   updatePowerSegments(filteredPlayers);
   updateOverviewStats(allPlayers);
 
-// 👑 Dominance / G1 switch
+// 👑 Dominance / G1 switch (FINAL FIX)
 dominanceSection.style.display = "block";
 
 if (activeAlliance === "ALL") {
-  // ✅ Normal dominance view
+  // ✅ Dominance only makes sense when multiple alliances exist
   renderAllianceDominance(filteredPlayers);
 
-  // 🔒 Hide Alliance G1 badge
+  // 🔒 Ensure G1 badge hidden
   const badge = document.getElementById("allianceG1Badge");
   if (badge) badge.classList.add("hidden");
 
 } else {
-  // ❌ Dominance % is meaningless for single alliance
+  // ❌ NEVER render dominance for a single alliance
   dominanceGrid.innerHTML = "";
 
   // ✅ Show Alliance G1 instead
@@ -1207,10 +1207,13 @@ function setText(id, val) {
   if (el) el.textContent = val;
 }
 
+
+
 /* =============================
    ALLIANCE DOMINANCE (TOP 5)
 ============================= */
 function renderAllianceDominance(players) {
+    if (activeAlliance !== "ALL") return; // 🛑 HARD STOP
   dominanceGrid.innerHTML = "";
 
   const map = {};
