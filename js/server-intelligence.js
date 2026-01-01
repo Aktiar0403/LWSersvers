@@ -926,27 +926,30 @@ setupInfiniteScroll();
   updatePowerSegments(filteredPlayers);
   updateOverviewStats(allPlayers);
 
- // 👑 Dominance
+// 👑 Dominance / G1 switch
 dominanceSection.style.display = "block";
 
-// =============================
-// ALLIANCE G1 (CURRENT)
-// =============================
-if (activeAlliance !== "ALL") {
+if (activeAlliance === "ALL") {
+  // ✅ Normal dominance view
+  renderAllianceDominance(filteredPlayers);
+
+  // 🔒 Hide Alliance G1 badge
+  const badge = document.getElementById("allianceG1Badge");
+  if (badge) badge.classList.add("hidden");
+
+} else {
+  // ❌ Dominance % is meaningless for single alliance
+  dominanceGrid.innerHTML = "";
+
+  // ✅ Show Alliance G1 instead
   const allianceG1 = computeAllianceG1(
     allPlayers,
     activeAlliance,
     activeWarzone
   );
-
   renderAllianceG1Badge(allianceG1);
-} else {
-  const badge = document.getElementById("allianceG1Badge");
-  if (badge) badge.classList.add("hidden");
 }
 
-
-renderAllianceDominance(filteredPlayers);
 updateTopRankSegment(filteredPlayers);
 updateBasePowerSegment();
 
