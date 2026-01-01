@@ -4714,3 +4714,54 @@ body.admin-view .admin-only {
     font-size: 14px;
   }
 }
+/* =============================
+   ADMIN LINKS / ACTIONS
+============================= */
+
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 10px;
+  padding: 8px 12px;
+
+  background: #2c2c2c;
+  color: #f5f5f5;
+
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+
+  border: 1px solid #3a3a3a;
+  cursor: pointer;
+
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-link:hover {
+  background: #3a3a3a;
+  border-color: #555;
+}
+
+.admin-link:active {
+  transform: translateY(1px);
+}
+
+/* Optional warning emphasis for conflicts */
+.admin-link.conflicts {
+  background: #3b1f1f;
+  border-color: #5a2a2a;
+}
+
+.admin-link.conflicts:hover {
+  background: #4a2626;
+}
+
+/* =============================
+   HIDDEN UTILITY
+============================= */
+.hidden {
+  display: none !important;
+}
