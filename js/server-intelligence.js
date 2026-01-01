@@ -926,30 +926,24 @@ setupInfiniteScroll();
   updatePowerSegments(filteredPlayers);
   updateOverviewStats(allPlayers);
 
-// 👑 Dominance / G1 switch (FINAL FIX)
+ // 👑 Dominance
 dominanceSection.style.display = "block";
 
-if (activeAlliance === "ALL") {
-  // ✅ Dominance only makes sense when multiple alliances exist
-  renderAllianceDominance(filteredPlayers);
-
-  // 🔒 Ensure G1 badge hidden
-  const badge = document.getElementById("allianceG1Badge");
-  if (badge) badge.classList.add("hidden");
-
-} else {
-  // ❌ NEVER render dominance for a single alliance
-  dominanceGrid.innerHTML = "";
-
-  // ✅ Show Alliance G1 instead
+// =============================
+// ALLIANCE G1 (CURRENT)
+// =============================
+if (activeAlliance !== "ALL") {
   const allianceG1 = computeAllianceG1(
     allPlayers,
     activeAlliance,
     activeWarzone
   );
-  renderAllianceG1Badge(allianceG1);
+
+  console.log("Alliance G1", allianceG1);
+  // UI hookup comes next
 }
 
+renderAllianceDominance(filteredPlayers);
 updateTopRankSegment(filteredPlayers);
 updateBasePowerSegment();
 
@@ -1239,28 +1233,21 @@ total += power;
     card.className = "dominance-card";
     card.dataset.alliance = alliance;
 
-    const showPct = activeAlliance === "ALL";
-
-card.innerHTML = `
-  <div class="dom-rank">#${index + 1}</div>
-  <div class="dom-name">${alliance}</div>
-
-  ${
-    showPct
+    card.innerHTML = isSelected
       ? `
-        <div class="dom-bar">
-          <span style="width:${Math.min(pct,92)}%"></span>
-        </div>
-        <div class="dom-meta">${pct}%</div>
-      `
-      : `
+        <div class="dom-rank">#${index + 1}</div>
+        <div class="dom-name">${alliance}</div>
+
         <div class="dom-insight">⚡ ${formatPowerM(power)} Total</div>
         <div class="dom-insight">👑 ${topPlayer?.name || "—"}</div>
         <div class="dom-insight">👥 ${members.length} In Top 200</div>
       `
-  }
-`;
-
+      : `
+        <div class="dom-rank">#${index + 1}</div>
+        <div class="dom-name">${alliance}</div>
+        <div class="dom-bar"><span style="width:${Math.min(pct,92)}%"></span></div>
+        <div class="dom-meta">${pct}%</div>
+      `;
 
     card.onclick = () => {
       dominanceSelectedAlliance =
