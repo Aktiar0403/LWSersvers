@@ -56,30 +56,12 @@ function weeksBetween(timestamp) {
 
 // Final computed power shown to users
 function computeEffectivePower(player) {
-  // If power is confirmed, show exact
-  if (player.powerSource === "confirmed") {
-    return {
-      value: player.basePower,
-      tag: "confirmed"
-    };
-  }
-
-  const weeks = weeksBetween(player.lastConfirmedAt);
-  if (weeks <= 0) {
-    return {
-      value: player.basePower,
-      tag: "estimated"
-    };
-  }
-
-  const rate = getWeeklyGrowthRate(player.basePower);
-  const grown = player.basePower * Math.pow(1 + rate, weeks);
-
   return {
-    value: Math.round(grown),
-    tag: "estimated"
+    value: player.basePower,
+    tag: "confirmed"
   };
 }
+
 async function loadAppConfig() {
   try {
     const ref = doc(db, "app_config", "global");
