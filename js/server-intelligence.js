@@ -323,51 +323,6 @@ function normalizeName(name) {
     .replace(/\s+/g, " ");
 }
 
-
-
-function renderTopRankG1Panel(result) {
-  const box = document.getElementById("topRankG1Box");
-  const val = document.getElementById("topRankG1Value");
-  const meta = document.getElementById("topRankG1Meta");
-
-  if (!box || !val || !meta) return;
-
-  box.classList.remove("negative");
-  box.classList.add("hidden");
-
-  if (!result || result.value == null) return;
-
-  const pct = result.value * 100;
-  const sign = pct > 0 ? "+" : "";
-
-  val.textContent = `${sign}${pct.toFixed(2)}% / day`;
-  meta.textContent = `Avg from ${result.count} players`;
-
-  if (pct < 0) {
-    box.classList.add("negative");
-  }
-
-  box.classList.remove("hidden");
-}
-
-function renderWarzoneG1Placeholder() {
-  const box = document.getElementById("topRankG1Box");
-  const title = box?.querySelector(".g1-title");
-  const val = document.getElementById("topRankG1Value");
-  const meta = document.getElementById("topRankG1Meta");
-
-  if (!box || !title || !val || !meta) return;
-
-  box.className = "top-rank-right placeholder";
-
-  title.textContent = "Warzone Growth (G1)";
-  val.textContent = "Coming soon";
-  meta.textContent = "Requires multi-upload history";
-
-  box.classList.remove("hidden");
-}
-
-
 // =============================
 // G1 — OBSERVED GROWTH COMPUTE
 // =============================
@@ -853,10 +808,6 @@ basePowerSegment.classList.add("base-power-neutral");
 
 
 function updateTopRankSegment(players) {
-const g1Box = document.getElementById("topRankG1Box");
-if (g1Box) g1Box.classList.add("hidden");
-
-  
   // ❌ Global / no warzone → ALWAYS HIDE
   if (
     activeWarzone === "ALL" ||
@@ -896,22 +847,6 @@ if (g1Box) g1Box.classList.add("hidden");
   topRankS1.textContent = `⚔️: ${s1Range}`;
 
   topRankSegment.classList.remove("hidden");
-  // =============================
-// ALLIANCE G1 (RIGHT PANEL)
-// =============================
-if (
-  activeAlliance !== "ALL" &&
-  activeWarzone !== "ALL"
-) {
-  const allianceG1 = computeAllianceG1(
-    allPlayers,
-    activeAlliance,
-    activeWarzone
-  );
-
-  renderTopRankG1Panel(allianceG1);
-}
-
 }
 
 
