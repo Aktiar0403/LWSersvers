@@ -587,7 +587,7 @@ if (btn.dataset.action === "rename-existing") {
     name: c.excelName,
     totalPower: c.excelPower,
     basePower: c.excelPower,
-    powerSource: "excel",
+    powerSource: "confirmed",
     lastConfirmedAt: serverTimestamp()
   });
 
