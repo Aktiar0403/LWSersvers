@@ -581,10 +581,12 @@ async function loadPlayers() {
   alliance: d.alliance || "",
   warzone: Number(d.warzone),
 
-    totalPower: Number(d.totalPower ?? 0), // keep for admin
+  totalPower: Number(d.totalPower ?? 0), // keep for admin
    basePower: Number(d.basePower ?? d.totalPower ?? 0),
    powerSource: d.powerSource || "confirmed",
-   lastConfirmedAt: d.lastConfirmedAt || d.importedAt
+   lastConfirmedAt: d.lastConfirmedAt || d.importedAt,
+   g1: d.g1 || null
+
   };
 
     });
