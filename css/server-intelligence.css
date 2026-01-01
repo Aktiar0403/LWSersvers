@@ -4783,3 +4783,32 @@ body.admin-view .admin-only {
 .g1-none {
   color: #aaa;
 }
+/* =============================
+   G1 BADGE
+============================= */
+.g1-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.g1-badge.positive {
+  background: rgba(0, 200, 120, 0.15);
+  color: #00c878;
+}
+
+.g1-badge.negative {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff5050;
+}
+
+.g1-badge.neutral {
+  background: rgba(180, 180, 180, 0.15);
+  color: #bbb;
+}

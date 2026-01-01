@@ -116,6 +116,39 @@ function computeAllianceG1(players, alliance, warzone) {
   };
 }
 
+function renderAllianceG1Badge(result) {
+  const badge = document.getElementById("allianceG1Badge");
+  if (!badge) return;
+
+  // Hide by default
+  badge.className = "g1-badge hidden";
+  badge.textContent = "";
+
+  if (!result || result.value === null) {
+    badge.textContent = "📈 G1: Insufficient data";
+    badge.classList.remove("hidden");
+    badge.classList.add("neutral");
+    return;
+  }
+
+  const pct = result.value * 100;
+  const sign = pct > 0 ? "+" : "";
+
+  badge.textContent =
+    `📈 Alliance G1: ${sign}${pct.toFixed(2)}% / day ` +
+    `(${result.count})`;
+
+  badge.classList.remove("hidden");
+
+  if (pct > 0.01) {
+    badge.classList.add("positive");
+  } else if (pct < -0.01) {
+    badge.classList.add("negative");
+  } else {
+    badge.classList.add("neutral");
+  }
+}
+
 
 function renderPagedPlayers(players) {
   const start = currentPage * PAGE_SIZE;
@@ -906,9 +939,12 @@ if (activeAlliance !== "ALL") {
     activeWarzone
   );
 
-  console.log("Alliance G1", allianceG1);
-  // UI hookup comes next
+  renderAllianceG1Badge(allianceG1);
+} else {
+  const badge = document.getElementById("allianceG1Badge");
+  if (badge) badge.classList.add("hidden");
 }
+
 
 renderAllianceDominance(filteredPlayers);
 updateTopRankSegment(filteredPlayers);
