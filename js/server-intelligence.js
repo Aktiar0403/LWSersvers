@@ -1242,21 +1242,27 @@ total += power;
     card.className = "dominance-card";
     card.dataset.alliance = alliance;
 
-    card.innerHTML = isSelected
-      ? `
-        <div class="dom-rank">#${index + 1}</div>
-        <div class="dom-name">${alliance}</div>
+    const showPct = activeAlliance === "ALL";
 
+card.innerHTML = `
+  <div class="dom-rank">#${index + 1}</div>
+  <div class="dom-name">${alliance}</div>
+
+  ${
+    showPct
+      ? `
+        <div class="dom-bar">
+          <span style="width:${Math.min(pct,92)}%"></span>
+        </div>
+        <div class="dom-meta">${pct}%</div>
+      `
+      : `
         <div class="dom-insight">⚡ ${formatPowerM(power)} Total</div>
         <div class="dom-insight">👑 ${topPlayer?.name || "—"}</div>
         <div class="dom-insight">👥 ${members.length} In Top 200</div>
       `
-      : `
-        <div class="dom-rank">#${index + 1}</div>
-        <div class="dom-name">${alliance}</div>
-        <div class="dom-bar"><span style="width:${Math.min(pct,92)}%"></span></div>
-        <div class="dom-meta">${pct}%</div>
-      `;
+  }
+`;
 
     card.onclick = () => {
       dominanceSelectedAlliance =
