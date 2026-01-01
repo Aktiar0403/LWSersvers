@@ -1207,13 +1207,10 @@ function setText(id, val) {
   if (el) el.textContent = val;
 }
 
-
-
 /* =============================
    ALLIANCE DOMINANCE (TOP 5)
 ============================= */
 function renderAllianceDominance(players) {
-    if (activeAlliance !== "ALL") return; // 🛑 HARD STOP
   dominanceGrid.innerHTML = "";
 
   const map = {};
@@ -1263,6 +1260,7 @@ card.innerHTML = `
       `
   }
 `;
+
 
     card.onclick = () => {
       dominanceSelectedAlliance =
