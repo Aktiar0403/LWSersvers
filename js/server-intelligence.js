@@ -1677,6 +1677,12 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     window.IS_ADMIN = false;
   }
+const adminConflictsLink =
+  document.getElementById("adminConflictsLink");
+
+if (adminConflictsLink && window.IS_ADMIN) {
+  adminConflictsLink.classList.remove("hidden");
+}
 
   // 🔐 Load global app config (likesEnabled)
   await loadAppConfig();
