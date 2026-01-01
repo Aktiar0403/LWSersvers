@@ -1138,12 +1138,19 @@ let skipped = 0;
     const uploadId = `upload-${Date.now()}`;
 
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    const row = rows[rowIndex];
+  const row = rows[rowIndex];
 
-   if (row.length < 5) {
-  skipped++;
-  continue;
-}
+  // ✅ NEW: skip ONLY if row is completely empty
+  const isEmptyRow = row.every(cell => {
+    if (cell === undefined || cell === null) return true;
+    if (typeof cell === "string" && cell.trim() === "") return true;
+    return false;
+  });
+
+  if (isEmptyRow) {
+    skipped++;
+    continue;
+  }
 
 const [rank, alliance, name, warzone, power] = row;
 
