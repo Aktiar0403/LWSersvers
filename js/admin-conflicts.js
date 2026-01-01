@@ -582,14 +582,61 @@ if (btn.dataset.action === "rename-existing") {
 
   // 1️⃣ Update server_players (name + power)
   const playerRef = doc(db, "server_players", selectedServerDocId);
+  // 🔍 Fetch previous player state (for G1)
+const playerSnap = await getDoc(playerRef);
+const prevData = playerSnap.data();
 
-  await updateDoc(playerRef, {
-    name: c.excelName,
-    totalPower: c.excelPower,
-    basePower: c.excelPower,
-    powerSource: "confirmed",
-    lastConfirmedAt: serverTimestamp()
-  });
+const prevPower = Number(prevData?.totalPower || 0);
+const prevTimestamp =
+  prevData?.lastConfirmedAt || prevData?.importedAt || null;
+  // =============================
+// G1 — Compute observed growth
+// =============================
+let g1Payload = null;
+
+if (
+  prevPower > 0 &&
+  prevTimestamp?.toDate &&
+  c.excelPower !== prevPower
+) {
+  const now = new Date();
+  const prevDate = prevTimestamp.toDate();
+  const days =
+    (now.getTime() - prevDate.getTime()) /
+    (1000 * 60 * 60 * 24);
+
+  if (days >= 1) {
+    const deltaPower = c.excelPower - prevPower;
+    const pctPerDay = deltaPower / prevPower / days;
+
+    g1Payload = {
+      deltaPower,
+      days,
+      pctPerDay,
+      powerPerDay: deltaPower / days,
+      source: "excel",
+      computedAt: serverTimestamp()
+    };
+  }
+}
+
+
+
+ const updates = {
+  name: c.excelName,
+  alliance: c.alliance, // ✅ FIX: alliance update
+  totalPower: c.excelPower,
+  basePower: c.excelPower,
+  powerSource: "confirmed",
+  lastConfirmedAt: serverTimestamp()
+};
+
+// ✅ Attach G1 only if valid
+if (g1Payload) {
+  updates.g1 = g1Payload;
+}
+
+await updateDoc(playerRef, updates);
 
   // 2️⃣ Append name history to identity (if exists)
   // (Safe even if identity not yet linked)
