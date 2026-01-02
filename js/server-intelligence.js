@@ -1337,10 +1337,13 @@ const cleanAlliance = String(alliance || "").trim();
 const wz = Number(warzone);
 const pwr = Number(power);
 
-if (!cleanName || !cleanAlliance || !wz || !pwr) {
+if (!cleanName || !wz || !pwr) {
   skipped++;
   continue;
 }
+
+const finalAlliance = cleanAlliance || "UNASSIGNED";
+
 
 // =============================
 // STEP 3.6 — SAFE MATCHING
