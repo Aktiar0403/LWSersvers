@@ -4877,3 +4877,14 @@ body.admin-view .admin-only {
 .top-rank-right.negative .g1-value {
   color: #ff6b6b;
 }
+/* 🔥 Buster Live CTA */
+.kobra-card-btn.buster-live {
+  border: 1px solid #ff6b00;
+  box-shadow: 0 0 12px rgba(255, 107, 0, 0.6);
+}
+
+.kobra-card-btn.buster-live .kobra-card-sub::after {
+  content: " • LIVE";
+  color: #ff6b00;
+  font-weight: 600;
+}
