@@ -1935,20 +1935,24 @@ if (logoutBtn) {
 
 console.log("🔒 PUBLIC MODE — identity logic fully removed");
 /* =============================
-   BUSTER LIVE → CTA REACTION
-   (READ-ONLY, PASSIVE)
+   BUSTER TIMER → CTA (READ ONLY)
 ============================= */
-(function watchBusterState() {
+(function syncBusterTimerToCTA() {
+  const timerEl = document.getElementById("busterCtaTimer");
   const card = document.getElementById("busterCard");
-  if (!card) return;
+
+  if (!timerEl || !card) return;
 
   function tick() {
-    if (window.IS_BUSTER_LIVE === true) {
-      card.classList.add("buster-live");
-      card.title = "🔥 Buster Day is LIVE";
-    } else {
-      card.classList.remove("buster-live");
-      card.title = "Prepare for Buster Day";
+    // Read-only mirror from Buster page
+    if (typeof window.BUSTER_TIMER_TEXT === "string") {
+      timerEl.textContent = window.BUSTER_TIMER_TEXT;
+
+      if (window.IS_BUSTER_LIVE === true) {
+        card.classList.add("buster-live");
+      } else {
+        card.classList.remove("buster-live");
+      }
     }
   }
 
