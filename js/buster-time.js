@@ -83,6 +83,6 @@ export function getBusterState() {
   const next = getNextSaturday730(istNow);
   return {
     live: false,
-    text: `in · ${format(next - istNow)}`
+    text: `${format(next - istNow)}`
   };
 }
