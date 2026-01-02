@@ -1086,7 +1086,7 @@ if (p.g1 && typeof p.g1.pctPerDay === "number") {
   });
 
   if (d) {
-    g1Text = `${d.weeklyPct}% /`;
+    g1Text = `${d.weeklyPct}%`;
     g1Sub = `≈ +${d.weeklyS1M}m S1`;
   }
 }
@@ -1137,7 +1137,7 @@ if (p.g1 && typeof p.g1.pctPerDay === "number") {
 
   <span class="tooltip">
     Weekly growth, derived from real re-uploads.
-    S1 is an estimated First Squad Power Growth.
+    S1 is an estimated First Squad Weekly Power Growth.
   </span>
 </div>
 
