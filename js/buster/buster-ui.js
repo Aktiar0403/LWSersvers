@@ -1042,3 +1042,6 @@ document.addEventListener('click', (event) => {
 
   timerEl.textContent = text.replace("🔥 LIVE · ", "").replace("Next Buster · ", "");
 }
+tick();
+  setInterval(tick, 1000);
+})();
