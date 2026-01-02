@@ -1086,8 +1086,8 @@ if (p.g1 && typeof p.g1.pctPerDay === "number") {
   });
 
   if (d) {
-    g1Text = `${d.weeklyPct}% / week`;
-    g1Sub = `      ≈ +${d.weeklyS1M}m S1`;
+    g1Text = `${d.weeklyPct}% /`;
+    g1Sub = `≈ +${d.weeklyS1M}m S1`;
   }
 }
 
@@ -1126,16 +1126,18 @@ if (p.g1 && typeof p.g1.pctPerDay === "number") {
     ⚔️ ${firstSquad}
   </div>
 
-  <div class="pc-power-meta ${powerTag}">
-    ${getPowerMeta(p)}
-  </div>
+  
  <div class="pc-g1 has-tooltip">
   📈 G1: ${g1Text}
   <div class="pc-g1-sub">${g1Sub}</div>
 
+  <div class="pc-power-meta ${powerTag}">
+    ${getPowerMeta(p)}
+  </div>
+
   <span class="tooltip">
-    Weekly growth derived from real re-uploads.
-    S1 is an estimated per-player combat power change.
+    Weekly growth, derived from real re-uploads.
+    S1 is an estimated First Squad Power Growth.
   </span>
 </div>
 
