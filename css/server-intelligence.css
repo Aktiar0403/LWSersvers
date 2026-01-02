@@ -4887,3 +4887,50 @@ body.admin-view .admin-only {
   color: #ff6b00;
   font-weight: 600;
 }
+
+/* =============================
+   TOP RANK SEGMENT — MOBILE FIT
+============================= */
+@media (max-width: 600px) {
+
+  .top-rank-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* still 50–50 */
+    gap: 8px;
+  }
+
+  .top-rank-left,
+  .top-rank-right {
+    min-width: 0; /* 🔥 critical to prevent overflow */
+    padding: 6px;
+  }
+
+  .top-rank-name {
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .top-rank-power {
+    font-size: 13px;
+  }
+
+  .top-rank-s1 {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  .g1-value {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .g1-meta {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
