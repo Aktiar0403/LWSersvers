@@ -4,7 +4,7 @@ console.log("🧨 buster-ui.js ");
    FIREBASE
 ============================= */
 import { dbPublic as db } from "../firebase-public.js";
-import { getBusterState } from "./buster-time.js";
+import { getBusterState } from "../buster-time.js";
 import {
   collection,
   getDocs
