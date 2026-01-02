@@ -5123,3 +5123,22 @@ body.admin-view .admin-only {
     text-align: left;
   }
 }
+@media (max-width: 600px) {
+  .has-tooltip .tooltip {
+    max-width: 260px;        /* 🔑 controls 2–3 lines */
+    width: auto;             /* ❌ no max-content */
+    
+    white-space: normal;     /* allow wrapping */
+    word-break: normal;      /* prevent vertical breaking */
+    overflow-wrap: break-word;
+
+    line-height: 1.4;
+    padding: 8px 12px;
+
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    text-align: left;
+
+    overflow-x: hidden;      /* 🔒 kill horizontal scroll */
+  }
+}
