@@ -5068,3 +5068,39 @@ body.admin-view .admin-only {
     text-align: center;
   }
 }
+.has-tooltip .tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+
+  background: rgba(15, 18, 25, 0.96);
+  color: #cfd8dc;
+
+  font-size: 11px;
+  line-height: 1.35;
+
+  padding: 8px 10px;
+  border-radius: 6px;
+
+  /* 🔑 KEY FIXES */
+  max-width: 260px;        /* wider → fewer lines */
+  white-space: normal;     /* allow wrapping */
+  word-break: normal;      /* prevent vertical breaking */
+  text-align: left;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease, transform .15s ease;
+  z-index: 40;
+}
+.has-tooltip:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+@media (max-width: 600px) {
+  .has-tooltip .tooltip {
+    max-width: 220px;
+    font-size: 11px;
+  }
+}
