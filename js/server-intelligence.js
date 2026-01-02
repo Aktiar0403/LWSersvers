@@ -118,38 +118,57 @@ function computeAllianceG1(players, alliance, warzone) {
   };
 }
 
-function renderAllianceG1Badge(result) {
-  const badge = document.getElementById("allianceG1Badge");
-  if (!badge) return;
+function renderTopRankG1() {
+  // Always reset
+  topRankG1Box.classList.add("hidden");
+  topRankG1Value.textContent = "—";
+  topRankG1Meta.textContent = "";
+  g1Title.textContent = "G1 Growth";
 
-  // Hide by default
-  badge.className = "g1-badge hidden";
-  badge.textContent = "";
+  // ❌ Global mode → no G1
+  if (activeWarzone === "ALL") return;
+
+  // 🟡 WARZONE ONLY → placeholder
+  if (activeAlliance === "ALL") {
+    g1Title.textContent = "Warzone G1";
+    topRankG1Value.textContent = "Coming Soon";
+    topRankG1Meta.textContent = "Observed growth coming in next phase";
+    topRankG1Box.classList.remove("hidden");
+    return;
+  }
+
+  // 🟢 ALLIANCE MODE → real G1
+  const result = computeAllianceG1(
+    allPlayers,
+    activeAlliance,
+    activeWarzone
+  );
+
+  g1Title.textContent = "Alliance G1";
 
   if (!result || result.value === null) {
-    badge.textContent = "📈 G1: Insufficient data";
-    badge.classList.remove("hidden");
-    badge.classList.add("neutral");
+    topRankG1Value.textContent = "Insufficient data";
+    topRankG1Meta.textContent =
+      `${result?.count || 0} players with valid G1`;
+    topRankG1Box.classList.remove("hidden");
     return;
   }
 
   const pct = result.value * 100;
   const sign = pct > 0 ? "+" : "";
 
-  badge.textContent =
-    `📈 Alliance G1: ${sign}${pct.toFixed(2)}% / day ` +
-    `(${result.count})`;
+  topRankG1Value.textContent =
+    `${sign}${pct.toFixed(2)}% / day`;
 
-  badge.classList.remove("hidden");
+  topRankG1Meta.textContent =
+    `Based on ${result.count} players`;
 
-  if (pct > 0.01) {
-    badge.classList.add("positive");
-  } else if (pct < -0.01) {
-    badge.classList.add("negative");
-  } else {
-    badge.classList.add("neutral");
-  }
+  topRankG1Box.classList.remove("hidden");
 }
+
+
+
+
 
 
 function renderPagedPlayers(players) {
@@ -526,6 +545,10 @@ const topRankPower = document.getElementById("topRankPower");
 const basePowerSegment = document.getElementById("basePowerSegment");
 const basePowerValue = document.getElementById("basePowerValue");
 const basePowerLabel = document.getElementById("basePowerLabel");
+const topRankG1Box = document.getElementById("topRankG1Box");
+const topRankG1Value = document.getElementById("topRankG1Value");
+const topRankG1Meta = document.getElementById("topRankG1Meta");
+const g1Title = document.getElementById("g1Title");
 
 
 
@@ -948,7 +971,7 @@ if (activeAlliance !== "ALL") {
 renderAllianceDominance(filteredPlayers);
 updateTopRankSegment(filteredPlayers);
 updateBasePowerSegment();
-
+renderTopRankG1();
 
 }
 
