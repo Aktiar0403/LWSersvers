@@ -5099,3 +5099,27 @@ body.admin-view .admin-only {
   transform: translateX(-50%) translateY(0);
 }
 
+@media (max-width: 600px) {
+  .has-tooltip .tooltip {
+    max-width: 220px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 600px) {
+  .has-tooltip .tooltip {
+    max-width: 90vw;          /* 🔑 use screen width */
+    width: max-content;       /* 🔑 expand horizontally */
+    min-width: 180px;         /* avoid narrow box */
+
+    white-space: normal;      /* allow wrapping */
+    word-break: keep-all;     /* 🔑 prevent vertical word breaks */
+    overflow-wrap: normal;
+
+    line-height: 1.4;
+    padding: 8px 12px;
+
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    text-align: left;
+  }
+}
