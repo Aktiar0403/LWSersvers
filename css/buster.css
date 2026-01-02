@@ -1124,3 +1124,464 @@ strong {
     align-items: stretch;
   }
 }
+/* =============================
+   PLAYER SELECTION & DISPLAY
+============================= */
+
+/* Player selection dropdown styling */
+#myPlayerSelect {
+  background: var(--bg-card-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300ff9d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+}
+
+#myPlayerSelect:focus {
+  outline: none;
+  border-color: var(--neon-green);
+  box-shadow: 0 0 0 3px var(--neon-green-glow);
+}
+
+#myPlayerSelect option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 0.5rem;
+}
+
+/* Player item in search results */
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.player-item:hover {
+  background: var(--bg-card);
+}
+
+.player-info {
+  flex: 1;
+}
+
+.player-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.player-alliance {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.player-fsp {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: var(--neon-green);
+  background: rgba(0, 255, 157, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Computed FSP display in fallback */
+#computedFspValue {
+  color: var(--neon-green);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: rgba(0, 255, 157, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 255, 157, 0.2);
+}
+
+/* Alliance search results */
+.alliance-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.alliance-result-item:hover {
+  background: var(--bg-card);
+  color: var(--neon-green);
+}
+
+.alliance-name {
+  font-weight: 600;
+  flex: 1;
+}
+
+.alliance-rank {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-right: 1rem;
+}
+
+.alliance-fsp-average {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: var(--neon-green);
+  font-size: 0.9rem;
+}
+
+/* =============================
+   MATCHUP MODAL SPECIFIC STYLES
+============================= */
+
+/* Matchup grid in modal */
+.matchup-grid {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.matchup-category {
+  margin-bottom: var(--spacing-lg);
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-sm);
+}
+
+.category-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--neon-green);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-count {
+  background: var(--bg-card-light);
+  color: var(--text-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Individual matchup cards */
+.matchup-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-card-light);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--border-color);
+  transition: var(--transition-fast);
+}
+
+.matchup-item.can {
+  border-left-color: var(--success);
+  background: rgba(0, 255, 157, 0.05);
+}
+
+.matchup-item.maybe {
+  border-left-color: var(--warning);
+  background: rgba(255, 179, 0, 0.05);
+}
+
+.matchup-item.cannot {
+  border-left-color: var(--danger);
+  background: rgba(255, 71, 87, 0.05);
+}
+
+.matchup-item:hover {
+  transform: translateX(3px);
+  box-shadow: 0 3px 10px var(--shadow-color);
+}
+
+.matchup-player-info {
+  flex: 1;
+}
+
+.matchup-player-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.matchup-player-alliance {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.matchup-fsp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.fsp-value {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.matchup-item.can .fsp-value {
+  color: var(--success);
+}
+
+.matchup-item.maybe .fsp-value {
+  color: var(--warning);
+}
+
+.matchup-item.cannot .fsp-value {
+  color: var(--danger);
+}
+
+.fsp-diff {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Modal status indicators */
+.modal-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.status-can {
+  background: rgba(0, 255, 157, 0.1);
+  color: var(--success);
+}
+
+.status-maybe {
+  background: rgba(255, 179, 0, 0.1);
+  color: var(--warning);
+}
+
+.status-cannot {
+  background: rgba(255, 71, 87, 0.1);
+  color: var(--danger);
+}
+
+/* =============================
+   THREAT CARDS ENHANCEMENTS
+============================= */
+
+/* Add player power details to threat cards */
+.threat-details {
+  margin-top: var(--spacing-xs);
+  font-size: 0.8rem;
+}
+
+.threat-power {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+}
+
+.threat-power-label {
+  color: var(--text-secondary);
+}
+
+.threat-power-value {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--neon-green);
+}
+
+/* Confidence badge enhancements */
+#confidenceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: var(--spacing-sm);
+  transition: var(--transition-normal);
+}
+
+#confidenceBadge.badge-success {
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 157, 0.1), 
+    rgba(0, 255, 157, 0.05));
+  border: 2px solid var(--success);
+  color: var(--success);
+  box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+}
+
+#confidenceBadge.badge-warning {
+  background: linear-gradient(135deg, 
+    rgba(255, 179, 0, 0.1), 
+    rgba(255, 179, 0, 0.05));
+  border: 2px solid var(--warning);
+  color: var(--warning);
+  box-shadow: 0 0 20px rgba(255, 179, 0, 0.2);
+}
+
+#confidenceBadge.badge-danger {
+  background: linear-gradient(135deg, 
+    rgba(255, 71, 87, 0.1), 
+    rgba(255, 71, 87, 0.05));
+  border: 2px solid var(--danger);
+  color: var(--danger);
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.2);
+}
+
+/* =============================
+   SLIDER VALUE DISPLAY ENHANCEMENT
+============================= */
+#sliderValueDisplay {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--neon-green);
+  background: rgba(0, 255, 157, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  min-width: 100px;
+  text-align: center;
+  border: 1px solid rgba(0, 255, 157, 0.2);
+}
+
+/* =============================
+   EMPTY STATES
+============================= */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* =============================
+   LOADING STATES FOR RESULTS
+============================= */
+.loading-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--neon-green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--spacing-md);
+}
+
+/* =============================
+   POWER FORMATTING UTILITIES
+============================= */
+.power-value {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+.power-m {
+  font-size: 0.85em;
+  color: var(--text-muted);
+  margin-left: 0.1em;
+}
+
+/* =============================
+   COMPACT VIEW FOR MOBILE
+============================= */
+@media (max-width: 768px) {
+  .player-item,
+  .alliance-result-item,
+  .matchup-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .player-fsp,
+  .alliance-fsp-average,
+  .matchup-fsp {
+    align-self: flex-start;
+  }
+  
+  .matchup-fsp {
+    align-items: flex-start;
+  }
+  
+  #sliderValueDisplay {
+    font-size: 1rem;
+    min-width: 80px;
+  }
+}
+
+/* =============================
+   ANIMATIONS FOR RESULTS
+============================= */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.buster-phase:not(.hidden) {
+  animation: slideIn 0.5s ease-out;
+}
+
+.matchup-item {
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.matchup-item:nth-child(1) { animation-delay: 0.1s; }
+.matchup-item:nth-child(2) { animation-delay: 0.2s; }
+.matchup-item:nth-child(3) { animation-delay: 0.3s; }
+.matchup-item:nth-child(4) { animation-delay: 0.4s; }
+.matchup-item:nth-child(5) { animation-delay: 0.5s; }
