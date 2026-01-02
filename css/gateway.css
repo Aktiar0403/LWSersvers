@@ -222,3 +222,38 @@
   color: #f5c542;
   border: 1px solid #5a3a2a;
 }
+/* =============================
+   BUSTER CTA CARD (INDEX)
+============================= */
+
+.action-card.buster-card {
+  position: relative;
+  border: 1px solid rgba(64, 220, 165, 0.25);
+  background: linear-gradient(180deg, #0f1514, #0b0f0e);
+}
+
+.buster-card-title {
+  margin: 0 0 6px;
+}
+
+.buster-card-sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.buster-card-timer {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #40dca5;
+}
+
+/* LIVE STATE */
+.action-card.buster-card.buster-live {
+  box-shadow: 0 0 18px rgba(255, 80, 80, 0.45);
+  border-color: rgba(255, 80, 80, 0.6);
+}
+
+.action-card.buster-card.buster-live .buster-card-timer {
+  color: #ff6b6b;
+}

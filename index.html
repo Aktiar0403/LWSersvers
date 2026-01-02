@@ -85,7 +85,7 @@
 
    
   <h3>
-    Server Intelligence
+  
   <a href="/server-intelligence" class="action-card primary">
   <h3>Server Intelligence</h3>
   <p>
@@ -95,10 +95,21 @@
 
 
 
-      <a href="/server-compare" class="action-card">
-        <h3>Compare Servers</h3>
-        <p>Side-by-side analysis of alliances and warzones.</p>
-      </a>
+    <a href="/buster" class="action-card buster-card" id="busterCard">
+
+  <h3 class="buster-card-title">
+  Buster Intelligence
+  </h3>
+
+  <p class="buster-card-sub">
+    First Squad pressure analysis
+  </p>
+
+  <div class="buster-card-timer" id="busterCtaTimer">
+    Loading…
+  </div>
+
+</a>
 
       <a href="/alliance-showdown" class="action-card experimental">
         <h3>Alliance Showdown</h3>
@@ -122,7 +133,7 @@
     </p>
 
     <!-- KO-FI SUPPORT -->
-<
+
 
   </section>
 
@@ -136,45 +147,31 @@
   </section>
 
 </main>
-<script>
-  // === MAINTENANCE COUNTDOWN (48 HOURS) ===
-  const COUNTDOWN_HOURS = 48;
+<script type="module">
+  import { getBusterState } from "/js/buster-time.js";
 
-  // Persist start time so refresh doesn't reset
-  let startTime = localStorage.getItem("si_maintenance_start");
+  (function syncBusterTimerToIndexCTA() {
+    const timerEl = document.getElementById("busterCtaTimer");
+    const card = document.getElementById("busterCard");
 
-  if (!startTime) {
-    startTime = Date.now();
-    localStorage.setItem("si_maintenance_start", startTime);
-  }
+    if (!timerEl || !card) return;
 
-  const endTime = Number(startTime) + COUNTDOWN_HOURS * 60 * 60 * 1000;
-  const timerEl = document.getElementById("countdownTimer");
+    function tick() {
+      const { live, text } = getBusterState();
+      timerEl.textContent = text;
 
-  function updateCountdown() {
-    const now = Date.now();
-    let diff = endTime - now;
-
-    if (diff <= 0) {
-      timerEl.textContent = "00:00:00";
-      return;
+      if (live) {
+        card.classList.add("buster-live");
+      } else {
+        card.classList.remove("buster-live");
+      }
     }
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    timerEl.textContent =
-      String(hours).padStart(2, "0") + ":" +
-      String(minutes).padStart(2, "0") + ":" +
-      String(seconds).padStart(2, "0");
-  }
-
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+    tick();
+    setInterval(tick, 1000);
+  })();
 </script>
 
-...
 </main>
 
 <!-- Buy Me a Coffee -->
