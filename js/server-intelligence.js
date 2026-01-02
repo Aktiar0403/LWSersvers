@@ -118,6 +118,35 @@ function computeAllianceG1(players, alliance, warzone) {
   };
 }
 
+function computeWarzoneG1(players, warzone) {
+  if (!warzone || warzone === "ALL") return null;
+
+  const eligible = players.filter(p =>
+    p.warzone === Number(warzone) &&
+    p.g1 &&
+    typeof p.g1.pctPerDay === "number" &&
+    p.g1.days >= 1
+  );
+
+  if (eligible.length < 10) {
+    return {
+      value: null,
+      count: eligible.length
+    };
+  }
+
+  const sum = eligible.reduce(
+    (acc, p) => acc + p.g1.pctPerDay,
+    0
+  );
+
+  return {
+    value: sum / eligible.length,
+    count: eligible.length
+  };
+}
+
+
 function renderTopRankG1() {
   // Always reset
   topRankG1Box.classList.add("hidden");
@@ -128,14 +157,36 @@ function renderTopRankG1() {
   // ❌ Global mode → no G1
   if (activeWarzone === "ALL") return;
 
-  // 🟡 WARZONE ONLY → placeholder
-  if (activeAlliance === "ALL") {
-    g1Title.textContent = "Warzone G1";
-    topRankG1Value.textContent = "Coming Soon";
-    topRankG1Meta.textContent = "Observed growth coming in next phase";
+  // 🟡 WARZONE G1 (OBSERVED)
+if (activeAlliance === "ALL") {
+  const wzG1 = computeWarzoneG1(
+    allPlayers,
+    activeWarzone
+  );
+
+  g1Title.textContent = "Warzone G1";
+
+  if (!wzG1 || wzG1.value === null) {
+    topRankG1Value.textContent = "Insufficient data";
+    topRankG1Meta.textContent =
+      `${wzG1?.count || 0} players with valid G1`;
     topRankG1Box.classList.remove("hidden");
     return;
   }
+
+  const pct = wzG1.value * 100;
+  const sign = pct > 0 ? "+" : "";
+
+  topRankG1Value.textContent =
+    `${sign}${pct.toFixed(2)}% / day`;
+
+  topRankG1Meta.textContent =
+    `Based on ${wzG1.count} players`;
+
+  topRankG1Box.classList.remove("hidden");
+  return;
+}
+
 
   // 🟢 ALLIANCE MODE → real G1
   const result = computeAllianceG1(
