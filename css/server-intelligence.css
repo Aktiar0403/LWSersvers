@@ -5052,3 +5052,19 @@ body.admin-view .admin-only {
     margin-top: 2px;
   }
 }
+@media (max-width: 600px) {
+
+  .pc-right {
+    align-items: center;      /* ⬅️ center horizontally */
+    text-align: center;       /* ⬅️ center text */
+  }
+  .pc-power-meta {
+    margin-top: 10px;         /* separation from growth */
+    padding-top: 6px;
+    border-top: 1px dashed rgba(255,255,255,0.08);
+
+    font-size: 11px;
+    opacity: 0.55;
+    text-align: center;
+  }
+}
