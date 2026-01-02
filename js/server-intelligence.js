@@ -1934,3 +1934,24 @@ if (logoutBtn) {
 
 
 console.log("🔒 PUBLIC MODE — identity logic fully removed");
+/* =============================
+   BUSTER LIVE → CTA REACTION
+   (READ-ONLY, PASSIVE)
+============================= */
+(function watchBusterState() {
+  const card = document.getElementById("busterCard");
+  if (!card) return;
+
+  function tick() {
+    if (window.IS_BUSTER_LIVE === true) {
+      card.classList.add("buster-live");
+      card.title = "🔥 Buster Day is LIVE";
+    } else {
+      card.classList.remove("buster-live");
+      card.title = "Prepare for Buster Day";
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();

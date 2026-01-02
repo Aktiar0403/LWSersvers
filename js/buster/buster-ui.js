@@ -1025,6 +1025,7 @@ document.addEventListener('click', (event) => {
   }
 
   function tick() {
+    window.IS_BUSTER_LIVE = isBusterLive(istNow);
     const istNow = nowIST();
 
     if (isBusterLive(istNow)) {
