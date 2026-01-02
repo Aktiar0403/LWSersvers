@@ -4164,3 +4164,149 @@ body.buster-loading .buster-cta-wrap {
     font-size: 15px;
   }
 }
+/* =============================
+   BUSTER SUMMARY (MINIMAL)
+============================= */
+
+.buster-intro.minimal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+}
+
+.buster-summary-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, #0f1418, #0b0f13);
+  border: 1px solid rgba(64, 220, 165, 0.15);
+  border-radius: 14px;
+  padding: 22px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Header ---------- */
+
+.buster-summary-head {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.buster-icon {
+  display: inline-block;
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.buster-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e6fff5;
+  margin: 0;
+}
+
+.buster-sub {
+  font-size: 13px;
+  color: #9bb5aa;
+  margin-top: 4px;
+}
+
+/* ---------- Body ---------- */
+
+.buster-summary-body {
+  margin: 14px 0;
+}
+
+.buster-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.buster-points li {
+  font-size: 13px;
+  color: #cfd9d5;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.buster-points li:last-child {
+  border-bottom: none;
+}
+
+/* ---------- Flow ---------- */
+
+.buster-summary-flow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0;
+  font-size: 12px;
+  color: #8fdcc5;
+}
+
+.buster-summary-flow span {
+  background: rgba(64, 220, 165, 0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* ---------- Footer ---------- */
+
+.buster-summary-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #b8c9c3;
+  margin-top: 12px;
+}
+
+.buster-summary-footer strong {
+  color: #40dca5;
+}
+
+/* ---------- CTA ---------- */
+
+.buster-cta-wrap {
+  margin-top: 18px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.buster-btn.primary {
+  width: 100%;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #40dca5, #2bbd8c);
+  border: none;
+  border-radius: 10px;
+  color: #07140f;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.buster-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(64, 220, 165, 0.35);
+}
+
+/* ---------- Mobile Fine-Tuning ---------- */
+
+@media (max-width: 480px) {
+  .buster-summary-card {
+    padding: 18px 16px;
+  }
+
+  .buster-title {
+    font-size: 18px;
+  }
+
+  .buster-sub {
+    font-size: 12px;
+  }
+
+  .buster-points li {
+    font-size: 12px;
+  }
+}
