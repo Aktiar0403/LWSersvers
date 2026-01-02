@@ -5098,9 +5098,4 @@ body.admin-view .admin-only {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
-@media (max-width: 600px) {
-  .has-tooltip .tooltip {
-    max-width: 220px;
-    font-size: 11px;
-  }
-}
+
