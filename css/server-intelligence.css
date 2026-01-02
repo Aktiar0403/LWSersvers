@@ -4974,3 +4974,34 @@ body.admin-view .admin-only {
   }
 }
 }
+.has-tooltip {
+  position: relative;
+}
+
+.has-tooltip .tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  background: rgba(15, 18, 25, 0.95);
+  color: #cfd8dc;
+  font-size: 11px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  max-width: 220px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity .15s ease, transform .15s ease;
+  z-index: 30;
+}
+
+.has-tooltip:hover .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pc-g1-sub {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 2px;
+}

@@ -166,25 +166,28 @@ if (activeAlliance === "ALL") {
 
   g1Title.textContent = "Warzone G1";
 
-  if (!wzG1 || wzG1.value === null) {
-    topRankG1Value.textContent = "Insufficient data";
-    topRankG1Meta.textContent =
-      `${wzG1?.count || 0} players with valid G1`;
-    topRankG1Box.classList.remove("hidden");
-    return;
-  }
+  // --- WARZONE G1 (WEEKLY + S1 AVG PER PLAYER) ---
+const avgBasePower =
+  allPlayers
+    .filter(p =>
+      p.warzone === Number(activeWarzone) &&
+      p.g1
+    )
+    .reduce((sum, p) => sum + p.basePower, 0) / wzG1.count;
 
-  const pct = wzG1.value * 100;
-  const sign = pct > 0 ? "+" : "";
+const d = deriveWeeklyG1AndS1({
+  pctPerDay: wzG1.value,
+  basePower: avgBasePower
+});
 
-  topRankG1Value.textContent =
-    `${sign}${pct.toFixed(2)}% / day`;
+topRankG1Value.textContent =
+  `${d.weeklyPct}% / week`;
 
-  topRankG1Meta.textContent =
-    `Based on ${wzG1.count} players`;
+topRankG1Meta.textContent =
+  `≈ +${d.weeklyS1M}m S1 • avg player (${wzG1.count})`;
 
-  topRankG1Box.classList.remove("hidden");
-  return;
+topRankG1Box.classList.remove("hidden");
+return;
 }
 
 
@@ -197,26 +200,31 @@ if (activeAlliance === "ALL") {
 
   g1Title.textContent = "Alliance G1";
 
-  if (!result || result.value === null) {
-    topRankG1Value.textContent = "Insufficient data";
-    topRankG1Meta.textContent =
-      `${result?.count || 0} players with valid G1`;
-    topRankG1Box.classList.remove("hidden");
-    return;
-  }
+ // --- ALLIANCE G1 (WEEKLY + S1 AVG PER PLAYER) ---
+const avgBasePower =
+  allPlayers
+    .filter(p =>
+      p.warzone === Number(activeWarzone) &&
+      p.alliance === activeAlliance &&
+      p.g1
+    )
+    .reduce((sum, p) => sum + p.basePower, 0) / result.count;
 
-  const pct = result.value * 100;
-  const sign = pct > 0 ? "+" : "";
+const d = deriveWeeklyG1AndS1({
+  pctPerDay: result.value,
+  basePower: avgBasePower
+});
 
-  topRankG1Value.textContent =
-    `${sign}${pct.toFixed(2)}% / day`;
+topRankG1Value.textContent =
+  `${d.weeklyPct}% / week`;
 
-  topRankG1Meta.textContent =
-    `Based on ${result.count} players`;
+topRankG1Meta.textContent =
+  `≈ +${d.weeklyS1M}m S1 • avg player (${result.count})`;
 
-  topRankG1Box.classList.remove("hidden");
+topRankG1Box.classList.remove("hidden");
+return;
+
 }
-
 
 
 
@@ -525,6 +533,26 @@ function formatPowerM(power) {
   if (!power) return "0M";
   return Math.round(power / 1_000_000) + "M";
 }
+
+// =============================
+// G1 — WEEKLY DERIVATION (DISPLAY ONLY)
+// =============================
+const S1_RATIO = 0.18; // per-player combat power translation
+
+function deriveWeeklyG1AndS1({ pctPerDay, basePower }) {
+  if (typeof pctPerDay !== "number" || !basePower) return null;
+
+  const weeklyPct = pctPerDay * 7 * 100; // %
+  const weeklyPowerGain = basePower * (weeklyPct / 100);
+  const weeklyS1GainM =
+    (weeklyPowerGain * S1_RATIO) / 1_000_000;
+
+  return {
+    weeklyPct: weeklyPct.toFixed(3), // % / week
+    weeklyS1M: weeklyS1GainM.toFixed(2) // m S1 / week
+  };
+}
+
 
 function isMobile() {
   return window.innerWidth < 768;
@@ -1049,18 +1077,20 @@ function renderPlayerCards(players, rankOffset = 0) {
 // G1 — UI EXTRACTION
 // =============================
 let g1Text = "—";
-let g1Class = "g1-none";
+let g1Sub = "";
 
 if (p.g1 && typeof p.g1.pctPerDay === "number") {
-  const pct = p.g1.pctPerDay * 100;
+  const d = deriveWeeklyG1AndS1({
+    pctPerDay: p.g1.pctPerDay,
+    basePower: p.basePower
+  });
 
-  const sign = pct > 0 ? "+" : "";
-  g1Text = `${sign}${pct.toFixed(2)}% / day`;
-
-  if (pct > 0) g1Class = "g1-positive";
-  else if (pct < 0) g1Class = "g1-negative";
-  else g1Class = "g1-neutral";
+  if (d) {
+    g1Text = `${d.weeklyPct}% / week`;
+    g1Sub = `≈ +${d.weeklyS1M}m S1`;
+  }
 }
+
 
 
     const card = document.createElement("div");
@@ -1099,9 +1129,16 @@ if (p.g1 && typeof p.g1.pctPerDay === "number") {
   <div class="pc-power-meta ${powerTag}">
     ${getPowerMeta(p)}
   </div>
-  <div class="pc-g1 ${g1Class}">
+ <div class="pc-g1 has-tooltip">
   📈 G1: ${g1Text}
+  <div class="pc-g1-sub">${g1Sub}</div>
+
+  <span class="tooltip">
+    Weekly growth derived from real re-uploads.
+    S1 is an estimated per-player combat power change.
+  </span>
 </div>
+
 
 
 ${LIKES_ENABLED ? `
