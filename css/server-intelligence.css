@@ -4933,4 +4933,44 @@ body.admin-view .admin-only {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+@media (max-width: 600px) {
+
+  .top-rank-left {
+    display: flex;
+    flex-direction: column; /* 🔥 key fix */
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+  }
+  .top-rank-name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    max-width: 100%;
+    display: block;
+  }
+  .top-rank-s1 {
+    font-size: 11px;
+    opacity: 0.75;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    max-width: 100%;
+    display: block;
+  }
+  .top-rank-power {
+    font-size: 13px;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+}
 }
