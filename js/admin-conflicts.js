@@ -14,6 +14,7 @@ import {
   query,
   where,
   orderBy,
+  getDoc,
   getDocs,
   updateDoc,
   doc,
