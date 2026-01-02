@@ -184,7 +184,7 @@ topRankG1Value.textContent =
   `${d.weeklyPct}% / week`;
 
 topRankG1Meta.textContent =
-  `≈ +${d.weeklyS1M}m S1 • avg player (${wzG1.count})`;
+ `Observed across ${wzG1.count} players`;
 
 topRankG1Box.classList.remove("hidden");
 return;
@@ -219,7 +219,7 @@ topRankG1Value.textContent =
   `${d.weeklyPct}% / week`;
 
 topRankG1Meta.textContent =
-  `≈ +${d.weeklyS1M}m S1 • avg player (${result.count})`;
+   `Based on ${result.count} players`;
 
 topRankG1Box.classList.remove("hidden");
 return;
@@ -1087,7 +1087,7 @@ if (p.g1 && typeof p.g1.pctPerDay === "number") {
 
   if (d) {
     g1Text = `${d.weeklyPct}% / week`;
-    g1Sub = `≈ +${d.weeklyS1M}m S1`;
+    g1Sub = `      ≈ +${d.weeklyS1M}m S1`;
   }
 }
 
