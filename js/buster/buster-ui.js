@@ -4,6 +4,7 @@ console.log("🧨 buster-ui.js ");
    FIREBASE
 ============================= */
 import { dbPublic as db } from "../firebase-public.js";
+import { getBusterState } from "./buster-time.js";
 import {
   collection,
   getDocs
@@ -1025,53 +1026,19 @@ document.addEventListener('click', (event) => {
   }
 
   function tick() {
-  const istNow = nowIST();
-  const live = isBusterLive(istNow);
+  const { live, text } = getBusterState();
 
-  // 🔒 expose read-only state
-  window.IS_BUSTER_LIVE = live;
+  window.IS_BUSTER_LIVE = live; // optional, for same-page use
 
   if (live) {
-    // 🔥 BUSTER LIVE
     titleEl.textContent = "🔥 Buster Day Live";
     countdownBox.classList.add("buster-live");
     ctaBtn && ctaBtn.classList.add("buster-live");
-
-    // End is Sunday 7:30 AM IST
-    const end = new Date(istNow);
-    end.setDate(end.getDate() + (end.getDay() === 6 ? 1 : 0));
-    end.setHours(7, 30, 0, 0);
-
-    const remaining = end - istNow;
-    const text =
-      remaining > 0
-        ? `Ends in ${format(remaining)}`
-        : "Ending…";
-
-    // 👇 Buster page timer
-    timerEl.textContent = text;
-
-    // 👇 GLOBAL TIMER FOR CTA
-    window.BUSTER_TIMER_TEXT = `🔥 LIVE · ${text}`;
-
   } else {
-    // ⏳ COUNTDOWN MODE
     titleEl.textContent = "Next Buster Day";
     countdownBox.classList.remove("buster-live");
     ctaBtn && ctaBtn.classList.remove("buster-live");
-
-    const next = getNextSaturday730(istNow);
-    const text = format(next - istNow);
-
-    // 👇 Buster page timer
-    timerEl.textContent = text;
-
-    // 👇 GLOBAL TIMER FOR CTA
-    window.BUSTER_TIMER_TEXT = `Next Buster · ${text}`;
   }
+
+  timerEl.textContent = text.replace("🔥 LIVE · ", "").replace("Next Buster · ", "");
 }
-
-
-  tick();
-  setInterval(tick, 1000);
-})();

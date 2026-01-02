@@ -9,6 +9,8 @@
 
 console.log("✅ Server Intelligence JS loaded");
 import { logout } from "./auth.js";
+import { getBusterState } from "./buster-time.js";
+
 import { db } from "./firebase-config.js";
 import {
   collection,
@@ -1935,7 +1937,7 @@ if (logoutBtn) {
 
 console.log("🔒 PUBLIC MODE — identity logic fully removed");
 /* =============================
-   BUSTER TIMER → CTA (READ ONLY)
+   BUSTER TIMER → CTA
 ============================= */
 (function syncBusterTimerToCTA() {
   const timerEl = document.getElementById("busterCtaTimer");
@@ -1944,15 +1946,13 @@ console.log("🔒 PUBLIC MODE — identity logic fully removed");
   if (!timerEl || !card) return;
 
   function tick() {
-    // Read-only mirror from Buster page
-    if (typeof window.BUSTER_TIMER_TEXT === "string") {
-      timerEl.textContent = window.BUSTER_TIMER_TEXT;
+    const { live, text } = getBusterState();
+    timerEl.textContent = text;
 
-      if (window.IS_BUSTER_LIVE === true) {
-        card.classList.add("buster-live");
-      } else {
-        card.classList.remove("buster-live");
-      }
+    if (live) {
+      card.classList.add("buster-live");
+    } else {
+      card.classList.remove("buster-live");
     }
   }
 
