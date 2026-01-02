@@ -4990,7 +4990,7 @@ body.admin-view .admin-only {
   max-width: 220px;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(4px);
+  transform: translateX(4px);
   transition: opacity .15s ease, transform .15s ease;
   z-index: 30;
 }
