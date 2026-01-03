@@ -33,16 +33,24 @@ async function initWarzoneLeaderboard() {
   const warzones = aggregateWarzones(players);
   console.log("🌍 Warzones found:", warzones.length);
 
-  const computedWarzones = warzones.map(wz =>
-    computeLwsRawScore(wz)
-  );
+const computedWarzones = warzones.map(wz =>
+  computeLwsRawScore(wz)
+);
 
-  // Debug one warzone to verify everything
-  console.log("🧠 Sample warzone (debug):", computedWarzones[0]);
+// STEP 3 — Normalize to LWS Index
+const normalizedWarzones = normalizeLwsScores(computedWarzones);
 
-  // ⛔ STOP HERE
-  // STEP 3 (normalization + UI) will come later
-}
+// Debug strongest & one sample
+console.log("🏆 Top warzone (by LWS):", 
+  normalizedWarzones.sort((a, b) => b.lwsRaw - a.lwsRaw)[0]
+);
+
+console.log("🧠 Sample warzone (normalized):", normalizedWarzones[0]);
+
+// ⛔ STOP HERE — Step 3 complete
+
+
+  
 
 /* =====================================================
    STEP 1 — DATA INTAKE (READ ONLY)
@@ -191,4 +199,29 @@ function computeLwsRawScore(warzone) {
     lwsRaw,
     sortedPlayers // kept for next steps (tiers, P-values, UI)
   };
+}
+
+// Noramlizaton LWS raw
+function normalizeLwsScores(warzones) {
+  if (!warzones || warzones.length === 0) return [];
+
+  // Find strongest warzone
+  const maxRaw = Math.max(...warzones.map(wz => wz.lwsRaw));
+
+  // Guard: avoid division by zero
+  if (maxRaw <= 0) {
+    return warzones.map(wz => ({
+      ...wz,
+      lwsIndex: 0
+    }));
+  }
+
+  return warzones.map(wz => {
+    const index = (wz.lwsRaw / maxRaw) * 100;
+
+    return {
+      ...wz,
+      lwsIndex: Number(index.toFixed(2)) // e.g. 65.87
+    };
+  });
 }
