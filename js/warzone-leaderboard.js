@@ -180,25 +180,44 @@ function computeDepthAdjustment(sortedPlayers) {
 ===================================================== */
 
 function computeLwsRawScore(warzone) {
-  // Sort players by raw power (desc)
-  const sortedPlayers = [...warzone.players].sort(
-    (a, b) => b.power - a.power
-  );
 
-  const depthAdjustment = computeDepthAdjustment(sortedPlayers);
+ // Sort players by raw power (desc)
+const sortedPlayers = [...warzone.players]
+  .sort((a, b) => b.power - a.power)
+  .slice(0, 200); // 🔒 HARD CUTOFF — ONLY TOP 200 COUNT
 
-  const lwsRaw =
-    warzone.primaryScore * (1 + depthAdjustment);
+// Recompute primary score using ONLY top 200
+let primaryScore200 = 0;
+for (const p of sortedPlayers) {
+  primaryScore200 += computeEffectivePower(p.power);
+}
+
+// Compute depth adjustment using ONLY top 200
+const depthAdjustment = computeDepthAdjustment(sortedPlayers);
+
+// Final LWS raw score (locked model)
+const lwsRaw =
+  primaryScore200 * (1 + depthAdjustment);
+
 
   return {
-    warzone: warzone.warzone,
-    playerCount: sortedPlayers.length,
-    totalPower: warzone.totalPower,
-    primaryScore: warzone.primaryScore,
-    depthAdjustment,
-    lwsRaw,
-    sortedPlayers // kept for next steps (tiers, P-values, UI)
-  };
+  warzone: warzone.warzone,
+
+  // Count of players USED in calculations (max 200)
+  playerCount: sortedPlayers.length,
+
+  // Display-only (still full warzone total)
+  totalPower: warzone.totalPower,
+
+  // Primary score AFTER top-200 cutoff
+  primaryScore: primaryScore200,
+
+  depthAdjustment,
+  lwsRaw,
+
+  // Keep for next steps (tiers, UI)
+  sortedPlayers
+};
 }
 
 // Noramlizaton LWS raw
