@@ -1,6 +1,6 @@
 console.log("🧠 Warzone Leaderboard JS loaded");
 
-import { dbPublic as db } from "./firebase-public.js";
+import { dbPublic as db } from "../firebase-public.js";
 import {
   collection,
   getDocs
