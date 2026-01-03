@@ -97,7 +97,7 @@ function computeEffectivePower(rawPower) {
   // Non-linear scaling:
   // High power players dominate disproportionately
   // Exponent can be tuned later
-  return Math.pow(rawPower, 2.69);
+  return Math.pow(rawPower, 2.49);
 }
 
 /* =====================================================
