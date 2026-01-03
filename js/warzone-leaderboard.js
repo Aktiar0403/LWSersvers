@@ -20,7 +20,7 @@ async function initWarzoneLeaderboard() {
 async function loadLeaderboardPlayers() {
   console.log("📥 Loading players (read-only)");
 
-  const snap = await getDocs(collection(db, "players"));
+  const snap = await getDocs(collection(db, "server_players"));
   const players = [];
 
   snap.forEach(doc => {
