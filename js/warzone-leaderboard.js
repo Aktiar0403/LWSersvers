@@ -145,20 +145,22 @@ function getDepthPower(sortedPlayers, index) {
 }
 
 /* =====================================================
-   STEP 2D — DEPTH ADJUSTMENT (v2.1 LOCKED)
+   DEPTH ADJUSTMENT v3 — LOCKED
+   Stronger depth impact, bounded & safe
 ===================================================== */
-
 function computeDepthAdjustment(sortedPlayers) {
   if (!sortedPlayers || sortedPlayers.length === 0) return 0;
 
   const P1 = sortedPlayers[0].power;
   if (P1 <= 0) return 0;
 
+  // Depth checkpoints (top-200 already enforced upstream)
   const P20  = getDepthPower(sortedPlayers, 20);
   const P50  = getDepthPower(sortedPlayers, 50);
   const P100 = getDepthPower(sortedPlayers, 100);
   const P130 = getDepthPower(sortedPlayers, 130);
 
+  // Normalized ratios
   const R20  = P20  / P1;
   const R50  = P50  / P1;
   const R100 = P100 / P1;
@@ -167,14 +169,16 @@ function computeDepthAdjustment(sortedPlayers) {
   // Equal-weight depth signal
   const depthSignal = (R20 + R50 + R100 + R130) / 4;
 
-  const baseline = 0.25;
-  let adjustment = depthSignal - baseline;
+  // 🔥 Locked tuning parameters
+  const baseline = 0.22;
+  let adjustment = 1.8 * (depthSignal - baseline);
 
-  // Hard clamp to ±15%
-  adjustment = Math.max(-0.15, Math.min(0.15, adjustment));
+  // Hard clamp: depth refines, never dominates
+  adjustment = Math.max(-0.25, Math.min(0.30, adjustment));
 
   return adjustment;
 }
+
 
 /* =====================================================
    STEP 2E — FINAL LWS RAW SCORE (INTERNAL)
