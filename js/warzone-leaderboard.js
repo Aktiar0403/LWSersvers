@@ -50,7 +50,7 @@ console.log("🧠 Sample warzone (normalized):", normalizedWarzones[0]);
 // ⛔ STOP HERE — Step 3 complete
 
 
-  
+}
 
 /* =====================================================
    STEP 1 — DATA INTAKE (READ ONLY)
