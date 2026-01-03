@@ -32,41 +32,34 @@ async function initWarzoneLeaderboard() {
    DATA INTAKE (READ ONLY)
 ============================= */
 
-async function loadLeaderboardPlayers() {
-  console.log("📥 Loading players from server_players (read-only)");
+async function initWarzoneLeaderboard() {
+  console.log("🚀 Initializing Warzone Leaderboard");
 
-  const snap = await getDocs(collection(db, "server_players"));
-  const players = [];
+  const players = await loadLeaderboardPlayers();
+  console.log("👥 Players loaded:", players.length);
 
-  snap.forEach(doc => {
-    const d = doc.data();
+  const warzones = aggregateWarzones(players);
+  console.log("🌍 Warzones found:", warzones.length);
 
-    // ✅ Correct schema mapping
-    const power = Number(d.totalPower);
+  const computed = warzones.map(wz =>
+    computeLwsRawScore(wz)
+  );
 
-    // Guard: must have warzone + valid power
-    if (!d.warzone || isNaN(power)) return;
+  console.log("🧠 Sample warzone (debug):", computed[0]);
 
-    players.push({
-      id: doc.id,
-      name: d.name || "Unknown",
-      alliance: d.alliance || "UNASSIGNED",
-      warzone: d.warzone,
-      power, // normalized raw power
-      basePower: d.basePower || null,
-      lastConfirmedAt: d.lastConfirmedAt || null,
-      g1: d.g1 || null
-    });
-  });
-
-  return players;
+  // ✅ STOP HERE — Step 2 complete
 }
+
 function computeEffectivePower(rawPower) {
   // Non-linear dominance curve
   // High power scales disproportionately
   // Tunable later, structure locked
   return Math.pow(rawPower, 1.08);
 }
+
+
+
+
 function aggregateWarzones(players) {
   const warzones = new Map();
 
@@ -133,21 +126,4 @@ function computeLwsRawScore(warzone) {
     depthAdjustment,
     lwsRaw
   };
-}
-async function initWarzoneLeaderboard() {
-  console.log("🚀 Initializing Warzone Leaderboard");
-
-  const players = await loadLeaderboardPlayers();
-  console.log("👥 Players loaded:", players.length);
-
-  const warzones = aggregateWarzones(players);
-  console.log("🌍 Warzones found:", warzones.length);
-
-  const computed = warzones.map(wz =>
-    computeLwsRawScore(wz)
-  );
-
-  console.log("🧠 Sample warzone (debug):", computed[0]);
-
-  // ✅ STOP HERE — Step 2 complete
 }
