@@ -39,6 +39,7 @@ const computedWarzones = warzones.map(wz =>
 
 // STEP 3 — Normalize to LWS Index
 const normalizedWarzones = normalizeLwsScores(computedWarzones);
+renderWarzoneTable(normalizedWarzones);
 
 // Debug strongest & one sample
 console.log("🏆 Top warzone (by LWS):", 
@@ -96,7 +97,7 @@ function computeEffectivePower(rawPower) {
   // Non-linear scaling:
   // High power players dominate disproportionately
   // Exponent can be tuned later
-  return Math.pow(rawPower, 1.08);
+  return Math.pow(rawPower, 1.25);
 }
 
 /* =====================================================
@@ -242,5 +243,66 @@ function normalizeLwsScores(warzones) {
       ...wz,
       lwsIndex: Number(index.toFixed(2)) // e.g. 65.87
     };
+  });
+}
+function classifyTier(power) {
+  if (power >= 230_000_000) return "mega";
+  if (power >= 180_000_000) return "whale";
+  if (power >= 160_000_000) return "shark";
+  if (power >= 140_000_000) return "piranha";
+  return null; // shrimp hidden everywhere
+}
+
+
+function countTiers(sortedPlayers) {
+  const counts = { mega: 0, whale: 0, shark: 0, piranha: 0 };
+
+  for (const p of sortedPlayers) {
+    const t = classifyTier(p.power);
+    if (t) counts[t]++;
+  }
+
+  return counts;
+}
+
+
+function fmtG(num) {
+  return (num / 1e9).toFixed(2) + "G";
+}
+
+function fmtDate(ts) {
+  if (!ts?.toDate) return "-";
+  return ts.toDate().toLocaleDateString();
+}
+
+
+function renderWarzoneTable(warzones) {
+  const tbody = document.getElementById("wzTableBody");
+  tbody.innerHTML = "";
+
+  // Sort by RAW LWS (never by index)
+  const sorted = [...warzones].sort((a, b) => b.lwsRaw - a.lwsRaw);
+
+  sorted.forEach((wz, i) => {
+    const tiers = countTiers(wz.sortedPlayers);
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="wz-rank">#${i + 1}</td>
+      <td>${wz.warzone}</td>
+      <td class="wz-lws">${wz.lwsIndex}</td>
+      <td>${fmtG(wz.totalPower)}</td>
+      <td class="wz-subtle">${fmtG(wz.sortedPlayers.at(-1)?.power || 0)}</td>
+
+      <td class="wz-tier" data-tier="mega">${tiers.mega}</td>
+      <td class="wz-tier" data-tier="whale">${tiers.whale}</td>
+      <td class="wz-tier" data-tier="shark">${tiers.shark}</td>
+      <td class="wz-tier" data-tier="piranha">${tiers.piranha}</td>
+
+      <td class="wz-subtle">${wz.g1?.pctPerDay ? (wz.g1.pctPerDay * 7 * 100).toFixed(2) + "%" : "-"}</td>
+      <td class="wz-subtle">${fmtDate(wz.sortedPlayers[0]?.lastConfirmedAt)}</td>
+    `;
+
+    tbody.appendChild(tr);
   });
 }

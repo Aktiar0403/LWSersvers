@@ -10,3 +10,56 @@
   opacity: 0.7;
   font-size: 0.9rem;
 }
+/* ===== Warzone Leaderboard ===== */
+
+.wz-board {
+  overflow-x: auto;
+}
+
+.wz-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.wz-table th,
+.wz-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.wz-table th {
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.wz-rank {
+  font-weight: 700;
+}
+
+.wz-lws {
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.wz-subtle {
+  opacity: 0.65;
+}
+
+.wz-tier {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.wz-tier:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .wz-table {
+    font-size: 13px;
+  }
+}
